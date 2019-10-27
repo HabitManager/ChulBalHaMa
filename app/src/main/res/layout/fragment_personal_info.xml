@@ -1,41 +1,131 @@
 <?xml version="1.0" encoding="utf-8"?>
 <android.support.constraint.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:padding="@dimen/fragment_padding_plain">
 
-    <Button
-        android:id="@+id/store_info"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
     <LinearLayout
-        android:orientation="vertical"
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.266"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0">
 
+        <!-- name -->
         <TextView
+            style="@style/MenuText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/setting_name"
-            style="@style/MenuText"/>
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
 
+        <EditText
+            style="@style/GuideText"
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_name"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="@dimen/fragment_horizontal_margin_big"
+            android:layout_marginLeft="@dimen/fragment_horizontal_margin_big"
+            android:layout_marginBottom="@dimen/content_space_small"/>
+
+
+        <!-- start place -->
+        <TextView
+            style="@style/MenuText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_start"
+            android:layout_gravity="center_vertical"
+            android:layout_marginBottom="@dimen/activity_vertical_margin"/>
         <LinearLayout
+            android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:padding="@dimen/fragment_vertical_padding_small">
+            android:layout_marginBottom="@dimen/content_space_small"
+            android:layout_marginStart="@dimen/fragment_horizontal_margin_big"
+            android:layout_marginLeft="@dimen/fragment_horizontal_margin_big">
+
+            <TextView
+                style="@style/GuideText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_start"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="0.5"/>
+
+            <TextView
+                android:id="@+id/info_text_home"
+                style="@style/GuideText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_start"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="2"/>
+            <Button
+                android:id="@+id/info_setting_start"
+                android:layout_width="60dp"
+                android:layout_height="30dp"
+                android:text="@string/button_change"
+                style="@style/StoreButton"/>
+
         </LinearLayout>
-        <TextView
-            android:layout_width="wrap_content"
+
+        <!-- destination -->
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="출발지를 적어주세요"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="도착지를 적어주세요"/>
+            android:layout_marginBottom="@dimen/activity_vertical_margin">
+
+            <TextView
+                style="@style/MenuText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/setting_destination"
+                android:layout_weight="1"
+                android:layout_gravity="center_vertical|start"/>
+            <Button
+                android:id="@+id/info_add_destination"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:background="@drawable/ic_add_circle_outline"
+                android:layout_gravity="center_vertical|end"
+                style="@style/StoreButton"/>
+
+        </LinearLayout>
+
+        <!-- destination array -->
+        <android.support.constraint.ConstraintLayout
+            android:id="@+id/list_description"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:layout_marginBottom="@dimen/content_space_small"
+            android:layout_marginStart="@dimen/fragment_horizontal_margin_big"
+            android:layout_marginLeft="@dimen/fragment_horizontal_margin_big"
+            >
+
+        </android.support.constraint.ConstraintLayout>
+
     </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        style="@style/StoreButton"
+        android:text="@string/store"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"/>
 
 </android.support.constraint.ConstraintLayout>

@@ -50,7 +50,6 @@ public class HabitListFragment extends Fragment {
                 startActivity(intent);
             }
         });
-
         return v;
     }
 }

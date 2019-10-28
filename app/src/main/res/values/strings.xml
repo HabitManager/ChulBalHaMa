@@ -4,11 +4,13 @@
     <string name="title_test">테스트</string>
     <string name="title_habit">습관 더하기</string>
 
+    <string name="store">저장하기</string>
 
     <string name="button_add">추가하기</string>
     <string name="button_need">필요하다</string>
     <string name="button_not_need">전혀 필요없다.</string>
     <string name="button_change">바꾸기</string>
+    <string name="button_setting">설정하기</string>
 
 
     <string name="guide_habit_name_intro">나는 출근/통학시간 중에</string>
@@ -30,8 +32,18 @@
 
 
     <string name="setting_name">이름</string>
-    <string name="setting_start">시작</string>
-    <string name="setting_destination">끝</string>
+    <string name="setting_start">출발</string>
+    <string name="setting_destination">도착</string>
+
+
+    <string name="map_register">등록</string>
+    <string name="map_location_name_guide">이 곳은 어디인가요?</string>
+    <string name="map_location_name_hint">EX) 회사, 학교</string>
+    <string name="map_location_address">위치를 설정해 주세요</string>
+    <string name="map_location_time_take">가는데 얼마나 걸리나요?</string>
+
+    <string name="time_hour">시</string>
+    <string name="time_minute">분</string>
 
 
     <string name="openDrawerNavigation">OpenDrawerNavigation</string>

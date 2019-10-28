@@ -3,6 +3,8 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
 
+    <dimen name="fragment_horizontal_margin_big">50dp</dimen>
+    <dimen name="fragment_vertical_margin_big">50dp</dimen>
     <dimen name="fragment_horizontal_padding_small">16dp</dimen>
     <dimen name="fragment_vertical_padding_small">16dp</dimen>
 
@@ -10,9 +12,12 @@
     <dimen name="nav_header_vertical_spacing">8dp</dimen>
     <dimen name="nav_header_height">176dp</dimen>
 
+    <dimen name="text_18sp">18sp</dimen>
     <dimen name="text_20sp">20sp</dimen>
     <dimen name="text_30sp">30sp</dimen>
     <dimen name="text_40sp">40sp</dimen>
 
     <dimen name="fragment_padding_plain">30dp</dimen>
+
+    <dimen name="content_space_small">45dp</dimen>
 </resources>

@@ -20,4 +20,5 @@
     <dimen name="fragment_padding_plain">30dp</dimen>
 
     <dimen name="content_space_small">45dp</dimen>
+
 </resources>

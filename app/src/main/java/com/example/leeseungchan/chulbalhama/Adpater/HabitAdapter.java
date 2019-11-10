@@ -2,18 +2,16 @@ package com.example.leeseungchan.chulbalhama.Adpater;
 
 
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.example.leeseungchan.chulbalhama.Activities.HabitChangeActivity;
+import com.example.leeseungchan.chulbalhama.Activities.HabitInfoActivity;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
 
@@ -29,9 +27,13 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         public TextView habitDescription;
         private TextView habitInfo, habitHistory, habitDelete;
         private CheckBox showAdditional;
+        private View v;
+        private HabitViewHolder holder;
 
         public HabitViewHolder(@NonNull final View v){
             super(v);
+            this.v = v;
+            holder = this;
             habitName = v.findViewById(R.id.item_habit_name);
             habitDescription = v.findViewById(R.id.item_habit_description);
             
@@ -55,10 +57,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             habitInfo.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                    Intent intent = new Intent(v.getContext(), HabitChangeActivity.class);
-                    HabitsVO habit = getHabit(getAdapterPosition());
-                    intent.putExtra("habit", habit);
-                    v.getContext().startActivity(intent);
+                    startIntent(0, holder);
                 }
             });
             
@@ -66,7 +65,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             habitHistory.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
-                
+                    startIntent(1, holder);
                 }
             });
             habitDelete = v.findViewById(R.id.delete);
@@ -124,5 +123,13 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
 
     private HabitsVO getHabit(int position){
         return mDataSet.get(position);
+    }
+    
+    private void startIntent(int type, HabitViewHolder holder){
+        Intent intent = new Intent(holder.v.getContext(), HabitInfoActivity.class);
+        HabitsVO habit = getHabit(holder.getAdapterPosition());
+        intent.putExtra("habit", habit);
+        intent.putExtra("type", type);
+        holder.v.getContext().startActivity(intent);
     }
 }

@@ -1,51 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@color/colorTertiary">
+    android:layout_height="match_parent">
 
     <Button
         android:id="@+id/button_for_start"
+        style="@style/StoreButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="8dp"
         android:layout_marginHorizontal="@dimen/content_space_small"
+        android:layout_marginTop="8dp"
+        android:background="@color/colorPrimary"
         android:text="@string/button_starting"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/imageView2"
-        app:layout_constraintVertical_bias="0.147"
-        android:background="@color/colorPrimary"
-        style="@style/StoreButton"/>
+        app:layout_constraintVertical_bias="0.353" />
 
     <Button
         android:id="@+id/button_for_dest"
+        style="@style/StoreButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:layout_marginHorizontal="@dimen/content_space_small"
+        android:layout_marginTop="20dp"
+        android:background="@color/colorPrimary"
         android:text="@string/button_ending"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_for_start"
-        android:background="@color/colorPrimary"
-        style="@style/StoreButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_for_start" />
 
     <Button
         android:id="@+id/store"
+        style="@style/StoreButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimary"
         android:text="@string/button_go"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_for_dest"
-        android:background="@color/colorPrimary"
-        style="@style/StoreButton"/>
+        app:layout_constraintTop_toBottomOf="@+id/button_for_dest" />
 
     <ImageView
         android:id="@+id/imageView2"
@@ -56,5 +55,18 @@
         app:layout_constraintHorizontal_bias="0.45"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:srcCompat="@drawable/hipo_stand" />
-</android.support.constraint.ConstraintLayout>
+        android:background="@drawable/hipo_stand" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        android:text="Name"
+        app:layout_constraintBottom_toTopOf="@+id/button_for_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

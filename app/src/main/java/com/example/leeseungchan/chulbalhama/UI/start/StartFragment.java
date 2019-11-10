@@ -2,19 +2,16 @@ package com.example.leeseungchan.chulbalhama.UI.start;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.fragment.app.Fragment;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 
-import com.example.leeseungchan.chulbalhama.Activities.AddHabitActivity;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
-import com.example.leeseungchan.chulbalhama.Adpater.HabitAdapter;
 import com.example.leeseungchan.chulbalhama.R;
 
 public class StartFragment extends Fragment {

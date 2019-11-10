@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="30dp">
+
+
+        <!-- habit name -->
+        <TextView
+            style="@style/MenuText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_name" />
+
+        <include
+            android:id="@+id/name_setting"
+            layout="@layout/item_list_change_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_small" />
+
+
+        <!-- habit description -->
+        <TextView
+            style="@style/MenuText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/setting_destination" />
+
+        <include
+            android:id="@+id/desc_setting"
+            layout="@layout/item_list_change_delete"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_small" />
+
+
+        <!-- prepare things -->
+        <TextView
+            style="@style/MenuText"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/guide_ask_prepare" />
+
+        <include
+            android:id="@+id/prepare_setting"
+            layout="@layout/fragment_list"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_small" />
+
+
+        <!-- day and place input -->
+        <include
+            android:id="@+id/day_setting"
+            layout="@layout/item_list_change_delete" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin" />
+
+        <include
+            android:id="@+id/add_habit_day"
+            layout="@layout/item_seven_day_boxes"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="80dp" />
+
+
+    </LinearLayout>
+</ScrollView>

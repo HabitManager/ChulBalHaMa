@@ -1,14 +1,10 @@
 package com.example.leeseungchan.chulbalhama.UI.components;
 
-import android.content.Context;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.constraint.ConstraintLayout;
-import android.util.AttributeSet;
-import android.view.LayoutInflater;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+
 import android.view.View;
 import android.widget.CheckBox;
-import android.widget.RadioButton;
 
 import com.example.leeseungchan.chulbalhama.R;
 

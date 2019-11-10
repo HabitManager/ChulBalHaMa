@@ -69,6 +69,15 @@
     <string name="day_sat">토</string>
     <string name="day_sun">일</string>
 
+    <string name="srbai">SRBAI 검사</string>
+    <string name="srbai_1">생각하기도 전에 준비했다.</string>
+    <string name="srbai_2">생각하기도 전에 시작했다.</string>
+    <string name="srbai_3">꼭 의식하지 않아도 한다.</string>
+    <string name="srbai_4">뭔가 자동적으로 하고 있었다.</string>
+
+    <string name="min">아직</string>
+    <string name="max">완전</string>
+
 
     <string name="openDrawerNavigation">OpenDrawerNavigation</string>
     <string name="closeDrawerNavigation">CloseDrawerNavigation</string>

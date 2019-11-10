@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
+    <androidx.appcompat.widget.Toolbar
         android:id="@+id/toolbar"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
@@ -25,93 +25,13 @@
             android:textColor="@color/colorAccent"
             android:textSize="30sp"
             android:textStyle="bold" />
-    </android.support.v7.widget.Toolbar>
+    </androidx.appcompat.widget.Toolbar>
 
-    <ScrollView
-        android:id="@+id/scrollView2"
+    <include
+        app:layout_constraintTop_toBottomOf="@id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:padding="30dp">
+        layout="@layout/content_main"/>
 
 
-            <!-- habit name -->
-            <TextView
-                style="@style/MenuText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_name" />
-
-            <include
-                android:id="@+id/name_setting"
-                layout="@layout/item_list_change_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/content_space_small" />
-
-
-            <!-- habit description -->
-            <TextView
-                style="@style/MenuText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/setting_destination" />
-
-            <include
-                android:id="@+id/desc_setting"
-                layout="@layout/item_list_change_delete"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/content_space_small" />
-
-
-            <!-- prepare things -->
-            <TextView
-                style="@style/MenuText"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="@string/guide_ask_prepare" />
-
-            <include
-                android:id="@+id/prepare_setting"
-                layout="@layout/fragment_list"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/content_space_small" />
-
-
-            <!-- day and place input -->
-            <include
-                android:id="@+id/day_setting"
-                layout="@layout/item_list_change_delete" />
-
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/activity_horizontal_margin" />
-
-            <include
-                android:id="@+id/add_habit_day"
-                layout="@layout/item_seven_day_boxes" />
-
-            <!-- reply history -->
-            <include layout="@layout/radiogroup_ten_inputs" />
-
-        </LinearLayout>
-    </ScrollView>
-
-    <View
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        tools:layout_editor_absoluteX="0dp"
-        tools:layout_editor_absoluteY="507dp" />
-
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

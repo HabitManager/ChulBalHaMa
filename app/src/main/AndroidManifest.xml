@@ -35,7 +35,7 @@
         <activity android:name=".Activities.LocationInfoActivity"
             android:parentActivityName=".Activities.MainActivity"
             />
-        <activity android:name=".Activities.HabitChangeActivity"
+        <activity android:name=".Activities.HabitInfoActivity"
             android:parentActivityName=".Activities.MainActivity"
             />
         <activity android:name=".Activities.StartActivity"

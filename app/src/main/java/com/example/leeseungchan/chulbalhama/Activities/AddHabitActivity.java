@@ -91,7 +91,7 @@ public class AddHabitActivity extends AppCompatActivity{
 
         final CustomSevenDayInfo customSevenDayInfo =
                 new CustomSevenDayInfo(findViewById(R.id.add_habit_day));
-        customSevenDayInfo.setPlace();
+        customSevenDayInfo.setPlaceData();
 
         // day and place TextView guide text
         guideText = dayPlace.findViewById(R.id.item_name);

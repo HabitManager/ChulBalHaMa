@@ -35,7 +35,7 @@ public class CustomSevenDayInfo {
         dayName.add("토");
         dayName.add("일");
         setDays();
-        setTimeData();
+        setTimeRowFromDB();
     }
 
     private void setDays(){
@@ -44,8 +44,24 @@ public class CustomSevenDayInfo {
             v.setText(dayName.get(i));
         }
     }
-
-    public void setTempTimeData(ArrayList<String> timeData){
+    
+    private void setTimeRowFromDB(){
+        DBHelper helper = new DBHelper(view.getContext());
+        SQLiteDatabase db = helper.getReadableDatabase();
+        Cursor cursor = db.rawQuery("select departure_time from day_of_week ", new String[]{});
+        
+        for(int i = 0; i < 7; i++){
+            cursor.moveToNext();
+            String time = cursor.getString(0);
+            if(time != null) {
+                TextView temp = dayInputs.get(i).findViewById(R.id.day_time);
+                temp.setText(time);
+            }
+        }
+        db.close();
+    }
+    
+    public void setSomeTimeRow(ArrayList<String> timeData){
         for(int i = 0; i < timeData.size(); i++){
             TextView temp;
             if(timeData.get(i) != null){
@@ -54,8 +70,56 @@ public class CustomSevenDayInfo {
             }
         }
     }
+    
+    public void setWholeTimeRow(final ArrayList<Boolean> selectedDays,
+                                     final ArrayList<Integer> time){
+        if(selectedDays.size() != 0) {
+            String timeInput = time.get(0).toString() + ":" + time.get(1).toString();
+            for (int i = 0; i < 7; i++) {
+                TextView v;
+                
+                if (selectedDays.get(i)) {
+                    v = dayInputs.get(i).findViewById(R.id.day_time);
+                    v.setText(timeInput);
+                }
+            }
+        }
+    }
+    
+    public void updateTimeToDays(ArrayList<Boolean> selectable, ArrayList<String> times){
+        DBHelper dbHelper = new DBHelper(view.getContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        
+        String sqlToGetDestID = "select _id from destinations order by _id DESC limit 1";
+        Cursor c = db.rawQuery(sqlToGetDestID, null);
+        c.moveToNext();
+        int destId = c.getInt(0);
+        String sqlToUpdate = "update day_of_week set ";
+        for(int i = 0; i < 7; i++){
+            Log.e("times", i +"and"+times.get(i));
+            if(selectable.get(i)){
+                String time = "\"" + times.get(i) +"\"";
+                db.execSQL(sqlToUpdate + "departure_time=" + time + ", destination_id="
+                    + destId + " where day=" + "\""+dayName.get(i)+ "\"");
+            }
+        }
+        Log.d("destination id", destId+"dest");
+        db.close();
+    }
+    
+    public void getResultTimeDataInput(ArrayList<String> times){
+        for(int i = 0; i < 7; i++){
+            TextView time = dayInputs.get(i).findViewById(R.id.day_time);
+            String actualTime = time.getText().toString();
+            if(actualTime != null){
+                times.add(actualTime);
+            }else{
+                times.add(null);
+            }
+        }
+    }
 
-    public void setPlace(){
+    public void setPlaceData(){
 
         DBHelper helper = new DBHelper(view.getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
@@ -82,37 +146,6 @@ public class CustomSevenDayInfo {
         db.close();
     }
 
-    private void setTimeData(){
-        DBHelper helper = new DBHelper(view.getContext());
-        SQLiteDatabase db = helper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("select departure_time from day_of_week ", new String[]{});
-
-        for(int i = 0; i < 7; i++){
-            cursor.moveToNext();
-            String time = cursor.getString(0);
-            if(time != null) {
-                TextView temp = dayInputs.get(i).findViewById(R.id.day_time);
-                temp.setText(time);
-                Log.e("DB add", " time: " + time);
-            }
-        }
-        db.close();
-    }
-
-    public void setTime(final ArrayList<Boolean> selectedDays,
-                        final ArrayList<Integer> time){
-        if(selectedDays.size() != 0) {
-            String timeInput = time.get(0).toString() + ":" + time.get(1).toString();
-            for (int i = 0; i < 7; i++) {
-                TextView v;
-
-                if (selectedDays.get(i)) {
-                    v = dayInputs.get(i).findViewById(R.id.day_time);
-                    v.setText(timeInput);
-                }
-            }
-        }
-    }
     public void pickDay(final ArrayList<Boolean> selectedDays){
         if(selectedDays.size() != 0) {
             for (int i = 0; i < 7; i++) {
@@ -128,36 +161,4 @@ public class CustomSevenDayInfo {
         }
     }
 
-    public void storeTimeToDays(ArrayList<Boolean> selectable, ArrayList<String> times){
-        DBHelper dbHelper = new DBHelper(view.getContext());
-        SQLiteDatabase db = dbHelper.getWritableDatabase();
-
-        String sqlToGetDestID = "select _id from destinations order by _id DESC limit 1";
-        Cursor c = db.rawQuery(sqlToGetDestID, null);
-        c.moveToNext();
-        int destId = c.getInt(0);
-        String sqlToUpdate = "update day_of_week set ";
-        for(int i = 0; i < 7; i++){
-            Log.e("times", i +"and"+times.get(i));
-            if(selectable.get(i)){
-                String time = "\"" + times.get(i) +"\"";
-                db.execSQL(sqlToUpdate + "departure_time=" + time + ", destination_id="
-                        + destId + " where day=" + "\""+dayName.get(i)+ "\"");
-            }
-        }
-        Log.d("destination id", destId+"dest");
-        db.close();
-    }
-
-    public void setTimeToTime(ArrayList<String> times){
-        for(int i = 0; i < 7; i++){
-            TextView time = dayInputs.get(i).findViewById(R.id.day_time);
-            String actualTime = time.getText().toString();
-            if(actualTime != null){
-                times.add(actualTime);
-            }else{
-                times.add(null);
-            }
-        }
-    }
 }

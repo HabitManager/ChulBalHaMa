@@ -28,6 +28,8 @@ import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.UI.components.CustomSevenDayInfo;
 import com.example.leeseungchan.chulbalhama.UI.map.MapAddFragment;
+import com.example.leeseungchan.chulbalhama.VO.DestinationsVO;
+import com.example.leeseungchan.chulbalhama.VO.LocationVO;
 
 import java.util.ArrayList;
 
@@ -51,13 +53,15 @@ public class DestinationInfoFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_destination_info, container, false);
 
         bundle.putInt("type", 1);
+        final LocationVO locationVO = (LocationVO) bundle.getSerializable("locationVO");
+        ArrayList<String> dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
 
         final EditText dest_name = v.findViewById(R.id.destination_name);
-        String name = ((LocationInfoActivity)getActivity()).getName();
+        String name = locationVO.getName();
         if(name != null) {
-            dest_name.setText(((LocationInfoActivity) getActivity()).getName());
+            dest_name.setText(name);
         }
-        setNameListener(dest_name);
+        setNameListener(dest_name, locationVO);
 
         /* destination coordination view */
         LinearLayout destinationCord = v.findViewById(R.id.destination_setting);
@@ -78,14 +82,7 @@ public class DestinationInfoFragment extends Fragment{
         destSetButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                FragmentTransaction transaction =
-                        getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fg;
-                fg = MapAddFragment.newInstance(bundle);
-                if (!fg.isAdded()) {
-                    transaction.replace(R.id.nav_host_fragment, fg)
-                            .commitNowAllowingStateLoss();
-                }
+                callMapFragment();
             }
         });
         destSetButton.setText(R.string.button_setting);
@@ -99,8 +96,8 @@ public class DestinationInfoFragment extends Fragment{
 
         // time TextView guide text
         final TextView timeGuideText = timeCord.findViewById(R.id.item_name);
-        final int time_hour = ((LocationInfoActivity) getActivity()).getTimeHour();
-        int time_minute = ((LocationInfoActivity) getActivity()).getTimeMin();
+        int time_hour = locationVO.getTimeHour();
+        int time_minute = locationVO.getTimeMin();
 
         if(time_hour > 0 && time_minute > 0){
             timeGuideText.setText(time_hour + "시간 " + time_minute + "분");
@@ -116,22 +113,7 @@ public class DestinationInfoFragment extends Fragment{
         timeButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // @todo time-day dialog is needed.
-                TimePickerDialog dialog = new TimePickerDialog(
-                                getContext(),
-                                android.R.style.Theme_Holo_Light_Dialog,
-                                new TimePickerDialog.OnTimeSetListener() {
-                    @Override
-                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                        ((LocationInfoActivity) getActivity()).setTimeHour(hourOfDay);
-                        ((LocationInfoActivity) getActivity()).setTimeMin(minute);
-                        timeGuideText.setText(hourOfDay + "시간 " + minute + "분");
-                    }
-                }, 0,0,true);
-
-
-                dialog.show();
-
+                showTimeDialog(timeGuideText, locationVO);
             }
         });
         timeButton.setText(R.string.button_setting);
@@ -146,9 +128,9 @@ public class DestinationInfoFragment extends Fragment{
         // set 2d array for day and time
         LinearLayout dayInput = v.findViewById(R.id.day_input);
         final CustomSevenDayInfo sevenDayInfo = new CustomSevenDayInfo(dayInput);
-        ArrayList<String> isTempData = ((LocationInfoActivity) getActivity()).getDayOfWeekTime();
+        ArrayList<String> isTempData = dayOfWeekTime;
         if(isTempData != null){
-            sevenDayInfo.setTempTimeData(isTempData);
+            sevenDayInfo.setSomeTimeRow(isTempData);
         }
 
         // set input layout
@@ -183,23 +165,17 @@ public class DestinationInfoFragment extends Fragment{
         destinationStoreBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                DBHelper dbHelper = new DBHelper(v.getContext());
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                // destination
-                String sql = "insert into destinations (coordinate, time, destination_name) values(?,?,?)";
-
-                String[] data = {
-                        destGuideText.getText().toString(),
-                        timeGuideText.getText().toString(),
-                        dest_name.getText().toString()
-                };
-                db.execSQL(sql, new Object[]{data[0], data[1], data[2]});
-                db.close();
-
-                // day
+                // insert destination data to sqlite db
+                insertDest(
+                    destGuideText.getText().toString(),
+                    timeGuideText.getText().toString(),
+                    dest_name.getText().toString()
+                );
+                
+                // update dayOfWeek table.
                 ArrayList<String> times = new ArrayList<>();
-                sevenDayInfo.setTimeToTime(times);
-                sevenDayInfo.storeTimeToDays(days,times);
+                sevenDayInfo.getResultTimeDataInput(times);
+                sevenDayInfo.updateTimeToDays(days,times);
 
                 getActivity().finish();
             }
@@ -210,7 +186,7 @@ public class DestinationInfoFragment extends Fragment{
 
 
 
-    private void setNameListener(EditText edit){
+    private void setNameListener(EditText edit, final LocationVO locationVO){
         edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -219,7 +195,7 @@ public class DestinationInfoFragment extends Fragment{
 
             @Override
             public void afterTextChanged(Editable arg0) {
-                ((LocationInfoActivity)getActivity()).setName(arg0.toString());
+                locationVO.setName(arg0.toString());
             }
 
             @Override
@@ -228,5 +204,41 @@ public class DestinationInfoFragment extends Fragment{
             }
         });
     }
-
+    
+    private void showTimeDialog(final TextView timeGuideText, final LocationVO locationVO){
+        TimePickerDialog dialog = new TimePickerDialog(
+            getContext(),
+            android.R.style.Theme_Holo_Light_Dialog,
+            new TimePickerDialog.OnTimeSetListener() {
+                @Override
+                public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                    locationVO.setTime(hourOfDay, minute);
+                    timeGuideText.setText(hourOfDay + " : " + minute);
+                }
+            }, 0,0,true);
+    
+    
+        dialog.show();
+    }
+    
+    private void callMapFragment(){
+        FragmentTransaction transaction =
+            getActivity().getSupportFragmentManager().beginTransaction();
+        Fragment fg;
+        fg = MapAddFragment.newInstance(bundle);
+        if (!fg.isAdded()) {
+            transaction.replace(R.id.nav_host_fragment, fg)
+                .commitNowAllowingStateLoss();
+        }
+    }
+    
+    private void insertDest(String coordinate, String time, String name){
+        DBHelper dbHelper = new DBHelper(getContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        // destination
+        String sql = "insert into destinations (coordinate, time, destination_name) values(?,?,?)";
+       
+        db.execSQL(sql, new Object[]{coordinate,time,name});
+        db.close();
+    }
 }

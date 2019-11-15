@@ -27,13 +27,12 @@ import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.VO.DestinationsVO;
+import com.example.leeseungchan.chulbalhama.VO.UserVO;
 
 import java.util.ArrayList;
 
 public class PersonalInfoFragment extends Fragment{
 
-    private FragmentManager fragmentManager;
-    private FragmentTransaction transaction;
     private ArrayList<DestinationsVO> destinations = new ArrayList<>();
     private DBHelper dbHelper;
 
@@ -43,19 +42,14 @@ public class PersonalInfoFragment extends Fragment{
                              @Nullable Bundle saveInstanceState) {
         View v = inflater.inflate(R.layout.fragment_personal_info, container, false);
         dbHelper = new DBHelper(getContext());
-
-        dbHelper = new DBHelper(getContext());
+        
+        UserVO userVO = getUserVO();
         
         /* name */
         LinearLayout name = v.findViewById(R.id.info_name);
         
-        // @todo need to get name data from db
-        final TextView textName = name.findViewById(R.id.item_name);
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor =  db.rawQuery("select name from user order by _id", null);
-        cursor.moveToNext();
-        textName.setText(cursor.getString(0));
-        db.close();
+        TextView textName = name.findViewById(R.id.item_name);
+        textName.setText(userVO.getName());
 
         TextView nameDesc = name.findViewById(R.id.item_description);
         nameDesc.setVisibility(View.INVISIBLE);
@@ -77,19 +71,12 @@ public class PersonalInfoFragment extends Fragment{
         /* start point */
         LinearLayout startPoint = v.findViewById(R.id.info_start);
 
-        SQLiteDatabase db2 = dbHelper.getReadableDatabase();
-        String sql = "select starting_name, starting_coordinate from user order by _id";
-        Cursor cursor2 =  db2.rawQuery(sql, null);
-        cursor2.moveToNext();
-
         TextView startPointName = startPoint.findViewById(R.id.item_name);
-        startPointName.setText(cursor2.getString(0));
+        startPointName.setText(userVO.getStartingCoordinate());
 
         TextView startPointDesc = startPoint.findViewById(R.id.item_description);
         startPointDesc.setEnabled(false);
-        startPointDesc.setText(cursor2.getString(1));
-
-        db2.close();
+        startPointDesc.setText(userVO.getStartingCoordinate());
 
         Button startPointChangeBtn = startPoint.findViewById(R.id.button_change);
         startPointChangeBtn.setText(R.string.button_change);
@@ -127,7 +114,12 @@ public class PersonalInfoFragment extends Fragment{
         destination.removeView(endPointDesc);
 
         RecyclerView destinationRecycler = destination.findViewById(R.id.list);
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getContext());
+        RecyclerView.LayoutManager layoutManager =
+            new LinearLayoutManager(
+                getContext(),
+                RecyclerView.VERTICAL,
+                false
+            );
         destinationRecycler.setLayoutManager(layoutManager);
 
         RecyclerView.Adapter mAdapter;
@@ -136,7 +128,6 @@ public class PersonalInfoFragment extends Fragment{
 
         retrieve();
 
-        fragmentManager = getActivity().getSupportFragmentManager();
         return v;
     }
 
@@ -188,5 +179,20 @@ public class PersonalInfoFragment extends Fragment{
 
         builder.show();
     }
-
+    
+    private UserVO getUserVO(){
+        dbHelper = new DBHelper(getContext());
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    
+        Cursor cursor =  db.rawQuery("select * from user order by _id", null);
+        cursor.moveToNext();
+        
+        UserVO userVO = new UserVO(
+            cursor.getString(1),
+            cursor.getString(2),
+            cursor.getString(3)
+        );
+        db.close();
+        return userVO;
+    }
 }

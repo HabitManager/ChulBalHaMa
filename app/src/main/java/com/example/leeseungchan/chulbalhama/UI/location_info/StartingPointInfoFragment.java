@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,9 @@ import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.UI.map.MapAddFragment;
+import com.example.leeseungchan.chulbalhama.VO.LocationVO;
+
+import java.util.ArrayList;
 
 public class StartingPointInfoFragment extends Fragment {
     Bundle bundle = new Bundle();
@@ -37,14 +41,18 @@ public class StartingPointInfoFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_starting_info, container, false);
 
         bundle.putInt("type", 0);
-
+        final LocationVO locationVO = (LocationVO) bundle.getSerializable("locationVO");
+        if(locationVO == null){
+            Log.e("location VO error ", "null exception");
+        }
         final EditText start_name = v.findViewById(R.id.starting_name);
-        String name = ((LocationInfoActivity)getActivity()).getName();
+   
+        String name = locationVO.getName();
 
         if(name != null) {
-            start_name.setText(((LocationInfoActivity) getActivity()).getName());
+            start_name.setText(name);
         }
-        setNameListener(start_name);
+        setNameListener(start_name, locationVO);
 
         /* starting setting view */
         LinearLayout destinationCord = v.findViewById(R.id.starting_setting);
@@ -99,7 +107,7 @@ public class StartingPointInfoFragment extends Fragment {
         return v;
     }
 
-    private void setNameListener(EditText edit){
+    private void setNameListener(EditText edit, final LocationVO locationVO){
         edit.addTextChangedListener(new TextWatcher() {
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -108,7 +116,7 @@ public class StartingPointInfoFragment extends Fragment {
 
             @Override
             public void afterTextChanged(Editable arg0) {
-                ((LocationInfoActivity)getActivity()).setName(arg0.toString());
+                locationVO.setName(arg0.toString());
             }
 
             @Override

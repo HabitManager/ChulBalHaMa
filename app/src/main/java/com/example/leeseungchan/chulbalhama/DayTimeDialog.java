@@ -53,7 +53,7 @@ public class DayTimeDialog {
                     numbers.add(timePicker.getCurrentMinute());
                 }
                 dayCheckBox.getResult(result);
-                sevenDayInfo.setTime(result, numbers);
+                sevenDayInfo.setWholeTimeRow(result, numbers);
                 sevenDayInfo.pickDay(result);
                 dlg.dismiss();
             }

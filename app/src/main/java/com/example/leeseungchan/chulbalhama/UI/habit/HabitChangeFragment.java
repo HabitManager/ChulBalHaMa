@@ -83,7 +83,7 @@ public class HabitChangeFragment extends Fragment {
         /* prepare list*/
         RecyclerView prepares = v.findViewById(R.id.list);
         RecyclerView.LayoutManager layoutManager =
-            new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
+            new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         prepares.setLayoutManager(layoutManager);
     
         RecyclerView.Adapter prepareAdapter = new PrepareAdapter(prepare);
@@ -97,7 +97,7 @@ public class HabitChangeFragment extends Fragment {
     
         final CustomSevenDayInfo customSevenDayInfo =
             new CustomSevenDayInfo(v.findViewById(R.id.add_habit_day));
-        customSevenDayInfo.setPlace();
+        customSevenDayInfo.setPlaceData();
     
         TextView dayText = habitday.findViewById(R.id.item_name);
         dayText.setText(habit.getHabitName());

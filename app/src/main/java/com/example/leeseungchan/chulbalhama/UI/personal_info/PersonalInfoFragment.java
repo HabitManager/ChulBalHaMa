@@ -26,6 +26,7 @@ import com.example.leeseungchan.chulbalhama.Adpater.DestinationAdapter;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
+import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.VO.DestinationsVO;
 import com.example.leeseungchan.chulbalhama.VO.UserVO;
 
@@ -35,6 +36,7 @@ public class PersonalInfoFragment extends Fragment{
 
     private ArrayList<DestinationsVO> destinations = new ArrayList<>();
     private DBHelper dbHelper;
+    private UserVO userVO;
 
     @Nullable
     @Override
@@ -43,56 +45,15 @@ public class PersonalInfoFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_personal_info, container, false);
         dbHelper = new DBHelper(getContext());
         
-        UserVO userVO = getUserVO();
+        userVO = getUserVO();
         
         /* name */
-        LinearLayout name = v.findViewById(R.id.info_name);
-        
-        TextView textName = name.findViewById(R.id.item_name);
-        textName.setText(userVO.getName());
-
-        TextView nameDesc = name.findViewById(R.id.item_description);
-        nameDesc.setVisibility(View.INVISIBLE);
-
-        Button nameChangeBtn = name.findViewById(R.id.button_change);
-        nameChangeBtn.setText(R.string.button_change);
-        nameChangeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setNameDialog();
-            }
-        });
-
-        Button nameDeleteBtn = name.findViewById(R.id.button_delete);
-        nameDeleteBtn.setVisibility(View.GONE);
-        name.removeView(nameDeleteBtn);
+        setPersonalInfoChangeDeleteItem(v, R.id.info_name);
 
 
         /* start point */
-        LinearLayout startPoint = v.findViewById(R.id.info_start);
-
-        TextView startPointName = startPoint.findViewById(R.id.item_name);
-        startPointName.setText(userVO.getStartingCoordinate());
-
-        TextView startPointDesc = startPoint.findViewById(R.id.item_description);
-        startPointDesc.setEnabled(false);
-        startPointDesc.setText(userVO.getStartingCoordinate());
-
-        Button startPointChangeBtn = startPoint.findViewById(R.id.button_change);
-        startPointChangeBtn.setText(R.string.button_change);
-        startPointChangeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(getContext(), LocationInfoActivity.class);
-                intent.putExtra("type", 0);
-                startActivity(intent);
-            }
-        });
-
-        Button startPointDeleteBtn = startPoint.findViewById(R.id.button_delete);
-        startPointDeleteBtn.setVisibility(View.GONE);
-        startPoint.removeView(startPointDeleteBtn);
-
+        setPersonalInfoChangeDeleteItem(v, R.id.info_start);
+        
 
         /* destination */
         LinearLayout destination = v.findViewById(R.id.info_destination);
@@ -145,10 +106,53 @@ public class PersonalInfoFragment extends Fragment{
 
             destinations.add(h);
         }
-        Log.e("destination size ", destinations.size() + "개");
+    }
+    
+    private void setPersonalInfoChangeDeleteItem(View v, int id){
+        LinearLayout layout = v.findViewById(id);
+        CustomChangeDeleteItem item= new CustomChangeDeleteItem(layout);
+        // set title text
+        item.setTitle(getPersonalInfoTitle(id));
+        // set desc invisible
+        item.setVisibility(item.DESCRIPTION, View.INVISIBLE);
+        // set change button text & onClickListener
+        item.setChange(getResources().getString(R.string.button_change));
+        setOnClickListener(item.getChange(), layout);
+        // set delete button Gone
+        item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    private String getPersonalInfoTitle(int id){
+        String title = null;
+        switch (id){
+            case R.id.info_name:
+                title = userVO.getName();
+                break;
+            case R.id.info_start:
+                title = userVO.getStartingCoordinate();
+        }
+        return title;
+    }
+    
+    private void setOnClickListener(View target, final View root){
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (root.getId()){
+                    case R.id.info_name:
+                        setNameDialog();
+                        break;
+                    case R.id.info_start:
+                        Intent intent = new Intent(getContext(), LocationInfoActivity.class);
+                        intent.putExtra("type", 1);
+                        startActivity(intent);
+                        break;
+                }
+            }
+        });
     }
 
-    public void setNameDialog(){
+    private void setNameDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         builder.setTitle("Title");
         View viewInflated =
@@ -166,7 +170,6 @@ public class PersonalInfoFragment extends Fragment{
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 db.execSQL("update user set name=\""+ newName + "\" where _id=1");
                 db.close();
-                Log.e("name input", "onClick:" + newName);
             }
         });
 

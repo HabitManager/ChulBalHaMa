@@ -20,13 +20,15 @@ import android.widget.TextView;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.UI.map.MapAddFragment;
 import com.example.leeseungchan.chulbalhama.VO.LocationVO;
 
 import java.util.ArrayList;
 
 public class StartingPointInfoFragment extends Fragment {
-    Bundle bundle = new Bundle();
+    private Bundle bundle;
+    private LocationVO locationVO;
 
     public static StartingPointInfoFragment newInstance(Bundle bundle){
         StartingPointInfoFragment v = new StartingPointInfoFragment();
@@ -41,88 +43,67 @@ public class StartingPointInfoFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_starting_info, container, false);
 
         bundle.putInt("type", 0);
-        final LocationVO locationVO = (LocationVO) bundle.getSerializable("locationVO");
-        if(locationVO == null){
-            Log.e("location VO error ", "null exception");
-        }
-        final EditText start_name = v.findViewById(R.id.starting_name);
-   
-        String name = locationVO.getName();
-
-        if(name != null) {
-            start_name.setText(name);
-        }
-        setNameListener(start_name, locationVO);
+        locationVO = (LocationVO) bundle.getSerializable("locationVO");
+        ((LocationInfoActivity)getActivity())
+            .setEditTextText((EditText) v.findViewById(R.id.starting_name), locationVO);
 
         /* starting setting view */
-        LinearLayout destinationCord = v.findViewById(R.id.starting_setting);
-
-        // starting TextView guide text
-        final TextView destGuideText = destinationCord.findViewById(R.id.item_name);
-        String address = bundle.getString("address");
-        if(address == null)
-            destGuideText.setText(R.string.guide_address);
-        else
-            destGuideText.setText(address);
-
-        TextView startText = destinationCord.findViewById(R.id.item_description);
-        startText.setVisibility(View.INVISIBLE);
-
-        // set add button
-        Button startSetButton = destinationCord.findViewById(R.id.button_change);
-        startSetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                FragmentTransaction transaction =
-                        getActivity().getSupportFragmentManager().beginTransaction();
-                Fragment fg;
-                fg = MapAddFragment.newInstance(bundle);
-                if (!fg.isAdded()) {
-                    transaction.replace(R.id.nav_host_fragment, fg)
-                            .commitNowAllowingStateLoss();
-                }
-            }
-        });
-        startSetButton.setText(R.string.button_setting);
-
-        Button startingPoint = destinationCord.findViewById(R.id.button_delete);
-        destinationCord.removeView(startingPoint);
+        setStartPointChangeDeleteItem(v, R.id.starting_setting);
 
 
         /* starting store */
         Button startStoreBtn = v.findViewById(R.id.store_starting);
-        startStoreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DBHelper dbHelper = new DBHelper(v.getContext());
-                SQLiteDatabase db = dbHelper.getWritableDatabase();
-                String sql = "update user set starting_name=\""+start_name.getText().toString() +
-                        "\", starting_coordinate=\""+destGuideText.getText().toString() + "\" where _id=1";
-                db.execSQL(sql);
-                db.close();
-                getActivity().finish();
-            }
-        });
-
+        setButtonClickEvent(startStoreBtn);
         return v;
     }
-
-    private void setNameListener(EditText edit, final LocationVO locationVO){
-        edit.addTextChangedListener(new TextWatcher() {
+    
+    private void setStartPointChangeDeleteItem(View v, int id){
+        LinearLayout layout = v.findViewById(id);
+        CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);
+        
+        // starting TextView guide text
+        ((LocationInfoActivity)getActivity())
+            .setAddress(item, bundle.getString("address"));
+        
+        // set add button
+        item.setChange(getResources().getString(R.string.button_setting));
+        setButtonClickEvent(item.getChange());
+        item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    private void setButtonClickEvent(Button btn){
+        btn.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // 입력되는 텍스트에 변화가 있을 때
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                locationVO.setName(arg0.toString());
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 입력하기 전에
+            public void onClick(View v) {
+                if(v.getId() == R.id.store_starting){
+                    updateStartPoint();
+                    getActivity().finish();
+                    
+                } else {
+                    fragmentChange(MapAddFragment.newInstance(bundle), R.id.nav_host_fragment);
+                }
             }
         });
+    }
+    
+    private void fragmentChange(Fragment fragment, int hostId){
+        // start transaction
+        FragmentTransaction transaction =
+            getActivity().getSupportFragmentManager().beginTransaction();
+        
+        // if the fragment doesn't add to activity, make new one.
+        if (!fragment.isAdded()) {
+            transaction.replace(hostId, fragment).commitNowAllowingStateLoss();
+        }
+    }
+    
+    private void updateStartPoint(){
+        DBHelper dbHelper = new DBHelper(getContext());
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "update user set starting_name=\""+locationVO.getName() +
+            "\", starting_coordinate=\""+ locationVO.getCoordinate() + "\" where _id=1";
+        db.execSQL(sql);
+        db.close();
+        getActivity().finish();
     }
 }

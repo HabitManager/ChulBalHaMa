@@ -18,7 +18,6 @@ public class LocationVO implements Serializable {
         timeHour = -1;
         timeMin = -1;
     }
-    
     public String getName() {
         return name;
     }
@@ -41,6 +40,10 @@ public class LocationVO implements Serializable {
         this.timeMin = timeMin;
     }
     
+    public String getTime(){
+        return timeHour + " : " + timeMin;
+    }
+    
     public int getTimeHour() {
         return timeHour;
     }
@@ -49,11 +52,7 @@ public class LocationVO implements Serializable {
         return timeMin;
     }
     
-    public double getLatitude() {
-        return latitude;
-    }
-    
-    public double getLongitude() {
-        return longitude;
+    public String getCoordinate(){
+        return longitude + ", " + latitude;
     }
 }

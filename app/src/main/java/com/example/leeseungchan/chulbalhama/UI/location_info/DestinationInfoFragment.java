@@ -26,10 +26,14 @@ import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.DayTimeDialog;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.UI.components.CustomSevenDayInfo;
 import com.example.leeseungchan.chulbalhama.UI.map.MapAddFragment;
 import com.example.leeseungchan.chulbalhama.VO.DestinationsVO;
 import com.example.leeseungchan.chulbalhama.VO.LocationVO;
+import com.google.android.material.shape.CutCornerTreatment;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -37,7 +41,10 @@ public class DestinationInfoFragment extends Fragment{
 
     private ArrayList<Boolean> days = new ArrayList<>();
     private ArrayList<Integer> time = new ArrayList<>();
-
+    private LocationVO locationVO;
+    private CustomSevenDayInfo sevenDayInfo;
+    private ArrayList<String> dayOfWeekTime;
+    
     Bundle bundle = new Bundle();
 
     public static DestinationInfoFragment newInstance(Bundle bundle){
@@ -53,159 +60,88 @@ public class DestinationInfoFragment extends Fragment{
         View v = inflater.inflate(R.layout.fragment_destination_info, container, false);
 
         bundle.putInt("type", 1);
-        final LocationVO locationVO = (LocationVO) bundle.getSerializable("locationVO");
-        ArrayList<String> dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
-
-        final EditText dest_name = v.findViewById(R.id.destination_name);
-        String name = locationVO.getName();
-        if(name != null) {
-            dest_name.setText(name);
-        }
-        setNameListener(dest_name, locationVO);
-
+        locationVO = (LocationVO) bundle.getSerializable("locationVO");
+        dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
+    
+        /* EditText to get name*/
+        ((LocationInfoActivity)getActivity())
+            .setEditTextText((EditText) v.findViewById(R.id.destination_name),locationVO);
+        
         /* destination coordination view */
-        LinearLayout destinationCord = v.findViewById(R.id.destination_setting);
-
-        // destination TextView guide text
-        final TextView destGuideText = destinationCord.findViewById(R.id.item_name);
-        String address = bundle.getString("address");
-        if(address == null)
-            destGuideText.setText(R.string.guide_address);
-        else
-            destGuideText.setText(address);
-
-        TextView destText = destinationCord.findViewById(R.id.item_description);
-        destText.setVisibility(View.INVISIBLE);
-
-        // set add button
-        Button destSetButton = destinationCord.findViewById(R.id.button_change);
-        destSetButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                callMapFragment();
-            }
-        });
-        destSetButton.setText(R.string.button_setting);
-
-        Button destDelButton = destinationCord.findViewById(R.id.button_delete);
-        destinationCord.removeView(destDelButton);
+        setDestInfoChangeDeleteItem(v, R.id.destination_setting);
 
 
         /* time setting view */
-        LinearLayout timeCord = v.findViewById(R.id.destination_time_duration);
+        setDestInfoChangeDeleteItem(v, R.id.destination_time_duration);
+        
 
-        // time TextView guide text
-        final TextView timeGuideText = timeCord.findViewById(R.id.item_name);
-        int time_hour = locationVO.getTimeHour();
-        int time_minute = locationVO.getTimeMin();
-
-        if(time_hour > 0 && time_minute > 0){
-            timeGuideText.setText(time_hour + "시간 " + time_minute + "분");
-        }else{
-            timeGuideText.setText(R.string.guide_when_time);
-        }
-
-        TextView timeText = timeCord.findViewById(R.id.item_description);
-        timeText.setVisibility(View.INVISIBLE);
-
-        // set add button
-        Button timeButton = timeCord.findViewById(R.id.button_change);
-        timeButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                showTimeDialog(timeGuideText, locationVO);
-            }
-        });
-        timeButton.setText(R.string.button_setting);
-
-        Button timeDelButton = timeCord.findViewById(R.id.button_delete);
-        timeCord.removeView(timeDelButton);
-
-
-
-        /* start time */
-
-        // set 2d array for day and time
-        LinearLayout dayInput = v.findViewById(R.id.day_input);
-        final CustomSevenDayInfo sevenDayInfo = new CustomSevenDayInfo(dayInput);
-        ArrayList<String> isTempData = dayOfWeekTime;
-        if(isTempData != null){
-            sevenDayInfo.setSomeTimeRow(isTempData);
-        }
-
+        /* start time view */
         // set input layout
-        LinearLayout destination = v.findViewById(R.id.destination_time_start);
-
-        // time TextView guide text
-        TextView endPointName = destination.findViewById(R.id.item_name);
-        endPointName.setVisibility(View.INVISIBLE);
-
-        TextView endPointDesc = destination.findViewById(R.id.item_description);
-        endPointDesc.setVisibility(View.INVISIBLE);
-
-        // set add button
-        Button endPointChangeBtn = destination.findViewById(R.id.button_change);
-        endPointChangeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                DayTimeDialog dayTimeDialog = new DayTimeDialog(getContext());
-                dayTimeDialog.callFunction(days, time, sevenDayInfo);
-                Toast.makeText(getContext(), "button clicked", Toast.LENGTH_SHORT).show();
-            }
-        });
-        endPointChangeBtn.setText(R.string.button_setting);
-
-        Button startTimeDel = destination.findViewById(R.id.button_delete);
-        startTimeDel.setVisibility(View.GONE);
-        destination.removeView(timeDelButton);
-
-
+        setDestInfoChangeDeleteItem(v, R.id.destination_time_start);
+        // set 2d array for day and time
+        setDayOfWeekArray(v);
+        
+        
         /* destination store */
-        Button destinationStoreBtn = v.findViewById(R.id.store_destination);
-        destinationStoreBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // insert destination data to sqlite db
-                insertDest(
-                    destGuideText.getText().toString(),
-                    timeGuideText.getText().toString(),
-                    dest_name.getText().toString()
-                );
-                
-                // update dayOfWeek table.
-                ArrayList<String> times = new ArrayList<>();
-                sevenDayInfo.getResultTimeDataInput(times);
-                sevenDayInfo.updateTimeToDays(days,times);
-
-                getActivity().finish();
-            }
-        });
+        insertDestination(v);
 
         return v;
     }
-
-
-
-    private void setNameListener(EditText edit, final LocationVO locationVO){
-        edit.addTextChangedListener(new TextWatcher() {
+    
+    private void setDestInfoChangeDeleteItem(View v, int id){
+        LinearLayout layout = v.findViewById(id);
+        CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);
+        // set title text view
+        setTitle(id, item);
+        // set description textView invisible
+        item.setVisibility(item.DESCRIPTION, View.INVISIBLE);
+        // set change button text & setOnClickListener
+        item.setChange(getResources().getString(R.string.button_setting));
+        setDestInfoClickListener(item.getChange(), layout);
+        // set delete button gone
+        item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    private void setTitle(int id, CustomChangeDeleteItem item){
+        switch (id){
+            case R.id.destination_setting:
+                ((LocationInfoActivity)getActivity())
+                    .setAddress(item, bundle.getString("address"));
+                break;
+            case R.id.destination_time_duration:
+                ((LocationInfoActivity)getActivity()).setTime(item, locationVO);
+                break;
+            case R.id.destination_time_start:
+                item.setVisibility(item.TITLE, View.GONE);
+        }
+    }
+    
+    private void insertDestination(View v){
+        Button destinationStoreBtn = v.findViewById(R.id.store_destination);
+        storeAndUpdateAndFinish(destinationStoreBtn);
+    }
+    
+    private void setDestInfoClickListener(View target, final View root){
+        target.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                // 입력되는 텍스트에 변화가 있을 때
-            }
-
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                locationVO.setName(arg0.toString());
-            }
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // 입력하기 전에
+            public void onClick(View v) {
+                switch (root.getId()){
+                    case R.id.destination_setting:
+                        callMapFragment();
+                        break;
+                    case R.id.destination_time_duration:
+                        showTimeDialog(locationVO);
+                        break;
+                    case R.id.destination_time_start:
+                        DayTimeDialog dayTimeDialog = new DayTimeDialog(getContext());
+                        dayTimeDialog.callFunction(days, time, sevenDayInfo);
+                        break;
+                }
             }
         });
     }
     
-    private void showTimeDialog(final TextView timeGuideText, final LocationVO locationVO){
+    private void showTimeDialog(final LocationVO locationVO){
         TimePickerDialog dialog = new TimePickerDialog(
             getContext(),
             android.R.style.Theme_Holo_Light_Dialog,
@@ -213,11 +149,10 @@ public class DestinationInfoFragment extends Fragment{
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
                     locationVO.setTime(hourOfDay, minute);
-                    timeGuideText.setText(hourOfDay + " : " + minute);
                 }
             }, 0,0,true);
-    
-    
+        
+        
         dialog.show();
     }
     
@@ -232,6 +167,30 @@ public class DestinationInfoFragment extends Fragment{
         }
     }
     
+    private void setDayOfWeekArray(View v){
+        LinearLayout dayInput = v.findViewById(R.id.day_input);
+        sevenDayInfo = new CustomSevenDayInfo(dayInput);
+        ArrayList<String> isTempData = dayOfWeekTime;
+        if(isTempData != null){
+            sevenDayInfo.setSomeTimeRow(isTempData);
+        }
+    }
+    
+    private void storeAndUpdateAndFinish(View v){
+        v.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // insert destination data to sqlite db
+                insertDest(locationVO.getCoordinate(), locationVO.getTime(), locationVO.getName());
+    
+                // update dayOfWeek table.
+                updateDayOfWeek();
+    
+                getActivity().finish();
+            }
+        });
+    }
+    
     private void insertDest(String coordinate, String time, String name){
         DBHelper dbHelper = new DBHelper(getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
@@ -240,5 +199,11 @@ public class DestinationInfoFragment extends Fragment{
        
         db.execSQL(sql, new Object[]{coordinate,time,name});
         db.close();
+    }
+    
+    private void updateDayOfWeek(){
+        ArrayList<String> times = new ArrayList<>();
+        sevenDayInfo.getResultTimeDataInput(times);
+        sevenDayInfo.updateTimeToDays(days,times);
     }
 }

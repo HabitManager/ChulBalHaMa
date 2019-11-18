@@ -1,8 +1,11 @@
 package com.example.leeseungchan.chulbalhama.UI.habit;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -11,6 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -18,12 +22,18 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
+import com.example.leeseungchan.chulbalhama.Activities.MainActivity;
 import com.example.leeseungchan.chulbalhama.Adpater.PrepareAdapter;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.DayDialog;
+import com.example.leeseungchan.chulbalhama.DayTimeDialog;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.UI.components.CustomSevenDayInfo;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
+import com.google.android.gms.vision.text.Line;
+import com.google.android.gms.vision.text.Text;
 
 import java.util.ArrayList;
 
@@ -35,6 +45,9 @@ public class HabitChangeFragment extends Fragment {
     private DBHelper dbHelper;
     private ArrayList<String> prepare = new ArrayList<>();
     private ArrayList<Boolean> days = new ArrayList<>();
+    private CustomSevenDayInfo customSevenDayInfo;
+    private RecyclerView.Adapter prepareAdapter;
+    private EditText prepareHintView;
     
     public static HabitChangeFragment newInstance(Bundle bundle){
         HabitChangeFragment v = new HabitChangeFragment();
@@ -53,71 +66,114 @@ public class HabitChangeFragment extends Fragment {
         
         
         /* habit name */
-        LinearLayout habitName = v.findViewById(R.id.name_setting);
-        TextView nameText = habitName.findViewById(R.id.item_name);
-        nameText.setText(habit.getHabitName());
-        Button nameChange = habitName.findViewById(R.id.button_change);
-        nameChange.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
-            }
-        });
-        Button nameDelete = habitName.findViewById(R.id.button_delete);
-        nameDelete.setVisibility(View.GONE);
+        setDestInfoChangeDeleteItem(v, R.id.name_setting);
     
         /* habit desc */
-        LinearLayout habitDesc = v.findViewById(R.id.desc_setting);
-        TextView descText = habitDesc.findViewById(R.id.item_name);
-        descText.setText(habit.getDescription());
-        Button descChange = habitDesc.findViewById(R.id.button_change);
-        descChange.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
-                setNameDialog( v, "설명 바꾸기", habit.getId(), "description");
-            }
-        });
-        Button descDelete = habitDesc.findViewById(R.id.button_delete);
-        descDelete.setVisibility(View.GONE);
+        setDestInfoChangeDeleteItem(v, R.id.desc_setting);
     
         /* prepare list*/
-        RecyclerView prepares = v.findViewById(R.id.list);
+        LinearLayout layoutPrepare = v.findViewById(R.id.prepare_setting);
+        prepareHintView = layoutPrepare.findViewById(R.id.input_for_selection);
+        TextView guideText = layoutPrepare.findViewById(R.id.guide_for_selection);
+        guideText.setText(R.string.guide_ask_prepare);
+    
+        RecyclerView prepares = layoutPrepare.findViewById(R.id.list);
         RecyclerView.LayoutManager layoutManager =
             new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         prepares.setLayoutManager(layoutManager);
     
-        RecyclerView.Adapter prepareAdapter = new PrepareAdapter(prepare);
+        prepareAdapter = new PrepareAdapter(prepare, 0, habit.getId());
         prepares.setAdapter(prepareAdapter);
     
         setPrepare(habit.getPrepare());
     
-        /* habit days */
-        LinearLayout habitday = v.findViewById(R.id.day_setting);
-    
-    
-        final CustomSevenDayInfo customSevenDayInfo =
-            new CustomSevenDayInfo(v.findViewById(R.id.add_habit_day));
-        customSevenDayInfo.setPlaceData();
-    
-        TextView dayText = habitday.findViewById(R.id.item_name);
-        dayText.setText(habit.getHabitName());
-        Button dayChange = habitday.findViewById(R.id.button_change);
-        dayChange.setOnClickListener(new View.OnClickListener(){
+        Button prepareInputButton = layoutPrepare.findViewById(R.id.button_for_selection);
+        prepareInputButton.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onClick(View v){
-                DayDialog customDialog = new DayDialog(getActivity());
-            
-                customDialog.callFunction(days, customSevenDayInfo);
+            public void onClick(View v) {
+                if(prepareHintView.getText().toString().length() < 1){
+                    prepareHintView.setHint("1자 이상 입력해주세요");
+                    prepareHintView.setHintTextColor(Color.RED);
+                }else {
+                    prepare.add(prepareHintView.getText().toString());
+                    updatePrepare(getContext());
+                    prepareHintView.setText("");
+                    prepareHintView.setHint("여기에 입력해 주세요.");
+                    prepareHintView.setHintTextColor(Color.GRAY);
+                    prepareAdapter.notifyDataSetChanged();
+                }
             }
         });
-        Button dayDelete = habitday.findViewById(R.id.button_delete);
-        dayDelete.setVisibility(View.GONE);
+    
+    
+        /* habit days */
+        customSevenDayInfo = new CustomSevenDayInfo(v.findViewById(R.id.add_habit_day));
+        customSevenDayInfo.setPlaceData();
+        
+        setDestInfoChangeDeleteItem(v, R.id.day_setting);
+    
         return v;
     }
     
+    private void setDestInfoChangeDeleteItem(View v, int id){
+        LinearLayout layout = v.findViewById(id);
+        CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);
+        // set title text view
+        item.setTitle(getTitle(id));
+        // set description textView invisible
+        item.setVisibility(item.DESCRIPTION, View.INVISIBLE);
+        // set change button text & setOnClickListener
+        item.setChange(getResources().getString(R.string.button_setting));
+        setChangeBtnClickListener(item.getChange(), layout);
+        // set delete button gone
+        item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    private String getTitle(int id){
+        String title = null;
+        switch (id){
+            case R.id.name_setting:
+                title = habit.getHabitName();
+                break;
+            case R.id.desc_setting:
+                title = habit.getDescription();
+                break;
+            case R.id.prepare_setting:
+                title = getResources().getString(R.string.guide_ask_prepare);
+                break;
+            case R.id.day_setting:
+                title = getResources().getString(R.string.guide_date);
+                break;
+        }
+        return title;
+    }
+    
+    private void setChangeBtnClickListener(View target, final View root){
+        target.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                switch (root.getId()){
+                    case R.id.name_setting:
+                        setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
+                        break;
+                    case R.id.desc_setting:
+                        setNameDialog( v, "설명 바꾸기", habit.getId(), "description");
+                        break;
+                    case R.id.prepare_setting:
+                        setPrepareOperation();
+                        break;
+                    case R.id.day_setting:
+                        DayDialog customDialog = new DayDialog(getActivity());
+                        customDialog.callFunction(days, customSevenDayInfo);
+                        break;
+                }
+            }
+        });
+    }
+    
     public void setNameDialog(View v, String title, final int id, final String attr){
-        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle(title);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+            builder.setTitle(title);
         View viewInflated =
             LayoutInflater.from(getContext()).inflate(
                 R.layout.dialog_edit_text,
@@ -134,7 +190,7 @@ public class HabitChangeFragment extends Fragment {
                 dialog.dismiss();
                 String newName = input.getText().toString();
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
-                String sql = "update habits set"+ " "+ attr +"=\""+ newName + "\" where _id=" + id;
+                String sql = "update habits set "+ attr +"=\""+ newName + "\" where _id=" + id;
                 db.execSQL(sql);
                 db.close();
                 Log.e("name input", "onClick:" + newName);
@@ -151,6 +207,21 @@ public class HabitChangeFragment extends Fragment {
         builder.show();
     }
     
+    
+    private void setPrepareOperation(){
+        if(prepareHintView.getText().toString().length() < 1){
+            prepareHintView.setHint("1자 이상 입력해주세요");
+            prepareHintView.setHintTextColor(Color.RED);
+        }else {
+            prepare.add(prepareHintView.getText().toString());
+            updatePrepare(getContext());
+            prepareHintView.setText("");
+            prepareHintView.setHint("여기에 입력해 주세요.");
+            prepareHintView.setHintTextColor(Color.GRAY);
+            prepareAdapter.notifyDataSetChanged();
+        }
+    }
+    
     private void setPrepare(String prepare){
         String[] prepares = prepare.split(",");
         
@@ -159,6 +230,24 @@ public class HabitChangeFragment extends Fragment {
         for(int i=0; i<prepares.length; i++){
             this.prepare.add(prepares[i]);
         }
-        
     }
+    
+    private void updatePrepare(Context context){
+        StringBuffer newPrepare = new StringBuffer();
+        
+        for(int i = 0; i < prepare.size(); i++){
+            newPrepare.append(prepare.get(i) + ",");
+        }
+        updateHabitPrepareDB(newPrepare.toString(), habit.getId(), context);
+    }
+    
+    private void updateHabitPrepareDB(String prepare, int id,Context context){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getWritableDatabase();
+        String sql = "update habits set prepare = ? where _id = ? ";
+        db.execSQL(sql, new Object[]{prepare, id});
+        db.close();
+    }
+    
+    
 }

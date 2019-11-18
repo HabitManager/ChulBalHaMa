@@ -35,6 +35,7 @@
     <string name="guide_prepare_end">(이)다.</string>
 
     <string name="guide_date_and_place_intro">요일 및 장소</string>
+    <string name="guide_date">요일</string>
 
     <string name="guide_when">언제 어디서 하실 예정이신가요?</string>
     <string name="guide_when_day">요일</string>

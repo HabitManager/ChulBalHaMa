@@ -57,7 +57,7 @@ public class HabitHistoryFragment extends Fragment {
         /* srbai history */
         RecyclerView recyclerView = v.findViewById(R.id.history_list);
         RecyclerView.LayoutManager layoutManager=
-            new LinearLayoutManager(getContext(), LinearLayout.VERTICAL, false);
+            new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
         recyclerView.setLayoutManager(layoutManager);
         SRBAIAdapter adapter = new SRBAIAdapter(srbaiVOS);
         recyclerView.setAdapter(adapter);

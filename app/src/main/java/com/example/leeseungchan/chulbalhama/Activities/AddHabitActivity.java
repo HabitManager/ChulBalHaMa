@@ -41,6 +41,8 @@ public class AddHabitActivity extends AppCompatActivity{
         // set up toolbar on top
         setToolbar();
 
+        habitName = findViewById(R.id.add_habit_name);
+        habitDesc = findViewById(R.id.add_habit_desc);
 
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);

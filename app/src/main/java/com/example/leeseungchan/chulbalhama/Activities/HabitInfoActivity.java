@@ -7,6 +7,7 @@ import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
+import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.example.leeseungchan.chulbalhama.R;
@@ -17,13 +18,14 @@ import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
 public class HabitInfoActivity extends AppCompatActivity {
 
     private HabitsVO habit;
+    private int type;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_habit);
         habit = (HabitsVO) getIntent().getSerializableExtra("habit");
-        int type = getIntent().getIntExtra("type", 0);
+        type = getIntent().getIntExtra("type", 0);
         
         Bundle bundle = new Bundle();
         bundle.putSerializable("habit", habit);
@@ -60,6 +62,18 @@ public class HabitInfoActivity extends AppCompatActivity {
     public void setTitle(String id){
         TextView title = (TextView)findViewById(R.id.toolbar_title);
         title.setText(id);
+    }
+    
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 
 }

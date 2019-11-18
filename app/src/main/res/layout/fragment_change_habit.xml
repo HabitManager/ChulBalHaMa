@@ -42,15 +42,10 @@
 
 
         <!-- prepare things -->
-        <TextView
-            style="@style/MenuText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/guide_ask_prepare" />
 
         <include
             android:id="@+id/prepare_setting"
-            layout="@layout/fragment_list"
+            layout="@layout/item_selective"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/content_space_small" />

@@ -35,17 +35,7 @@ public class HabitListFragment extends Fragment {
         View v = inflater.inflate(R.layout.fragment_habit_list, container, false);
 
         // set up recycler view
-        RecyclerView recyclerView;
-        recyclerView = (RecyclerView) v.findViewById(R.id.list);
-        RecyclerView.LayoutManager layoutManager;
-        layoutManager = new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-
-        RecyclerView.Adapter mAdapter;
-        mAdapter = new HabitAdapter(habits);
-        recyclerView.setAdapter(mAdapter);
-
-        retrieve();
+        setRecyclerView(v);
 
         // set add button
         Button habitAddButton = v.findViewById(R.id.add);
@@ -62,7 +52,7 @@ public class HabitListFragment extends Fragment {
         return v;
     }
 
-    public void retrieve(){
+    private void retrieve(){
         habits.clear();
 
         DBHelper dbHelper = new DBHelper(getContext());
@@ -79,4 +69,19 @@ public class HabitListFragment extends Fragment {
             habits.add(h);
         }
     }
+    
+    private void setRecyclerView(View v){
+        RecyclerView recyclerView;
+        recyclerView = (RecyclerView) v.findViewById(R.id.list);
+        RecyclerView.LayoutManager layoutManager;
+        layoutManager = new LinearLayoutManager(getContext(), RecyclerView.VERTICAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+    
+        RecyclerView.Adapter mAdapter;
+        mAdapter = new HabitAdapter(habits);
+        recyclerView.setAdapter(mAdapter);
+    
+        retrieve();
+    }
+    
 }

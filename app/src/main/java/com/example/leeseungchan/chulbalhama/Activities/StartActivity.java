@@ -1,6 +1,6 @@
 package com.example.leeseungchan.chulbalhama.Activities;
 
-import android.os.Bundle
+import android.os.Bundle;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 import androidx.appcompat.app.AppCompatActivity;

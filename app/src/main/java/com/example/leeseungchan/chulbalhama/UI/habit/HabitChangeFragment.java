@@ -68,8 +68,11 @@ public class HabitChangeFragment extends Fragment {
         /* habit name */
         setDestInfoChangeDeleteItem(v, R.id.name_setting);
     
-        /* habit desc */
-        setDestInfoChangeDeleteItem(v, R.id.desc_setting);
+        /* habit due */
+        setDestInfoChangeDeleteItem(v, R.id.due);
+        
+        /* habit quantity*/
+        setDestInfoChangeDeleteItem(v, R.id.quantity);
     
         /* prepare list*/
         LinearLayout layoutPrepare = v.findViewById(R.id.prepare_setting);
@@ -135,8 +138,11 @@ public class HabitChangeFragment extends Fragment {
             case R.id.name_setting:
                 title = habit.getHabitName();
                 break;
-            case R.id.desc_setting:
+            case R.id.due:
                 title = habit.getDue() + "일";
+                break;
+            case R.id.quantity:
+                title = habit.getQuantity() + " " + habit.getDependents();
                 break;
             case R.id.prepare_setting:
                 title = getResources().getString(R.string.guide_ask_prepare);
@@ -156,7 +162,7 @@ public class HabitChangeFragment extends Fragment {
                     case R.id.name_setting:
                         setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
                         break;
-                    case R.id.desc_setting:
+                    case R.id.due:
                         setNameDialog( v, "설명 바꾸기", habit.getId(), "description");
                         break;
                     case R.id.prepare_setting:
@@ -223,6 +229,8 @@ public class HabitChangeFragment extends Fragment {
     }
     
     private void setPrepare(String prepare){
+        if(prepare == null)
+            return;
         String[] prepares = prepare.split(",");
         
         this.prepare.clear();

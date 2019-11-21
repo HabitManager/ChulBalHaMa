@@ -93,14 +93,15 @@ public class PersonalInfoFragment extends Fragment{
         destinations.clear();
         DBHelper dbHelper = new DBHelper(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String sql = "select destination_name from destinations";
+        String sql = "select destination_name, _id from destinations";
         Cursor c = db.rawQuery(sql, null);
         while(c.moveToNext()){
             String name = c.getString(0);
+            int id = c.getInt(1);
 
             DestinationsVO h = new DestinationsVO();
             h.setDestinationName(name);
-
+            h.setId(id);
             destinations.add(h);
         }
     }

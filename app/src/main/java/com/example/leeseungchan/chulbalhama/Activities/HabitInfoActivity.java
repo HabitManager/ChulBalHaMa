@@ -41,21 +41,20 @@ public class HabitInfoActivity extends AppCompatActivity {
 
         setTitle(habit.getHabitName());
     
+        
+        // set up fragment
         HabitChangeFragment habitChangeFragment = HabitChangeFragment.newInstance(bundle);
         HabitHistoryFragment habitHistoryFragment = HabitHistoryFragment.newInstance(bundle);
         
         FragmentManager fragmentManager = getSupportFragmentManager();
         
         FragmentTransaction transaction = fragmentManager.beginTransaction();
-        if(type == 0) {
             transaction.replace(R.id.nav_host_fragment, habitChangeFragment)
                 .commitAllowingStateLoss();
         
-        } else {
             transaction.replace(R.id.nav_host_fragment, habitHistoryFragment)
                 .commitAllowingStateLoss();
         
-        }
     }
     
     

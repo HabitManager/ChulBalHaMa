@@ -134,13 +134,14 @@ public class CustomSevenDayInfo {
             String destinationName;
             TextView temp = dayInputs.get(i).findViewById(R.id.day_place);
             temp.setVisibility(View.VISIBLE);
-
             if(destId.moveToNext()&&destId.getInt(0)!= 0) {
                 destName = db.rawQuery(nameSql+destId.getInt(0),null);
-                destName.moveToNext();
+                
+                if(destName.moveToNext()&&destName.getString(0) != null) {
                     destinationName = destName.getString(0);
                     Log.e("destination name = ", destinationName);
-                temp.setText(destName.getString(0));
+                    temp.setText(destName.getString(0));
+                }
             }
         }
         db.close();

@@ -114,10 +114,11 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstRun(){
         boolean isFirstRun = prefs.getBoolean("isFirstRun",true);
-        // for test
-        isFirstRun = true;
+        DBHelper dbHelper = new DBHelper(this);
         if(isFirstRun)
         {
+            dbHelper.setDays();
+            dbHelper.setUser();
             Intent newIntent = new Intent(MainActivity.this, StartActivity.class);
             startActivity(newIntent);
 

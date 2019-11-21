@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION =5;
+    public static final int DB_VERSION =6;
     //스키마 변경 및 수정시에 DB_VERSION 바꿔주기
 
     public DBHelper(Context context){
@@ -34,8 +34,10 @@ public class DBHelper extends SQLiteOpenHelper {
         String habitsTable = "CREATE TABLE habits ("+
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+
                 "habit_name not null,"+
-                "description," +
-                "prepare default 'empty',"+
+                "quantity integer," +
+                "prepare default null,"+
+                "due integer," +
+                "dependents text," +
                 "achievement_rate default 0)";
 
         String dayOfWeekTable = "CREATE TABLE day_of_week("+

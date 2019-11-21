@@ -55,7 +55,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                android:paddingBottom="30dp">
+                android:layout_marginBottom="@dimen/content_space_small">
 
                 <EditText
                     android:id="@+id/add_habit_name"
@@ -73,34 +73,53 @@
             </LinearLayout>
 
 
-            <!-- habit description -->
+            <!-- habit due -->
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/guide_habit_desc_intro"
+                android:text="@string/guide_habit_due"
                 style="@style/GuideText"/>
+
+            <include
+                android:id="@+id/due"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/content_space_small"
+                layout="@layout/item_list_change_delete"/>
+
+            <!-- habit quantity -->
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:paddingBottom="30dp">
+                android:orientation="horizontal">
 
-                <EditText
-                    android:id="@+id/add_habit_desc"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/guide_habit_desc_hint"
-                    android:textSize="15sp"
-                    android:textColorHint="@color/colorPrimary"
-                    android:selectAllOnFocus="true"/>
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/guide_habit_desc_end"
+                    android:text="@string/guide_habit_quantity"
+                    android:layout_weight="1"
                     style="@style/GuideText"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/guide_habit_quantity_prompt"
+                    android:layout_weight="1"
+                    style="@style/PromptText"/>
+                <CheckBox
+                    android:id="@+id/check_for_quantity"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+
             </LinearLayout>
 
+            <include
+                android:id="@+id/quantity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/content_space_small"
+                android:visibility="gone"
+                layout="@layout/item_list_change_delete"/>
 
             <!-- prepare things -->
             <include

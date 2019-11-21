@@ -9,6 +9,7 @@ public class UserVO {
     public UserVO(String coordinate, String startingName, String name){
         startingCoordinate = coordinate;
         this.name = name;
+        this.startingName = startingName;
     }
     
     public String getName() {

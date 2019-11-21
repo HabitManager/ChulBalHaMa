@@ -99,44 +99,4 @@ public class LocationInfoActivity extends AppCompatActivity{
         }
     }
     
-    public void setAddress(CustomChangeDeleteItem item, String address){
-        if(address == null)
-            item.setTitle(getResources().getString(R.string.guide_address));
-        else
-            item.setTitle(address);
-    }
-    
-    public void setTime(CustomChangeDeleteItem time, LocationVO locationVO){
-        int time_hour = locationVO.getTimeHour();
-        int time_minute = locationVO.getTimeMin();
-        
-        if(time_hour > 0 && time_minute > 0){
-            time.setTitle(time_hour + ":" + time_minute);
-        }else{
-            time.setTitle(getResources().getString(R.string.guide_when_time));
-        }
-    }
-    
-    public void setEditTextText(EditText editText, LocationVO locationVO){
-        String name = locationVO.getName();
-        if(name != null) {
-            editText.setText(name);
-        }
-        setNameListener(editText, locationVO);
-    }
-    
-    private void setNameListener(EditText edit, final LocationVO locationVO){
-        edit.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-            
-            @Override
-            public void afterTextChanged(Editable arg0) {
-                locationVO.setName(arg0.toString());
-            }
-            
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-        });
-    }
 }

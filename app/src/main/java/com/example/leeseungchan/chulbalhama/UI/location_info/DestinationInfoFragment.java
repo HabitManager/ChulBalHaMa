@@ -64,8 +64,7 @@ public class DestinationInfoFragment extends Fragment{
         dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
     
         /* EditText to get name*/
-        ((LocationInfoActivity)getActivity())
-            .setEditTextText((EditText) v.findViewById(R.id.destination_name),locationVO);
+        setEditTextText((EditText) v.findViewById(R.id.destination_name),locationVO);
         
         /* destination coordination view */
         setDestInfoChangeDeleteItem(v, R.id.destination_setting);
@@ -88,6 +87,29 @@ public class DestinationInfoFragment extends Fragment{
         return v;
     }
     
+    public void setEditTextText(EditText editText, LocationVO locationVO){
+        String name = locationVO.getName();
+        if(name != null) {
+            editText.setText(name);
+        }
+        setNameListener(editText, locationVO);
+    }
+    
+    private void setNameListener(EditText edit, final LocationVO locationVO){
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                locationVO.setName(arg0.toString());
+            }
+            
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        });
+    }
+    
     private void setDestInfoChangeDeleteItem(View v, int id){
         LinearLayout layout = v.findViewById(id);
         CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);
@@ -105,14 +127,30 @@ public class DestinationInfoFragment extends Fragment{
     private void setTitle(int id, CustomChangeDeleteItem item){
         switch (id){
             case R.id.destination_setting:
-                ((LocationInfoActivity)getActivity())
-                    .setAddress(item, bundle.getString("address"));
+                setAddress(item, bundle.getString("address"));
                 break;
             case R.id.destination_time_duration:
-                ((LocationInfoActivity)getActivity()).setTime(item, locationVO);
+                setTime(item, locationVO);
                 break;
             case R.id.destination_time_start:
                 item.setVisibility(item.TITLE, View.GONE);
+        }
+    }
+    
+    private void setAddress(CustomChangeDeleteItem item, String address){
+        if(address == null)
+            item.setTitle(getResources().getString(R.string.guide_address));
+        else
+            item.setTitle(address);
+    }
+    private void setTime(CustomChangeDeleteItem time, LocationVO locationVO){
+        int time_hour = locationVO.getTimeHour();
+        int time_minute = locationVO.getTimeMin();
+        
+        if(time_hour > 0 && time_minute > 0){
+            time.setTitle(time_hour + ":" + time_minute);
+        }else{
+            time.setTitle(getResources().getString(R.string.guide_when_time));
         }
     }
     

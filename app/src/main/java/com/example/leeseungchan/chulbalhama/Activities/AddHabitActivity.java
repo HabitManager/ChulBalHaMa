@@ -11,6 +11,8 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -19,6 +21,7 @@ import com.example.leeseungchan.chulbalhama.Adpater.PrepareAdapter;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.DayDialog;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.UI.components.CustomSevenDayInfo;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
 
@@ -27,7 +30,9 @@ import java.util.ArrayList;
 public class AddHabitActivity extends AppCompatActivity{
 
     private EditText habitName;
-    private EditText habitDesc;
+    private int quantity, due;
+    private String dependents;
+    
     // prepare
     private ArrayList<String> prepares = new ArrayList<>();
     // day and place
@@ -42,8 +47,32 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
-        habitDesc = findViewById(R.id.add_habit_desc);
-
+        LinearLayout due = findViewById(R.id.due);
+        
+        /* due */
+        CustomChangeDeleteItem dueItem = new CustomChangeDeleteItem(due);
+        dueItem.setTitle(getResources().getString(R.string.guide_habit_due));
+        dueItem.setChange(getResources().getString(R.string.button_setting));
+        dueItem.setVisibility(dueItem.DELETE_BTN, View.GONE);
+        
+        /* quantity */
+        final LinearLayout quantity = findViewById(R.id.quantity);
+        
+        CheckBox checkBox = findViewById(R.id.check_for_quantity);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(isChecked){
+                    quantity.setVisibility(View.VISIBLE);
+                }else{
+                    quantity.setVisibility(View.GONE);
+                }
+            }
+        });
+    
+        CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
+        
+        
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);
 
@@ -130,14 +159,15 @@ public class AddHabitActivity extends AppCompatActivity{
 
     private void serializeHabit(HabitsVO habit){
         String habitName = this.habitName.getText().toString();
-        String habitDesc = this.habitDesc.getText().toString();
         StringBuffer prepare = new StringBuffer();
         for(int i = 0; i < prepares.size(); i++){
             prepare.append(prepares.get(i) + ",");
         }
 
         habit.setHabitName(habitName);
-        habit.setDescription(habitDesc);
+        habit.setDue(due);
+        habit.setQuantity(quantity);
+        habit.setDependents(dependents);
         habit.setPrepare(prepare.toString());
     }
     
@@ -147,10 +177,12 @@ public class AddHabitActivity extends AppCompatActivity{
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(
-            "insert into habits (habit_name, description, prepare) values(?,?,?)",
+            "insert into habits (habit_name, quantity, due, dependents, prepare) values(?,?,?,?,?)",
             new Object[]{
                 habitsVO.getHabitName(),
-                habitsVO.getDescription(),
+                habitsVO.getQuantity(),
+                habitsVO.getDue(),
+                habitsVO.getDependents(),
                 habitsVO.getPrepare()}
             );
         db.close();

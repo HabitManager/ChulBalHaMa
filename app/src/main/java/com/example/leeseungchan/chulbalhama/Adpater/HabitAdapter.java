@@ -106,7 +106,8 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
 
         public void setHabit(HabitsVO itemHabit){
             habitName.setText(itemHabit.getHabitName());
-            habitDescription.setText(itemHabit.getDescription());
+            String description = itemHabit.getDue() + "일";
+            habitDescription.setText(description);
         }
     }
 

@@ -136,7 +136,7 @@ public class HabitChangeFragment extends Fragment {
                 title = habit.getHabitName();
                 break;
             case R.id.desc_setting:
-                title = habit.getDescription();
+                title = habit.getDue() + "일";
                 break;
             case R.id.prepare_setting:
                 title = getResources().getString(R.string.guide_ask_prepare);

@@ -23,6 +23,11 @@
         <item name="android:paddingRight">5dp</item>
     </style>
 
+    <style name="PromptText">
+        <item name="android:textColor">@color/colorTertiary</item>
+        <item name="android:textSize">15sp</item>
+    </style>
+
     <style name="SelectableButton">
         <item name="android:layout_margin">10dp</item>
         <item name="android:padding">10dp</item>

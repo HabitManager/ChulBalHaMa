@@ -44,8 +44,7 @@ public class StartingPointInfoFragment extends Fragment {
 
         bundle.putInt("type", 0);
         locationVO = (LocationVO) bundle.getSerializable("locationVO");
-        ((LocationInfoActivity)getActivity())
-            .setEditTextText((EditText) v.findViewById(R.id.starting_name), locationVO);
+        setEditTextText((EditText) v.findViewById(R.id.starting_name), locationVO);
 
         /* starting setting view */
         setStartPointChangeDeleteItem(v, R.id.starting_setting);
@@ -56,19 +55,48 @@ public class StartingPointInfoFragment extends Fragment {
         setButtonClickEvent(startStoreBtn);
         return v;
     }
+    private void setEditTextText(EditText editText, LocationVO locationVO){
+        String name = locationVO.getName();
+        if(name != null) {
+            editText.setText(name);
+        }
+        setNameListener(editText, locationVO);
+    }
     
+    private void setNameListener(EditText edit, final LocationVO locationVO){
+        edit.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {}
+            
+            @Override
+            public void afterTextChanged(Editable arg0) {
+                locationVO.setName(arg0.toString());
+            }
+            
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
+        });
+    }
     private void setStartPointChangeDeleteItem(View v, int id){
         LinearLayout layout = v.findViewById(id);
         CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);
         
         // starting TextView guide text
-        ((LocationInfoActivity)getActivity())
-            .setAddress(item, bundle.getString("address"));
+        setAddress(item, bundle.getString("address"));
         
         // set add button
         item.setChange(getResources().getString(R.string.button_setting));
         setButtonClickEvent(item.getChange());
         item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    
+    
+    private void setAddress(CustomChangeDeleteItem item, String address){
+        if(address == null)
+            item.setTitle(getResources().getString(R.string.guide_address));
+        else
+            item.setTitle(address);
     }
     
     private void setButtonClickEvent(Button btn){

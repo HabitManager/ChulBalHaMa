@@ -18,6 +18,7 @@ import android.widget.TextView;
 import com.example.leeseungchan.chulbalhama.Activities.HabitInfoActivity;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.habit.HabitHistoryFragment;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
 
 import java.util.ArrayList;

@@ -47,9 +47,9 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
-        LinearLayout due = findViewById(R.id.due);
         
         /* due */
+        LinearLayout due = findViewById(R.id.due);
         CustomChangeDeleteItem dueItem = new CustomChangeDeleteItem(due);
         dueItem.setTitle(getResources().getString(R.string.guide_habit_due));
         dueItem.setChange(getResources().getString(R.string.button_setting));
@@ -156,34 +156,31 @@ public class AddHabitActivity extends AppCompatActivity{
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
     
+    private void targetDialog(){
+    
+    }
+    
 
-    private void serializeHabit(HabitsVO habit){
-        String habitName = this.habitName.getText().toString();
+    private String getPrepare(){
         StringBuffer prepare = new StringBuffer();
         for(int i = 0; i < prepares.size(); i++){
             prepare.append(prepares.get(i) + ",");
         }
 
-        habit.setHabitName(habitName);
-        habit.setDue(due);
-        habit.setQuantity(quantity);
-        habit.setDependents(dependents);
-        habit.setPrepare(prepare.toString());
+        return prepare.toString();
     }
     
     private void insertHabit(){
-        HabitsVO habitsVO = new HabitsVO();
-        serializeHabit(habitsVO);
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(
             "insert into habits (habit_name, quantity, due, dependents, prepare) values(?,?,?,?,?)",
             new Object[]{
-                habitsVO.getHabitName(),
-                habitsVO.getQuantity(),
-                habitsVO.getDue(),
-                habitsVO.getDependents(),
-                habitsVO.getPrepare()}
+                this.habitName.getText().toString(),
+                quantity,
+                due,
+                dependents,
+                getPrepare()}
             );
         db.close();
     }

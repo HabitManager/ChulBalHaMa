@@ -25,20 +25,34 @@
             android:layout_height="wrap_content"
             android:layout_marginBottom="@dimen/content_space_small" />
 
-
-        <!-- habit description -->
+        <!-- habit due -->
         <TextView
-            style="@style/MenuText"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/setting_destination" />
+            android:text="@string/guide_habit_due"
+            style="@style/MenuText"/>
 
         <include
-            android:id="@+id/desc_setting"
-            layout="@layout/item_list_change_delete"
+            android:id="@+id/due"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/content_space_small" />
+            android:layout_marginBottom="@dimen/content_space_small"
+            layout="@layout/item_list_change_delete"/>
+
+        <!-- habit quantity -->
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/guide_habit_quantity"
+            style="@style/MenuText"/>
+
+        <include
+            android:id="@+id/quantity"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_small"
+            layout="@layout/item_list_change_delete"/>
 
 
         <!-- prepare things -->

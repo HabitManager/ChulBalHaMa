@@ -103,11 +103,6 @@
                 android:id="@+id/day_input"
                 layout="@layout/item_seven_day_boxes" />
 
-            <View
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_marginBottom="@dimen/content_space_small" />
-
             <Button
                 android:id="@+id/store_destination"
                 style="@style/StoreButton"

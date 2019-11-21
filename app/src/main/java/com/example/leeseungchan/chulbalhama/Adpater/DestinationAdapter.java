@@ -3,6 +3,8 @@ package com.example.leeseungchan.chulbalhama.Adpater;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -36,11 +38,13 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                 public void onClick(View v) {
                     System.out.println("\n" + mData.get(getAdapterPosition()));
                     int id = getAdapterPosition();
+                    int destId = mData.get(id).getId();
                     deleteList(id);
                     notifyDataSetChanged();
                     DBHelper dbHelper = new DBHelper(itemView.getContext());
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
-                    String sql = "delete from destinations where _id=" + "\"" + id + "\"";
+                    String sql = "delete from destinations where _id=" + destId;
+                    Log.e("안돼니", "정말 안돼니?");
                     db.execSQL(sql);
                     db.close();
                 }

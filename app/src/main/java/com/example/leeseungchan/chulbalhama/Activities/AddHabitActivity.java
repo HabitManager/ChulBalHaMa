@@ -72,7 +72,6 @@ public class AddHabitActivity extends AppCompatActivity{
     
         CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
         
-        
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);
 

@@ -127,7 +127,6 @@ public class PersonalInfoFragment extends Fragment{
                 break;
             case R.id.info_start:
                 title = userVO.getStartingName();
-                
         }
         return title;
     }
@@ -193,7 +192,6 @@ public class PersonalInfoFragment extends Fragment{
             cursor.getString(2),
             cursor.getString(3)
         );
-        
         db.close();
         return userVO;
     }

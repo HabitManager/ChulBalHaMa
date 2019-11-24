@@ -24,7 +24,6 @@ public class DestinationsVO {
     public void setId(int id) {
         this.id = id;
     }
-    
     public String getCoordinate() {
         return coordinate;
     }

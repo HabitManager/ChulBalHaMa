@@ -281,5 +281,4 @@ public class HabitChangeFragment extends Fragment {
         db.close();
     }
     
-    
 }

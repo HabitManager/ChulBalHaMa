@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.UI.location_info.DestinationInfoFragment;
 import com.example.leeseungchan.chulbalhama.UI.location_info.StartingPointInfoFragment;
+import com.example.leeseungchan.chulbalhama.VO.LocationVO;
 import com.skt.Tmap.TMapData;
 import com.skt.Tmap.TMapMarkerItem;
 import com.skt.Tmap.TMapPOIItem;
@@ -32,7 +33,8 @@ import java.util.ArrayList;
 public class MapAddFragment extends Fragment implements View.OnClickListener{
 
     private Context context;
-    String lat, lon;
+    String tmpLat, tmpLon;
+    double saveLat, saveLon;
     Bundle bundle;
 
     /* TMap 세팅*/
@@ -96,9 +98,9 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
                                     TMapPOIItem item = (TMapPOIItem) poiItem.get(0);
                                     markerItem.setTMapPoint( item.getPOIPoint() ); // 마커의 좌표 지정
                                     tMapView.addMarkerItem("markerItem1", markerItem); // 지도에 마커 추가
-                                    lat = item.getPOIPoint().toString().split(" ")[1];
-                                    lon = item.getPOIPoint().toString().split(" ")[3];
-                                    tMapView.setCenterPoint( Double.parseDouble(lon), Double.parseDouble(lat) ); // 지도 이동
+                                    tmpLat = item.getPOIPoint().toString().split(" ")[1];
+                                    tmpLon = item.getPOIPoint().toString().split(" ")[3];
+                                    tMapView.setCenterPoint( Double.parseDouble(tmpLon), Double.parseDouble(tmpLat) ); // 지도 이동
                                 }
                                 Log.d("finish Tag", "검색 끝");
                             }
@@ -119,10 +121,10 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
                 Log.d("x" , Float.toString(pointF.x));
                 Log.d("y" , Float.toString(pointF.y));
                 Log.d("x", tMapPoint.toString());
-                lat = tMapPoint.toString().split(" ")[1];
-                lon = tMapPoint.toString().split(" ")[3];
-                pressed_X = Double.parseDouble(lon);
-                pressed_Y = Double.parseDouble(lat);
+                tmpLat = tMapPoint.toString().split(" ")[1];
+                tmpLon = tMapPoint.toString().split(" ")[3];
+                pressed_X = Double.parseDouble(tmpLon);
+                pressed_Y = Double.parseDouble(tmpLat);
                 return false;
             }
 
@@ -131,12 +133,14 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
                 Log.d("x" , Float.toString(pointF.x));
                 Log.d("y" , Float.toString(pointF.y));
                 Log.d("x", tMapPoint.toString());
-                lat = tMapPoint.toString().split(" ")[1];
-                lon = tMapPoint.toString().split(" ")[3];
-                String result = "위도 : " + lat + "경도 : " + lon;
-                if(Double.parseDouble(lon) == pressed_X && Double.parseDouble(lat) == pressed_Y){
+                tmpLat = tMapPoint.toString().split(" ")[1];
+                tmpLon = tMapPoint.toString().split(" ")[3];
+                String result = "위도 : " + tmpLat + "경도 : " + tmpLon;
+                if(Double.parseDouble(tmpLon) == pressed_X && Double.parseDouble(tmpLat) == pressed_Y){
                     Log.d("마커!","마커!");
                     markerItem.setTMapPoint( tMapPoint ); // 마커의 좌표 지정
+                    saveLon = pressed_X;
+                    saveLat = pressed_Y;
                 }
                 return false;
             }
@@ -149,7 +153,11 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
     public void onClick(View view) {
         FragmentTransaction transaction = getActivity().getSupportFragmentManager().beginTransaction();
         Fragment fg;
-        bundle.putString("address",search_box.getText().toString());
+
+        LocationVO temp = (LocationVO) bundle.getSerializable("locationVO");
+        temp.setLongitude(saveLon);
+        temp.setLatitude(saveLat);
+        Log.e("VO class", saveLon + "와" + saveLat + "이 들어갑니다.");
         if(view.getId() == R.id.register_btn){
 
             switch (bundle.getInt("type")) {

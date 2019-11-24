@@ -55,4 +55,11 @@ public class LocationVO implements Serializable {
     public String getCoordinate(){
         return longitude + ", " + latitude;
     }
+
+    public void setLatitude(double lat){
+        this.latitude = lat;
+    }
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
 }

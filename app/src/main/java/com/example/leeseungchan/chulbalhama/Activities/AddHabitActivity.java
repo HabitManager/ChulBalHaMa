@@ -1,6 +1,8 @@
 package com.example.leeseungchan.chulbalhama.Activities;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -9,7 +11,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
@@ -30,9 +34,8 @@ import java.util.ArrayList;
 public class AddHabitActivity extends AppCompatActivity{
 
     private EditText habitName;
-    private int quantity, due;
-    private String dependents;
-    
+    private int due;
+    private CustomChangeDeleteItem dueItem;
     // prepare
     private ArrayList<String> prepares = new ArrayList<>();
     // day and place
@@ -47,29 +50,19 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
+        
         /* due */
         LinearLayout due = findViewById(R.id.due);
-        CustomChangeDeleteItem dueItem = new CustomChangeDeleteItem(due);
+        dueItem = new CustomChangeDeleteItem(due);
         dueItem.setTitle(getResources().getString(R.string.guide_habit_due));
         dueItem.setChange(getResources().getString(R.string.button_setting));
         dueItem.setVisibility(dueItem.DELETE_BTN, View.GONE);
-        
-        /* quantity */
-        final LinearLayout quantity = findViewById(R.id.quantity);
-        
-        CheckBox checkBox = findViewById(R.id.check_for_quantity);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+        dueItem.getChange().setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    quantity.setVisibility(View.VISIBLE);
-                }else{
-                    quantity.setVisibility(View.GONE);
-                }
+            public void onClick(View v) {
+                inflateDays();
             }
         });
-    
-        CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
         
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);
@@ -153,11 +146,6 @@ public class AddHabitActivity extends AppCompatActivity{
         getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
     }
-    
-    private void targetDialog(){
-    
-    }
-    
 
     private String getPrepare(){
         StringBuffer prepare = new StringBuffer();
@@ -172,15 +160,40 @@ public class AddHabitActivity extends AppCompatActivity{
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(
-            "insert into habits (habit_name, quantity, due, dependents, prepare) values(?,?,?,?,?)",
+            "insert into habits (habit_name,  due, prepare) values(?,?,?)",
             new Object[]{
                 this.habitName.getText().toString(),
-                quantity,
                 due,
-                dependents,
                 getPrepare()}
             );
         db.close();
+    }
+    
+    private void inflateDays(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        LayoutInflater inflater = this.getLayoutInflater();
+        View inflatedView = inflater.inflate(R.layout.dialog_target, null);
+        
+        final EditText input = inflatedView.findViewById(R.id.input);
+        // Inflate and set the layout for the dialog
+        // Pass null as the parent view because its going in the dialog layout
+        builder.setView(inflatedView)
+            // Add action buttons
+            .setPositiveButton(R.string.button_change, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    due = Integer.parseInt(input.getText().toString());
+                    dueItem.setTitle(due + " 일");
+                }
+            })
+            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+    
+        builder.create();
+        builder.show();
     }
 
 }

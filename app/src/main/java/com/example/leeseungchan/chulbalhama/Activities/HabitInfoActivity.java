@@ -41,6 +41,8 @@ public class HabitInfoActivity extends AppCompatActivity {
 
         setTitle(habit.getHabitName());
     
+        
+        // set up fragment
         HabitChangeFragment habitChangeFragment = HabitChangeFragment.newInstance(bundle);
         HabitHistoryFragment habitHistoryFragment = HabitHistoryFragment.newInstance(bundle);
         
@@ -56,6 +58,7 @@ public class HabitInfoActivity extends AppCompatActivity {
                 .commitAllowingStateLoss();
         
         }
+        
     }
     
     

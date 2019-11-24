@@ -87,39 +87,6 @@
                 android:layout_marginBottom="@dimen/content_space_small"
                 layout="@layout/item_list_change_delete"/>
 
-            <!-- habit quantity -->
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/guide_habit_quantity"
-                    android:layout_weight="1"
-                    style="@style/GuideText"/>
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/guide_habit_quantity_prompt"
-                    android:layout_weight="1"
-                    style="@style/PromptText"/>
-                <CheckBox
-                    android:id="@+id/check_for_quantity"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-
-            </LinearLayout>
-
-            <include
-                android:id="@+id/quantity"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:visibility="gone"
-                layout="@layout/item_list_change_delete"/>
-
             <View android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/content_space_small"/>

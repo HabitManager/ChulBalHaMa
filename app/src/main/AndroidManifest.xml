@@ -3,6 +3,10 @@
     package="com.example.leeseungchan.chulbalhama"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,6 +45,10 @@
         <activity android:name=".Activities.StartActivity"
             android:parentActivityName=".Activities.MainActivity"
             />
+        <service
+            android:name=".Service.HamaService"
+            android:enabled="true"
+            android:exported="true" />
     </application>
 
 </manifest>

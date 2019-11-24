@@ -135,7 +135,16 @@ public class MainActivity extends AppCompatActivity
         TextView title = (TextView)findViewById(R.id.toolbar_title);
         title.setText(id);
     }
-
+    
+    @Override
+    protected void onRestart() {
+        super.onRestart();
+        Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
+    
+        transaction = fragmentManager.beginTransaction();
+        transaction.detach(fragment).attach(fragment).commit();
+    }
+    
     public void checkFirstRun(){
         boolean isFirstRun = prefs.getBoolean("isFirstRun",true);
         DBHelper dbHelper = DBHelper.getInstance(this);
@@ -147,9 +156,9 @@ public class MainActivity extends AppCompatActivity
             startActivity(newIntent);
 
             prefs.edit().putBoolean("isFirstRun",false).apply();
-            //처음만 true 그다음부터는 false 바꾸는 동작
         }
     }
+    
 
     @Override
     public void onRequestPermissionsResult(int requestCode,

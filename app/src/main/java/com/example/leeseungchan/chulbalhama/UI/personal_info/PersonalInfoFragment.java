@@ -9,6 +9,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -34,6 +35,7 @@ public class PersonalInfoFragment extends Fragment{
     private ArrayList<DestinationsVO> destinations = new ArrayList<>();
     private DBHelper dbHelper;
     private UserVO userVO;
+    private View view;
 
     @Nullable
     @Override
@@ -43,6 +45,7 @@ public class PersonalInfoFragment extends Fragment{
         dbHelper = DBHelper.getInstance(getContext());
         
         userVO = getUserVO();
+        view = v;
         
         /* name */
         setPersonalInfoChangeDeleteItem(v, R.id.info_name);
@@ -152,7 +155,7 @@ public class PersonalInfoFragment extends Fragment{
 
     private void setNameDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setTitle("Title");
+        builder.setTitle("이름 바꾸기");
         View viewInflated =
                 LayoutInflater.from(getContext())
                         .inflate(R.layout.dialog_edit_text, (ViewGroup) getView(), false);
@@ -168,6 +171,8 @@ public class PersonalInfoFragment extends Fragment{
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 db.execSQL("update user set name=\""+ newName + "\" where _id=1");
                 db.close();
+    
+                refresh();
             }
         });
 
@@ -195,5 +200,10 @@ public class PersonalInfoFragment extends Fragment{
         );
         db.close();
         return userVO;
+    }
+    
+    private void refresh(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.detach(this).attach(this).commit();
     }
 }

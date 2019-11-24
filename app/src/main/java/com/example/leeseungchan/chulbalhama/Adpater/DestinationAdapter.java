@@ -43,7 +43,7 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                     DBHelper dbHelper = DBHelper.getInstance(itemView.getContext());
                     SQLiteDatabase db = dbHelper.getWritableDatabase();
                     String time = "update day_of_week set departure_time=null where destination_id="
-                            + destId;
+                        + destId;
                     db.execSQL(time);
                     String sql = "delete from destinations where _id=" + destId;
                     db.execSQL(sql);

@@ -30,8 +30,7 @@ import java.util.ArrayList;
 public class AddHabitActivity extends AppCompatActivity{
 
     private EditText habitName;
-    private int quantity, due;
-    private String dependents;
+    private int due;
     
     // prepare
     private ArrayList<String> prepares = new ArrayList<>();
@@ -54,23 +53,6 @@ public class AddHabitActivity extends AppCompatActivity{
         dueItem.setTitle(getResources().getString(R.string.guide_habit_due));
         dueItem.setChange(getResources().getString(R.string.button_setting));
         dueItem.setVisibility(dueItem.DELETE_BTN, View.GONE);
-        
-        /* quantity */
-        final LinearLayout quantity = findViewById(R.id.quantity);
-        
-        CheckBox checkBox = findViewById(R.id.check_for_quantity);
-        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
-                if(isChecked){
-                    quantity.setVisibility(View.VISIBLE);
-                }else{
-                    quantity.setVisibility(View.GONE);
-                }
-            }
-        });
-    
-        CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
         
         
         /* prepare */
@@ -158,6 +140,7 @@ public class AddHabitActivity extends AppCompatActivity{
     
     private void targetDialog(){
     
+    
     }
     
 
@@ -174,12 +157,10 @@ public class AddHabitActivity extends AppCompatActivity{
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         db.execSQL(
-            "insert into habits (habit_name, quantity, due, dependents, prepare) values(?,?,?,?,?)",
+            "insert into habits (habit_name,  due, prepare) values(?,?,?)",
             new Object[]{
                 this.habitName.getText().toString(),
-                quantity,
                 due,
-                dependents,
                 getPrepare()}
             );
         db.close();

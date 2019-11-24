@@ -49,11 +49,15 @@ public class HabitInfoActivity extends AppCompatActivity {
         FragmentManager fragmentManager = getSupportFragmentManager();
         
         FragmentTransaction transaction = fragmentManager.beginTransaction();
+        if(type == 0) {
             transaction.replace(R.id.nav_host_fragment, habitChangeFragment)
                 .commitAllowingStateLoss();
         
+        } else {
             transaction.replace(R.id.nav_host_fragment, habitHistoryFragment)
                 .commitAllowingStateLoss();
+        
+        }
         
     }
     

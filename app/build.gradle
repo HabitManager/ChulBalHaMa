@@ -21,12 +21,6 @@ android {
         jumboMode true
         javaMaxHeapSize "4g"
     }
-    allprojects {
-        repositories {
-            google()
-            jcenter()
-        }
-    }
     buildToolsVersion '28.0.3'
 }
 

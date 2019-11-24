@@ -70,9 +70,6 @@ public class HabitChangeFragment extends Fragment {
     
         /* habit due */
         setDestInfoChangeDeleteItem(v, R.id.due);
-        
-        /* habit quantity*/
-        setDestInfoChangeDeleteItem(v, R.id.quantity);
     
         /* prepare list*/
         LinearLayout layoutPrepare = v.findViewById(R.id.prepare_setting);
@@ -140,9 +137,6 @@ public class HabitChangeFragment extends Fragment {
                 break;
             case R.id.due:
                 title = habit.getDue() + "일";
-                break;
-            case R.id.quantity:
-                title = habit.getQuantity() + " " + habit.getDependents();
                 break;
             case R.id.prepare_setting:
                 title = getResources().getString(R.string.guide_ask_prepare);

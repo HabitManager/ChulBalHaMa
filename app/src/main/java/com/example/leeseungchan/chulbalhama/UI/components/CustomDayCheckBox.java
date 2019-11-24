@@ -3,17 +3,24 @@ package com.example.leeseungchan.chulbalhama.UI.components;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
+import android.content.Context;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.view.View;
 import android.widget.CheckBox;
 
+import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 
 import java.util.ArrayList;
 
 public class CustomDayCheckBox{
+    
+    private Context context;
     private ArrayList<CheckBox> boxes = new ArrayList<>();
     
     public CustomDayCheckBox(View view){
+        this.context = view.getContext();
         boxes.add((CheckBox) view.findViewById(R.id.mon));
         boxes.add((CheckBox) view.findViewById(R.id.the));
         boxes.add((CheckBox) view.findViewById(R.id.wes));
@@ -21,6 +28,22 @@ public class CustomDayCheckBox{
         boxes.add((CheckBox) view.findViewById(R.id.fri));
         boxes.add((CheckBox) view.findViewById(R.id.sat));
         boxes.add((CheckBox) view.findViewById(R.id.sun));
+    }
+    
+    public void setBoxes(int selectedId){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    
+        String sql ="select habit_id from day_of_week";
+        Cursor habitId = db.rawQuery(sql, null);
+        for(int i = 0; i < 7; i++){
+            habitId.moveToNext();
+            int id = habitId.getInt(0);
+            if(selectedId == id){
+                boxes.get(i).setChecked(true);
+            }
+        }
+        db.close();
     }
     
     public void getResult(final ArrayList<Boolean> result){

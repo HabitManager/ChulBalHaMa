@@ -177,8 +177,7 @@ public class CustomSevenDayInfo {
     public void showSelectedDay(int selectedHabitId){
         DBHelper helper = new DBHelper(view.getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
-        String sql =
-            "select habit_id from day_of_week";
+        String sql ="select habit_id from day_of_week";
         Cursor habitId = db.rawQuery(sql, null);
     
         for(int i = 0; i < 7; i++){

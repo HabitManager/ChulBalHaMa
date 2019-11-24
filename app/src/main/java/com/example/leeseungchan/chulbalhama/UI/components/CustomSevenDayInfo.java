@@ -193,9 +193,5 @@ public class CustomSevenDayInfo {
         }
         db.close();
     }
-    
-    public void setEachLayoutClickEvent(){
-    
-    }
 
 }

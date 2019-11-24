@@ -124,7 +124,7 @@ public class AddHabitActivity extends AppCompatActivity{
             public void onClick(View v) {
                 DayDialog customDialog = new DayDialog(AddHabitActivity.this);
 
-                customDialog.callFunction(days, customSevenDayInfo, 1);
+                customDialog.callFunction(days, customSevenDayInfo, -1);
             }
         });
 

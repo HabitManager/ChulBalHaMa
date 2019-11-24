@@ -34,7 +34,8 @@ public class DayDialog {
 
         final CustomDayCheckBox dayCheckBox =
                 new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
-        dayCheckBox.setBoxes(habitId);
+        dayCheckBox.setBoxes();
+        dayCheckBox.showSelectedBoxes(habitId);
         final Button okButton = (Button) dlg.findViewById(R.id.okButton);
         final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
 

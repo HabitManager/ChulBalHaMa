@@ -30,7 +30,27 @@ public class CustomDayCheckBox{
         boxes.add((CheckBox) view.findViewById(R.id.sun));
     }
     
-    public void setBoxes(int selectedId){
+    public void setBoxes(){
+        DBHelper dbHelper = new DBHelper(context);
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    
+        String sql ="select departure_time from day_of_week";
+        Cursor time = db.rawQuery(sql, null);
+        for(int i = 0; i < 7; i++){
+            time.moveToNext();
+            String id = time.getString(0);
+            if(id == null){
+                boxes.get(i).setEnabled(false);
+            }
+        }
+        db.close();
+    }
+    
+    public void showSelectedBoxes(int selectedId){
+        if(selectedId == -1){
+            return;
+        }
+        
         DBHelper dbHelper = new DBHelper(context);
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     

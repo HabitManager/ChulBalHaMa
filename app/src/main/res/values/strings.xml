@@ -16,6 +16,7 @@
     <string name="button_starting">출발지 입력하기</string>
     <string name="button_ending">도착지 추가하기</string>
     <string name="button_go">시작하기</string>
+    <string name="button_cancel">취소</string>
 
     <string name="see_info">정보보기</string>
     <string name="see_history">기록보기</string>
@@ -36,9 +37,12 @@
     <string name="guide_date_and_place_intro">요일 및 장소</string>
     <string name="guide_date">요일</string>
 
-    <string name="guide_when">언제 어디서 하실 예정이신가요?</string>
+    <string name="guide_when">요일 및 시간</string>
     <string name="guide_when_day">요일</string>
     <string name="guide_when_time">시간</string>
+    <string name="guide_due_f">나는</string>
+    <string name="guide_due_tw">일 안에</string>
+    <string name="guide_due_th">습관 완성을 도전할 것이다.</string>
     <string name="guide_where">장소</string>
     <string name="guide_address">주소</string>
 

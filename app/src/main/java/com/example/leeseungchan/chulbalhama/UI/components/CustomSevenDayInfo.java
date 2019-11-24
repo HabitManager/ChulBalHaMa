@@ -46,7 +46,7 @@ public class CustomSevenDayInfo {
     }
     
     private void setTimeRowFromDB(){
-        DBHelper helper = new DBHelper(view.getContext());
+        DBHelper helper = DBHelper.getInstance(view.getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         Cursor cursor = db.rawQuery("select departure_time from day_of_week ", new String[]{});
         
@@ -87,7 +87,7 @@ public class CustomSevenDayInfo {
     }
     
     public void updateTimeToDays(ArrayList<Boolean> selectable, ArrayList<String> times){
-        DBHelper dbHelper = new DBHelper(view.getContext());
+        DBHelper dbHelper = DBHelper.getInstance(view.getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
         String sqlToGetDestID = "select _id from destinations order by _id DESC limit 1";
@@ -106,7 +106,7 @@ public class CustomSevenDayInfo {
     }
     
     public void updateDayHabit(ArrayList<Boolean> selectable){
-        DBHelper helper = new DBHelper(view.getContext());
+        DBHelper helper = DBHelper.getInstance();
         SQLiteDatabase db = helper.getWritableDatabase();
         Cursor habitId = db.rawQuery("select _id from habits order by _id DESC limit 1", null);
         habitId.moveToNext();
@@ -133,7 +133,7 @@ public class CustomSevenDayInfo {
 
     public void setPlaceData(){
 
-        DBHelper helper = new DBHelper(view.getContext());
+        DBHelper helper = DBHelper.getInstance(view.getContext());
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql =
             "select destination_id from day_of_week";
@@ -175,7 +175,7 @@ public class CustomSevenDayInfo {
     }
     
     public void showSelectedDay(int selectedHabitId){
-        DBHelper helper = new DBHelper(view.getContext());
+        DBHelper helper = DBHelper.getInstance();
         SQLiteDatabase db = helper.getReadableDatabase();
         String sql ="select habit_id from day_of_week";
         Cursor habitId = db.rawQuery(sql, null);

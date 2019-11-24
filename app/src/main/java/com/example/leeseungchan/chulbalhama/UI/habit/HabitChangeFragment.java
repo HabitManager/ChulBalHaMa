@@ -61,7 +61,7 @@ public class HabitChangeFragment extends Fragment {
                              @Nullable Bundle saveInstanceState) {
         View v = inflater.inflate(R.layout.fragment_change_habit, container, false);
     
-        dbHelper = new DBHelper(getContext());
+        dbHelper = DBHelper.getInstance(getContext());
         habit = (HabitsVO) bundle.getSerializable("habit");
         
         
@@ -272,7 +272,7 @@ public class HabitChangeFragment extends Fragment {
     }
     
     private void updateHabitPrepareDB(String prepare, int id,Context context){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = DBHelper.getInstance(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql = "update habits set prepare = ? where _id = ? ";
         db.execSQL(sql, new Object[]{prepare, id});

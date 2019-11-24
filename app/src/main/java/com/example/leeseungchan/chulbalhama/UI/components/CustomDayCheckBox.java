@@ -31,7 +31,7 @@ public class CustomDayCheckBox{
     }
     
     public void setBoxes(){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
         String sql ="select departure_time from day_of_week";
@@ -51,7 +51,7 @@ public class CustomDayCheckBox{
             return;
         }
         
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
         String sql ="select habit_id from day_of_week";

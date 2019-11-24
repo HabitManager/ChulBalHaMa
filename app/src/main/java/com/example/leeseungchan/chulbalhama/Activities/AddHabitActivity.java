@@ -61,7 +61,7 @@ public class AddHabitActivity extends AppCompatActivity{
         dueItem.getChange().setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                inflateDays();
+                dueDialog();
             }
         });
         
@@ -172,8 +172,10 @@ public class AddHabitActivity extends AppCompatActivity{
         db.close();
     }
     
-    private void inflateDays(){
+    private void dueDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        
+        builder.setTitle("달성 목표");
         LayoutInflater inflater = this.getLayoutInflater();
         View inflatedView = inflater.inflate(R.layout.dialog_target, null);
         

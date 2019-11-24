@@ -200,33 +200,33 @@ public class AddHabitActivity extends AppCompatActivity{
     }
     
     private boolean checkEvertThingInserted(){
-        if(isHabitNameEmpty() && isDueEmpty() && isDayEmpty()){
+        if(!isHabitNameEmpty() && !isDueEmpty() && !isDayEmpty()){
             return true;
         }
         return false;
     }
     
     private boolean isHabitNameEmpty(){
-        if(habitName.getText().toString() == ""){
+        if(habitName.getText().toString().length() == 0){
+            Toast.makeText(getApplicationContext(), "이름을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
-        Toast.makeText(getApplicationContext(), "이름을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
         return false;
     }
     
     private boolean isDueEmpty(){
         if(due == -1){
+            Toast.makeText(getApplicationContext(), "기한을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
-        Toast.makeText(getApplicationContext(), "소요시간을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
         return false;
     }
     
     private boolean isDayEmpty(){
         if(days.isEmpty()){
+            Toast.makeText(getApplicationContext(), "요일을 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
-        Toast.makeText(getApplicationContext(), "요일을 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
         return false;
     }
 

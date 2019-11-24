@@ -3,6 +3,7 @@ package com.example.leeseungchan.chulbalhama.Activities;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -136,6 +137,7 @@ public class AddHabitActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if(checkEvertThingInserted()){
                     insertHabit();
+                    customSevenDayInfo.updateDayHabit(days);
                     finish();
                 }
             }
@@ -172,6 +174,7 @@ public class AddHabitActivity extends AppCompatActivity{
             );
         db.close();
     }
+    
     
     private void dueDialog(){
         AlertDialog.Builder builder = new AlertDialog.Builder(this);

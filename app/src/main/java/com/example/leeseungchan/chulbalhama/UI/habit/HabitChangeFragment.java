@@ -109,6 +109,7 @@ public class HabitChangeFragment extends Fragment {
         /* habit days */
         customSevenDayInfo = new CustomSevenDayInfo(v.findViewById(R.id.add_habit_day));
         customSevenDayInfo.setPlaceData();
+        customSevenDayInfo.showSelectedDay(habit.getId());
         
         setDestInfoChangeDeleteItem(v, R.id.day_setting);
     
@@ -187,7 +188,6 @@ public class HabitChangeFragment extends Fragment {
                     String sql = "update habits set due="+ newDue + " where _id="+habit.getId();
                     db.execSQL(sql);
                     db.close();
-                    Log.e("what", "fucking new Due " + newDue);
                 }
             })
             .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
@@ -222,7 +222,6 @@ public class HabitChangeFragment extends Fragment {
                 String sql = "update habits set "+ attr +"=\""+ newName + "\" where _id=" + id;
                 db.execSQL(sql);
                 db.close();
-                Log.e("name input", "onClick:" + newName);
             }
         });
         

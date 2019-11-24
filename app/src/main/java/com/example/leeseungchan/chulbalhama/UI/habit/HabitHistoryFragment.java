@@ -50,7 +50,7 @@ public class HabitHistoryFragment extends Fragment {
                              @Nullable Bundle saveInstanceState) {
         View v = inflater.inflate(R.layout.fragment_history_habit, container, false);
         this.v = v;
-        dbHelper = new DBHelper(getContext());
+        dbHelper = DBHelper.getInstance(getContext());
         habit = (HabitsVO) bundle.getSerializable("habit");
 
         /* srbai history */

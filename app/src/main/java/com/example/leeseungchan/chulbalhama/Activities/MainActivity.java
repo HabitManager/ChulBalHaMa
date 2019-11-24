@@ -61,7 +61,8 @@ public class MainActivity extends AppCompatActivity
                     0 );
         }
 
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
+
         prefs = getSharedPreferences("Pref", MODE_PRIVATE);
 //        dbHelper.setDays();
 //        dbHelper.setUser();
@@ -137,7 +138,7 @@ public class MainActivity extends AppCompatActivity
 
     public void checkFirstRun(){
         boolean isFirstRun = prefs.getBoolean("isFirstRun",true);
-        DBHelper dbHelper = new DBHelper(this);
+        DBHelper dbHelper = DBHelper.getInstance(this);
         if(isFirstRun)
         {
             dbHelper.setDays();
@@ -186,11 +187,9 @@ public class MainActivity extends AppCompatActivity
         return;
     }
 
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         mainCreated=false;
     }
-
 }

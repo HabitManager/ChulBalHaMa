@@ -16,12 +16,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Bundle;
-
 import android.os.Handler;
 import android.os.IBinder;
 import android.util.Log;
 import android.widget.Toast;
-
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -89,7 +87,6 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
     }
 
     //액티비티에서 서비스 함수를 호출하기 위한 함수 생성
-
     public void setLocationHelper(LocationHelper helper) {
     }
 
@@ -104,7 +101,6 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.d("HamaService", "onStartCommand");
-
 
         mBroadcastReceiver = new ActivityDetectionBroadcastReceiver();
         buildGoogleApiClient();

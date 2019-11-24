@@ -44,7 +44,7 @@ public class StartFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 String newName = userName.getText().toString();
-                DBHelper dbHelper = new DBHelper(getContext());
+                DBHelper dbHelper = DBHelper.getInstance(getContext());
                 SQLiteDatabase db = dbHelper.getReadableDatabase();
                 db.execSQL("update user set name=\""+ newName + "\" where _id=1");
                 db.close();

@@ -55,7 +55,7 @@ public class HabitListFragment extends Fragment {
     private void retrieve(){
         habits.clear();
 
-        DBHelper dbHelper = new DBHelper(getContext());
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "select * from habits";
         Cursor c = db.rawQuery(sql, null);

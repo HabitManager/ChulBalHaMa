@@ -164,9 +164,9 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         mDataSet.remove(position);
     }
     private void deleteOnHabitTable(int id, Context context){
-        DBHelper dbHelper = new DBHelper(context);
+        DBHelper dbHelper =  DBHelper.getInstance(context);
         SQLiteDatabase db = dbHelper.getWritableDatabase();
-        
+
         String sql = "delete from habits where _id = ?";
         db.execSQL(sql, new Object[]{id});
         db.close();

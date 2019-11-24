@@ -48,7 +48,6 @@ public class LocationHelper {
     public static final String CHANNEL_ID = "location_noti_channel";
     private int updateInterval = 5000;
 
-
     private boolean activityRecognitionStart = false;
 
 
@@ -166,5 +165,6 @@ public class LocationHelper {
             manager.createNotificationChannel(serviceChannel);
         }
     }
+
 
 }

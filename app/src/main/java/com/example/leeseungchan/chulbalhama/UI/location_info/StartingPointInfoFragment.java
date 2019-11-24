@@ -123,7 +123,7 @@ public class StartingPointInfoFragment extends Fragment {
     }
     
     private void updateStartPoint(){
-        DBHelper dbHelper = new DBHelper(getContext());
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         String sql = "update user set starting_name=\""+locationVO.getName() +
             "\", starting_coordinate=\""+ locationVO.getCoordinate() + "\" where _id=1";

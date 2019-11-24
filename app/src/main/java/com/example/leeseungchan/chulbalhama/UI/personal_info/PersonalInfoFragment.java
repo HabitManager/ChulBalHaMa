@@ -40,7 +40,7 @@ public class PersonalInfoFragment extends Fragment{
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saveInstanceState) {
         View v = inflater.inflate(R.layout.fragment_personal_info, container, false);
-        dbHelper = new DBHelper(getContext());
+        dbHelper = DBHelper.getInstance(getContext());
         
         userVO = getUserVO();
         
@@ -91,7 +91,7 @@ public class PersonalInfoFragment extends Fragment{
 
     public void retrieve(){
         destinations.clear();
-        DBHelper dbHelper = new DBHelper(getContext());
+        DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "select destination_name, _id from destinations";
         Cursor c = db.rawQuery(sql, null);
@@ -182,7 +182,7 @@ public class PersonalInfoFragment extends Fragment{
     }
     
     private UserVO getUserVO(){
-        dbHelper = new DBHelper(getContext());
+        dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
         Cursor cursor =  db.rawQuery("select * from user where _id=1", null);

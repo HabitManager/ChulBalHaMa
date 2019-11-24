@@ -230,7 +230,7 @@ public class DestinationInfoFragment extends Fragment{
     }
     
     private void insertDest(String coordinate, String time, String name){
-        DBHelper dbHelper = new DBHelper(getContext());
+        DBHelper dbHelper =  DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // destination
         String sql = "insert into destinations (coordinate, time, destination_name) values(?,?,?)";

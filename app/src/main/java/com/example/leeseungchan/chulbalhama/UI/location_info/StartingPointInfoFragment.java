@@ -89,9 +89,12 @@ public class StartingPointInfoFragment extends Fragment {
         setButtonClickEvent(item.getChange());
         item.setVisibility(item.DELETE_BTN, View.GONE);
     }
+<<<<<<< HEAD
     
     
     
+=======
+>>>>>>> 612f3eedcbba875d8b36a76a49d46b7c133e1557
     private void setAddress(CustomChangeDeleteItem item, String address){
         if(address == null)
             item.setTitle(getResources().getString(R.string.guide_address));

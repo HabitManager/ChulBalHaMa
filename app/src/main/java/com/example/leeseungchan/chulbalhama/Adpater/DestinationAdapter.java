@@ -3,7 +3,6 @@ package com.example.leeseungchan.chulbalhama.Adpater;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;

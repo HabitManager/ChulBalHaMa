@@ -280,6 +280,4 @@ public class HabitChangeFragment extends Fragment {
         db.execSQL(sql, new Object[]{prepare, id});
         db.close();
     }
-    
-    
 }

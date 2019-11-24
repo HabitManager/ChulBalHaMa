@@ -47,7 +47,6 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
-        
         /* due */
         LinearLayout due = findViewById(R.id.due);
         CustomChangeDeleteItem dueItem = new CustomChangeDeleteItem(due);
@@ -71,7 +70,6 @@ public class AddHabitActivity extends AppCompatActivity{
         });
     
         CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
-        
         
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);

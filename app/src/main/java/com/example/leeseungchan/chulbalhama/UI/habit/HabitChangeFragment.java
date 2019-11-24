@@ -131,7 +131,6 @@ public class HabitChangeFragment extends Fragment {
         // set delete button gone
         item.setVisibility(item.DELETE_BTN, View.GONE);
     }
-    
     private String getTitle(int id){
         String title = null;
         switch (id){

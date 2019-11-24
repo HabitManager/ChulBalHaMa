@@ -153,7 +153,6 @@ public class HabitChangeFragment extends Fragment {
         }
         return title;
     }
-    
     private void setChangeBtnClickListener(View target, final View root){
         target.setOnClickListener(new View.OnClickListener() {
             @Override

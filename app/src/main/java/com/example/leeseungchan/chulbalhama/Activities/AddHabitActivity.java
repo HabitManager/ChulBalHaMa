@@ -47,7 +47,6 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
-        
         /* due */
         LinearLayout due = findViewById(R.id.due);
         CustomChangeDeleteItem dueItem = new CustomChangeDeleteItem(due);
@@ -71,7 +70,6 @@ public class AddHabitActivity extends AppCompatActivity{
         });
     
         CustomChangeDeleteItem quantityItem = new CustomChangeDeleteItem(quantity);
-        
         
         /* prepare */
         final LinearLayout prepare = findViewById(R.id.prepare);
@@ -181,6 +179,23 @@ public class AddHabitActivity extends AppCompatActivity{
                 due,
                 dependents,
                 getPrepare()}
+            );
+        db.close();
+    }
+    
+    private void insertHabit(){
+        HabitsVO habitsVO = new HabitsVO();
+        serializeHabit(habitsVO);
+        DBHelper helper = new DBHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        db.execSQL(
+            "insert into habits (habit_name, quantity, due, dependents, prepare) values(?,?,?,?,?)",
+            new Object[]{
+                habitsVO.getHabitName(),
+                habitsVO.getQuantity(),
+                habitsVO.getDue(),
+                habitsVO.getDependents(),
+                habitsVO.getPrepare()}
             );
         db.close();
     }

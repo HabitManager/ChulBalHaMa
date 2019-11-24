@@ -2,7 +2,6 @@ package com.example.leeseungchan.chulbalhama.Adpater;
 
 import android.content.Context;
 import androidx.recyclerview.widget.RecyclerView;
-
 import android.database.ContentObservable;
 import android.database.sqlite.SQLiteDatabase;
 import android.view.LayoutInflater;

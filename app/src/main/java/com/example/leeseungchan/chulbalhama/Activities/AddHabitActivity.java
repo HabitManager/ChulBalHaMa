@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.leeseungchan.chulbalhama.Adpater.PrepareAdapter;
 import com.example.leeseungchan.chulbalhama.DBHelper;
@@ -34,7 +35,7 @@ import java.util.ArrayList;
 public class AddHabitActivity extends AppCompatActivity{
 
     private EditText habitName;
-    private int due;
+    private int due = -1;
     private CustomChangeDeleteItem dueItem;
     // prepare
     private ArrayList<String> prepares = new ArrayList<>();
@@ -132,8 +133,10 @@ public class AddHabitActivity extends AppCompatActivity{
         store.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                insertHabit();
-                finish();
+                if(checkEvertThingInserted()){
+                    insertHabit();
+                    finish();
+                }
             }
         });
     }
@@ -194,6 +197,37 @@ public class AddHabitActivity extends AppCompatActivity{
     
         builder.create();
         builder.show();
+    }
+    
+    private boolean checkEvertThingInserted(){
+        if(isHabitNameEmpty() && isDueEmpty() && isDayEmpty()){
+            return true;
+        }
+        return false;
+    }
+    
+    private boolean isHabitNameEmpty(){
+        if(habitName.getText().toString() == ""){
+            return true;
+        }
+        Toast.makeText(getApplicationContext(), "이름을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+        return false;
+    }
+    
+    private boolean isDueEmpty(){
+        if(due == -1){
+            return true;
+        }
+        Toast.makeText(getApplicationContext(), "소요시간을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+        return false;
+    }
+    
+    private boolean isDayEmpty(){
+        if(days.isEmpty()){
+            return true;
+        }
+        Toast.makeText(getApplicationContext(), "요일을 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+        return false;
     }
 
 }

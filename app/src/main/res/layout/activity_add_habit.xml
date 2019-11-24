@@ -90,6 +90,10 @@
             <View android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:layout_marginBottom="@dimen/content_space_small"/>
+
+            <View android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_marginBottom="@dimen/content_space_small"/>
             <!-- prepare things -->
             <include
                 android:id="@+id/prepare"

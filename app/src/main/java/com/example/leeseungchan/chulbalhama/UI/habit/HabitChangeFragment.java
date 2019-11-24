@@ -114,7 +114,6 @@ public class HabitChangeFragment extends Fragment {
     
         return v;
     }
-    
     private void setDestInfoChangeDeleteItem(View v, int id){
         LinearLayout layout = v.findViewById(id);
         CustomChangeDeleteItem item = new CustomChangeDeleteItem(layout);

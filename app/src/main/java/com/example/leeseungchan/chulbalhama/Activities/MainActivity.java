@@ -117,9 +117,10 @@ public class MainActivity extends AppCompatActivity
         super.onRestart();
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
     
-        transaction = fragmentManager.beginTransaction();
-        transaction.detach(fragment).attach(fragment).commit();
-    
+        if(fragment != habitListFragment) {
+            transaction = fragmentManager.beginTransaction();
+            transaction.detach(fragment).attach(fragment).commit();
+        }
     }
     
     public void checkFirstRun(){

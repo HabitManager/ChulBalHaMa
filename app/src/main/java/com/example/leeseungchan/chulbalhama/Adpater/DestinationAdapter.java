@@ -46,7 +46,6 @@ public class DestinationAdapter extends RecyclerView.Adapter<DestinationAdapter.
                             + destId;
                     db.execSQL(time);
                     String sql = "delete from destinations where _id=" + destId;
-                    Log.e("안돼니", "정말 안돼니?");
                     db.execSQL(sql);
                     db.close();
                 }

@@ -70,9 +70,6 @@ public class HabitChangeFragment extends Fragment {
     
         /* habit due */
         setDestInfoChangeDeleteItem(v, R.id.due);
-        
-        /* habit quantity*/
-        setDestInfoChangeDeleteItem(v, R.id.quantity);
     
         /* prepare list*/
         LinearLayout layoutPrepare = v.findViewById(R.id.prepare_setting);
@@ -131,6 +128,7 @@ public class HabitChangeFragment extends Fragment {
         // set delete button gone
         item.setVisibility(item.DELETE_BTN, View.GONE);
     }
+    
     private String getTitle(int id){
         String title = null;
         switch (id){
@@ -139,9 +137,6 @@ public class HabitChangeFragment extends Fragment {
                 break;
             case R.id.due:
                 title = habit.getDue() + "일";
-                break;
-            case R.id.quantity:
-                title = habit.getQuantity() + " " + habit.getDependents();
                 break;
             case R.id.prepare_setting:
                 title = getResources().getString(R.string.guide_ask_prepare);
@@ -162,7 +157,7 @@ public class HabitChangeFragment extends Fragment {
                         setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
                         break;
                     case R.id.due:
-                        setNameDialog( v, "설명 바꾸기", habit.getId(), "description");
+                        inflateDays();
                         break;
                     case R.id.prepare_setting:
                         setPrepareOperation();
@@ -174,6 +169,36 @@ public class HabitChangeFragment extends Fragment {
                 }
             }
         });
+    }
+    
+    private void inflateDays(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View inflatedView = inflater.inflate(R.layout.dialog_target, null);
+        
+        final EditText input = inflatedView.findViewById(R.id.input);
+        
+        builder.setView(inflatedView)
+            .setPositiveButton(R.string.button_change, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    int newDue = Integer.parseInt(input.getText().toString());
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    String sql = "update habits set due="+ newDue + " where _id="+habit.getId();
+                    db.execSQL(sql);
+                    db.close();
+                    Log.e("what", "fucking new Due " + newDue);
+                }
+            })
+            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+        
+        builder.create();
+        builder.show();
     }
     
     public void setNameDialog(View v, String title, final int id, final String attr){
@@ -255,6 +280,5 @@ public class HabitChangeFragment extends Fragment {
         db.execSQL(sql, new Object[]{prepare, id});
         db.close();
     }
-    
     
 }

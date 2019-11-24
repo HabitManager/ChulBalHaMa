@@ -62,12 +62,10 @@ public class HabitListFragment extends Fragment {
         while(c.moveToNext()){
             int id = c.getInt(0);
             String name = c.getString(1);
-            int quantity = c.getInt(2);
+            String prepare = c.getString(2);
             int due = c.getInt(3);
-            String dependents = c.getString(4);
-            String prepare = c.getString(5);
 
-            HabitsVO h = new HabitsVO(id, name, quantity, due, dependents,prepare, 0);
+            HabitsVO h = new HabitsVO(id, name, due, prepare, 0);
             habits.add(h);
         }
     }

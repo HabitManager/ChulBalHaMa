@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:background="@color/colorPrimary"
-        android:text="@string/guide_when"
+        android:text="@string/guide_when_day"
         android:textColor="@color/colorAccent"
         android:textStyle="bold"
         android:textSize="@dimen/text_20sp"/>

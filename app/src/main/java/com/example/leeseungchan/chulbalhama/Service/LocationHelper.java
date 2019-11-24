@@ -80,6 +80,10 @@ public class LocationHelper {
 //                        Toast.makeText(context, "책을 가지고 나가세요!", Toast.LENGTH_SHORT).show();
 //                    }
 //                }
+
+                //TODO 유저의 위치 vs 목적지 위치 / 집 위치 비교
+                //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
+
                 lastLatitude = latitude;
                 lastLongitude = longitude;
 
@@ -110,6 +114,9 @@ public class LocationHelper {
             latitude = calc.formattingPoint(latitude);
             lastLatitude = latitude;
             lastLongitude = longitude;
+
+            //TODO 현재 요일에 맞는 DB의 요일 VO 가져옴
+            //TODO 요일 VO에 있는 출발 시간 연관 VO 목적지 위경도, 습관 정보 가져옴
 
             Log.d("최초 위치 정보", "위도 : " + longitude + ", 경도 : " + latitude  );
                 lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,

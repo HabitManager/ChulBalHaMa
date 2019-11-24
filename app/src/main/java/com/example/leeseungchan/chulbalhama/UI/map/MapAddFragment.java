@@ -101,6 +101,8 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
                                     tmpLat = item.getPOIPoint().toString().split(" ")[1];
                                     tmpLon = item.getPOIPoint().toString().split(" ")[3];
                                     tMapView.setCenterPoint( Double.parseDouble(tmpLon), Double.parseDouble(tmpLat) ); // 지도 이동
+                                    saveLat = Double.parseDouble(tmpLat);
+                                    saveLon = Double.parseDouble(tmpLon);
                                 }
                                 Log.d("finish Tag", "검색 끝");
                             }

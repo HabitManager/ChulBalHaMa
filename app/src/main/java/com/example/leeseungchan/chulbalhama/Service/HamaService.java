@@ -6,6 +6,8 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Binder;
 import android.os.Build;
 import android.os.Handler;
@@ -18,9 +20,13 @@ import androidx.core.app.NotificationCompat;
 
 
 import com.example.leeseungchan.chulbalhama.Activities.MainActivity;
+import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class HamaService extends Service {
     public static final String CHANNEL_ID = "service_channel";
@@ -28,8 +34,6 @@ public class HamaService extends Service {
     Notification notification;
     LocationUpdateThread locationThread;
     LocationHelper locationHelper;
-    int count=0;
-    boolean startupdate=false;
     Calendar car;
 
     public class HamaServiceBinder extends Binder {
@@ -70,7 +74,7 @@ public class HamaService extends Service {
                 0, notificationIntent, 0);
 
         Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
+                .setContentTitle("하마 서비스~")
                 .setContentText(input)
                 .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(pendingIntent)
@@ -126,12 +130,99 @@ public class HamaService extends Service {
     }
 
     public int adjustTimeInterval(){
+        int interval ;
+        long diff=0;
+        long diff2=0;
+        long sec=0;
+        long sec2=0;
+        boolean isHome= true;
+
+        /* 오늘의 요일은? */
         car = Calendar.getInstance();
-        int datOfWeek = car.get(Calendar.DAY_OF_WEEK);
-        int hour = car.get(Calendar.HOUR);
-        int minute = car.get(Calendar.MINUTE);
-        Toast.makeText(getApplicationContext(), "현재시간은 " + hour +"시" + minute + "분 입니다.", Toast.LENGTH_SHORT).show();
-        //TODO DB 시간 조회 후 Time Interval 재설정
-        return 3000;
+        int dayOfWeeks = car.get(Calendar.DAY_OF_WEEK);
+        int dayId = 0;
+        switch (dayOfWeeks){
+            case 1:
+                dayId = 6; // 일
+                break;
+            case 2:
+                dayId = 0; //월
+                break;
+            case 3:
+                dayId = 1; //화
+                break;
+            case 4:
+                dayId = 2; //수
+                break;
+            case 5:
+                dayId = 3; //목
+                break;
+            case 6:
+                dayId = 4; //금
+                break;
+            case 7:
+                dayId = 5; //토
+                break;
+        }
+
+        /* 현재 시간은? */
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        car = Calendar.getInstance();
+        String currentTime = format.format(car.getTime());
+        Log.d("CurrentTime?", currentTime);
+
+        /* 오늘 출발 시간 조회 */
+        DBHelper helper = new DBHelper(this);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String daySql = "select departure_time, destination_id from day_of_week where _id = ?";
+        Cursor c = db.rawQuery(daySql, new String[]{ Integer.toString(dayId+1)}, null);
+        c.moveToNext();
+        Log.d("Hama", c.toString());
+        String todayDepartureTime = c.getString(0);
+        Log.d("DepartureTime", todayDepartureTime);
+
+        /* 오늘 도착 예정 시간 조회*/
+        int destination_id = c.getInt(1);
+        String arrivalSql = "select time from destinations where _id = ?";
+        Cursor c2 = db.rawQuery(arrivalSql, new String[]{Integer.toString(destination_id)}, null);
+        c2.moveToNext();
+        String arrivalTime = c2.getString(0);
+        Log.d("Destination Time", arrivalTime);
+
+        /* 현재 시간과 오늘 출발 시간 비교 */
+        Date curretnDateTime;
+        Date departureDateTime;
+        Date arrivalDateTime;
+
+        try{
+            curretnDateTime = format.parse(currentTime);
+            departureDateTime = format.parse(todayDepartureTime);
+            arrivalDateTime = format.parse(arrivalTime);
+            diff = Math.abs(curretnDateTime.getTime() - departureDateTime.getTime());
+            diff2 = Math.abs(curretnDateTime.getTime() - arrivalDateTime.getTime());
+        }catch (Exception e){}
+
+        sec = diff/1000;
+        sec2 = diff2/1000;
+        Log.d("Sec Diff", Long.toString(sec));
+        /* 집에 있으면 */
+        if (isHome) {
+            /* 출발하기 바로 전 */
+            if (sec < 1800) {
+                return 180000;
+                /* 아니면 */
+            } else {
+                return 36000000;
+            }
+            /* 집에서 나왔으면*/
+        } else {
+            /* 도착하기 조금 전*/
+            if (sec2<1200){
+                return 180000;
+                /* 이동중엔*/
+            } else {
+                return 9000000;
+            }
+        }
     }
 }

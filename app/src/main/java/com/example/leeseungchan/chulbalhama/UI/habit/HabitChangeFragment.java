@@ -157,7 +157,7 @@ public class HabitChangeFragment extends Fragment {
                         setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
                         break;
                     case R.id.due:
-                        setNameDialog( v, "설명 바꾸기", habit.getId(), "description");
+                        inflateDays();
                         break;
                     case R.id.prepare_setting:
                         setPrepareOperation();
@@ -169,6 +169,36 @@ public class HabitChangeFragment extends Fragment {
                 }
             }
         });
+    }
+    
+    private void inflateDays(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
+        LayoutInflater inflater = this.getLayoutInflater();
+        View inflatedView = inflater.inflate(R.layout.dialog_target, null);
+        
+        final EditText input = inflatedView.findViewById(R.id.input);
+        
+        builder.setView(inflatedView)
+            .setPositiveButton(R.string.button_change, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.dismiss();
+                    int newDue = Integer.parseInt(input.getText().toString());
+                    SQLiteDatabase db = dbHelper.getReadableDatabase();
+                    String sql = "update habits set due="+ newDue + " where _id="+habit.getId();
+                    db.execSQL(sql);
+                    db.close();
+                    Log.e("what", "fucking new Due " + newDue);
+                }
+            })
+            .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    dialog.cancel();
+                }
+            });
+        
+        builder.create();
+        builder.show();
     }
     
     public void setNameDialog(View v, String title, final int id, final String attr){

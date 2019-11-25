@@ -83,7 +83,7 @@ public class LocationHelper {
     double start_lon;
     double start_lat;
     String destination_name;
-    Date startDateTime;
+    Date startDateTime ;
     Date arrivalDateTime;
     long diff, diff2, sec, sec2;
 
@@ -108,6 +108,8 @@ public class LocationHelper {
         String dest_name = "";
         String dest_cordi = "";
         String todays_habit_name = "";
+
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
 
         /* 유저 데이터 조회*/
         DBHelper helper = DBHelper.getInstance(context);
@@ -148,12 +150,6 @@ public class LocationHelper {
                 break;
         }
 
-        /* 지금 몇시 ? */
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-        car = Calendar.getInstance();
-        String currentTime = format.format(car.getTime());
-        Log.d("CurrentTime?", currentTime);
-
         /* 요일 테이블 조회. */
         try {
             String daySql = "select * from day_of_week where _id = ?";
@@ -162,6 +158,8 @@ public class LocationHelper {
             departure_time = cDay.getString(2);
             todays_habit = cDay.getInt(4);
             today_dest = cDay.getInt(3);
+            departure_time = format.format(departure_time);
+            startDateTime = format.parse(departure_time);
             Log.d("TodayDeparture_time?", departure_time);
         } catch (Exception e){Log.e("LocationHelper", "Day Of Week Table error");}
 
@@ -316,6 +314,12 @@ public class LocationHelper {
     public void notiCondition(){
         Log.e("LocationHelper", "Notification Condition");
         //TODO 조건에 따른 새로운 알람 주기.
+
+        /* 지금 몇시 ? */
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        car = Calendar.getInstance();
+        String currentTime = format.format(car.getTime());
+        Log.d("CurrentTime?", currentTime);
 
     }
 

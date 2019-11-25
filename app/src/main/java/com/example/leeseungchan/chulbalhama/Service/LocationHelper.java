@@ -7,6 +7,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -19,6 +21,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
 
 import com.example.leeseungchan.chulbalhama.Activities.MainActivity;
+import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 
 public class LocationHelper {
@@ -38,12 +41,21 @@ public class LocationHelper {
 
     public LocationHelper(final Context context){
         this.context = context;
+        DBHelper helper = new DBHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String userSql = "select * from user";
+        Cursor c = db.rawQuery(userSql, null);
+        c.moveToNext();
+        String userName = c.getString(3);
+        Log.e("User Name ", userName);
         lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         calc = new DistanceCalc();
         createNotificationChannel();
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, notificationIntent, 0);
+
+
 
         final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Foreground Service")

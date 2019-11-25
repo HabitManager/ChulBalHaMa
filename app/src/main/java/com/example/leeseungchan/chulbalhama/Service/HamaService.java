@@ -129,19 +129,19 @@ public class HamaService extends Service {
         }
     }
 
-    public int adjustTimeInterval(){
-        int interval ;
-        long diff=0;
-        long diff2=0;
-        long sec=0;
-        long sec2=0;
-        boolean isHome= true;
+    public int adjustTimeInterval() {
+        int interval;
+        long diff = 0;
+        long diff2 = 0;
+        long sec = 0;
+        long sec2 = 0;
+        boolean isHome = true;
 
         /* 오늘의 요일은? */
         car = Calendar.getInstance();
         int dayOfWeeks = car.get(Calendar.DAY_OF_WEEK);
         int dayId = 0;
-        switch (dayOfWeeks){
+        switch (dayOfWeeks) {
             case 1:
                 dayId = 6; // 일
                 break;
@@ -175,54 +175,57 @@ public class HamaService extends Service {
         DBHelper helper = new DBHelper(this);
         SQLiteDatabase db = helper.getWritableDatabase();
         String daySql = "select departure_time, destination_id from day_of_week where _id = ?";
-        Cursor c = db.rawQuery(daySql, new String[]{ Integer.toString(dayId+1)}, null);
+        Cursor c = db.rawQuery(daySql, new String[]{Integer.toString(dayId + 1)}, null);
         c.moveToNext();
-        Log.d("Hama", c.toString());
-        String todayDepartureTime = c.getString(0);
-        Log.d("DepartureTime", todayDepartureTime);
+        try {
+            String todayDepartureTime = c.getString(0);
+            Log.d("DepartureTime", todayDepartureTime);
 
-        /* 오늘 도착 예정 시간 조회*/
-        int destination_id = c.getInt(1);
-        String arrivalSql = "select time from destinations where _id = ?";
-        Cursor c2 = db.rawQuery(arrivalSql, new String[]{Integer.toString(destination_id)}, null);
-        c2.moveToNext();
-        String arrivalTime = c2.getString(0);
-        Log.d("Destination Time", arrivalTime);
+            /* 오늘 도착 예정 시간 조회*/
+            int destination_id = c.getInt(1);
+            String arrivalSql = "select time from destinations where _id = ?";
+            Cursor c2 = db.rawQuery(arrivalSql, new String[]{Integer.toString(destination_id)}, null);
+            c2.moveToNext();
+            String arrivalTime = c2.getString(0);
+            Log.d("Destination Time", arrivalTime);
 
-        /* 현재 시간과 오늘 출발 시간 비교 */
-        Date curretnDateTime;
-        Date departureDateTime;
-        Date arrivalDateTime;
+            /* 현재 시간과 오늘 출발 시간 비교 */
+            Date curretnDateTime;
+            Date departureDateTime;
+            Date arrivalDateTime;
 
-        try{
-            curretnDateTime = format.parse(currentTime);
-            departureDateTime = format.parse(todayDepartureTime);
-            arrivalDateTime = format.parse(arrivalTime);
-            diff = Math.abs(curretnDateTime.getTime() - departureDateTime.getTime());
-            diff2 = Math.abs(curretnDateTime.getTime() - arrivalDateTime.getTime());
-        }catch (Exception e){}
-
-        sec = diff/1000;
-        sec2 = diff2/1000;
-        Log.d("Sec Diff", Long.toString(sec));
-        /* 집에 있으면 */
-        if (isHome) {
-            /* 출발하기 바로 전 */
-            if (sec < 1800) {
-                return 180000;
-                /* 아니면 */
-            } else {
-                return 36000000;
+            try {
+                curretnDateTime = format.parse(currentTime);
+                departureDateTime = format.parse(todayDepartureTime);
+                arrivalDateTime = format.parse(arrivalTime);
+                diff = Math.abs(curretnDateTime.getTime() - departureDateTime.getTime());
+                diff2 = Math.abs(curretnDateTime.getTime() - arrivalDateTime.getTime());
+            } catch (Exception e) {
             }
-            /* 집에서 나왔으면*/
-        } else {
-            /* 도착하기 조금 전*/
-            if (sec2<1200){
-                return 180000;
-                /* 이동중엔*/
+
+            sec = diff / 1000;
+            sec2 = diff2 / 1000;
+            Log.d("Sec Diff", Long.toString(sec));
+            /* 집에 있으면 */
+            if (isHome) {
+                /* 출발하기 바로 전 */
+                if (sec < 1800) {
+                    return 180000;
+                    /* 아니면 */
+                } else {
+                    return 36000000;
+                }
+                /* 집에서 나왔으면*/
             } else {
-                return 9000000;
+                /* 도착하기 조금 전*/
+                if (sec2 < 1200) {
+                    return 180000;
+                    /* 이동중엔*/
+                } else {
+                    return 9000000;
+                }
             }
-        }
+        } catch (Exception e){}
+        return 180000;
     }
 }

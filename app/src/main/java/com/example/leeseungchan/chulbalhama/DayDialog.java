@@ -45,7 +45,7 @@ public class DayDialog {
             public void onClick(View view) {
                 dayCheckBox.getResult(result);
                 customSevenDayInfo.pickDay(result);
-
+                customSevenDayInfo.updateDayHabit(result, habitId);
                 dlg.dismiss();
             }
         });

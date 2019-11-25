@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -157,7 +158,7 @@ public class HabitChangeFragment extends Fragment {
                         setNameDialog( v, "이름 바꾸기", habit.getId(), "habit_name");
                         break;
                     case R.id.due:
-                        inflateDays();
+                        setDue();
                         break;
                     case R.id.prepare_setting:
                         setPrepareOperation();
@@ -171,7 +172,7 @@ public class HabitChangeFragment extends Fragment {
         });
     }
     
-    private void inflateDays(){
+    private void setDue(){
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
         LayoutInflater inflater = this.getLayoutInflater();
         View inflatedView = inflater.inflate(R.layout.dialog_target, null);
@@ -199,6 +200,7 @@ public class HabitChangeFragment extends Fragment {
         builder.create();
         builder.show();
     }
+    
     
     public void setNameDialog(View v, String title, final int id, final String attr){
             AlertDialog.Builder builder = new AlertDialog.Builder(getContext());

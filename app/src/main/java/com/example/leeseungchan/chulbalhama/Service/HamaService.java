@@ -225,7 +225,7 @@ public class HamaService extends Service {
                     return 9000000;
                 }
             }
-        } catch (Exception e){}
+        } catch (Exception e){ Log.e("HamaService", "Exception"); }
         return 180000;
     }
 }

@@ -24,10 +24,15 @@ import com.example.leeseungchan.chulbalhama.Activities.MainActivity;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+
 public class LocationHelper {
     LocationListener gpsLocationListener;
     LocationManager lm;
     DistanceCalc calc;
+    Calendar car;
     Context context;
     NotificationManager manager;
     public static final String CHANNEL_ID = "location_noti_channel";
@@ -37,25 +42,144 @@ public class LocationHelper {
     double lastLatitude;
 
     String userState = "HOME";
-    String lastState = "";
+
+    /* 조건 파악에 필요한 정보 */
+    String userName;
+    String habitName;
+    double dest_lon;
+    double dest_lat;
+    double start_lon;
+    double start_lat;
+    String destination_name;
+    Date startDateTime;
+    Date arrivalDateTime;
+    long diff, diff2, sec, sec2;
 
     public LocationHelper(final Context context){
         this.context = context;
-        DBHelper helper = new DBHelper(context);
-        SQLiteDatabase db = helper.getWritableDatabase();
-        String userSql = "select * from user";
-        Cursor c = db.rawQuery(userSql, null);
-        c.moveToNext();
-        String userName = c.getString(3);
-        Log.e("User Name ", userName);
         lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         calc = new DistanceCalc();
         createNotificationChannel();
+
+        dbQuery();
+
+        getLocationListener();
+        Log.d("LocationHelper", "constructor");
+    }
+
+    public void dbQuery(){
+        String departure_time = "";
+        int today_dest = -1;
+        int todays_habit = -1;
+        String dest_name = "";
+        String todays_habit_name = "";
+
+        /* 유저 데이터 조회*/
+        DBHelper helper = new DBHelper(context);
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String userSql = "select * from user";
+        Cursor cUser = db.rawQuery(userSql, null);
+        cUser.moveToNext();
+        userName = cUser.getString(3);
+
+        Log.d("\nQueryStart", "----------------------");
+        Log.d("dbQuery", "유저 이름 : " + userName);
+
+        /* 오늘의 요일은? */
+        car = Calendar.getInstance();
+        int dayOfWeeks = car.get(Calendar.DAY_OF_WEEK);
+        int dayId = 0;
+        switch (dayOfWeeks) {
+            case 1:
+                dayId = 6; // 일
+                break;
+            case 2:
+                dayId = 0; //월
+                break;
+            case 3:
+                dayId = 1; //화
+                break;
+            case 4:
+                dayId = 2; //수
+                break;
+            case 5:
+                dayId = 3; //목
+                break;
+            case 6:
+                dayId = 4; //금
+                break;
+            case 7:
+                dayId = 5; //토
+                break;
+        }
+
+        /* 지금 몇시 ? */
+        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
+        car = Calendar.getInstance();
+        String currentTime = format.format(car.getTime());
+        Log.d("CurrentTime?", currentTime);
+
+        /* 요일 테이블 조회. */
+        try {
+            String daySql = "select * from day_of_week where _id = ?";
+            Cursor cDay = db.rawQuery(daySql, new String[]{Integer.toString(dayId + 1)}, null);
+            cDay.moveToNext();
+            departure_time = cDay.getString(2);
+            todays_habit = cDay.getInt(4);
+            today_dest = cDay.getInt(3);
+            Log.d("TodayDeparture_time?", departure_time);
+        } catch (Exception e){Log.e("LocationHelper", "Day Of Week Table error");}
+
+        /* 요일에 설정된 목적지 조회 */
+        try {
+            String destSql = "select * from destinations where _id = ?";
+            Cursor cDestination = db.rawQuery(destSql, new String[]{Integer.toString(today_dest)}, null);
+            cDestination.moveToNext();
+            dest_name = cDestination.getString(3);
+            Log.d("Todays Destination?", dest_name);
+        } catch (Exception e){Log.e("LocationHelper", "Destination Table error");}
+
+        /* 오늘의 습관 조회 */
+        try{
+            String habitSql = "select * from habits where _id = ?";
+            Cursor cHabit = db.rawQuery(habitSql, new String[]{Integer.toString(todays_habit)});
+            cHabit.moveToNext();
+            todays_habit_name = cHabit.getString(1);
+            Log.d("Todays Habit name ?", todays_habit_name);
+        } catch (Exception e){Log.e("LocationHelper", "Habits Table error");}
+    }
+
+
+    public void getLocation(){
+        if(ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
+            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+            String provider = location.getProvider();
+
+            // 위치 정보 얻기 누른 시점 위도, 경도
+            double longitude = location.getLongitude();
+            double latitude = location.getLatitude();
+
+            longitude = calc.formattingPoint(longitude);
+            latitude = calc.formattingPoint(latitude);
+            lastLatitude = latitude;
+            lastLongitude = longitude;
+
+            Log.d("최초 위치 정보", "위도 : " + longitude + ", 경도 : " + latitude  );
+                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
+                        updateInterval,
+                        0,
+                        gpsLocationListener);
+                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
+                        updateInterval,
+                        0,
+                        gpsLocationListener);
+        }
+    }
+
+    public void getLocationListener(){
         Intent notificationIntent = new Intent(context, MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(context,
                 0, notificationIntent, 0);
-
-
 
         final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Foreground Service")
@@ -77,29 +201,12 @@ public class LocationHelper {
 
                 longitude = calc.formattingPoint(longitude);
                 latitude = calc.formattingPoint(latitude);
-//                if(calc.distance(schoolLocation.getLatitude(),schoolLocation.getLongitude(),currentLocation.getLatitude(),currentLocation.getLongitude(),"meter") < 50 && userState=="OnTheRoad"){
-//                    //TODO 이 때 시간이 시작시간보다 늦으면 지각이므로 알람을 안띄우게
-//                    userState = "SCHOOL";
-//                    Toast.makeText(context, "학교에 거의 도착했습니다!", Toast.LENGTH_SHORT).show();
-//                } else if (calc.distance(homeLocation.getLatitude(),homeLocation.getLongitude(),currentLocation.getLatitude(),currentLocation.getLongitude(),"meter") > 50 && userState =="HOME"){
-//                    userState ="OnTheRoad";
-//                    Toast.makeText(context, "집에서 나왔습니다!", Toast.LENGTH_SHORT).show();
-//                    //TODO 여기에 ~초이상 머무르면 뜨는 알람 설정 (사용자가 집에서 나왔다.)
-//                } else if (calc.distance(homeLocation.getLatitude(),homeLocation.getLongitude(),currentLocation.getLatitude(),currentLocation.getLongitude(),"meter") < 50){
-//                    //유저가 집에 있다.
-//                    userState ="HOME";
-//                    if(false){
-//                        Toast.makeText(context, "책을 가지고 나가세요!", Toast.LENGTH_SHORT).show();
-//                    }
-//                }
 
-                //TODO 유저의 위치 vs 목적지 위치 / 집 위치 비교
+                //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
                 //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
 
                 lastLatitude = latitude;
                 lastLongitude = longitude;
-
-                lastState=userState;
             }
 
             public void onStatusChanged(String provider, int status, Bundle extras) {
@@ -111,35 +218,6 @@ public class LocationHelper {
             public void onProviderDisabled(String provider) {
             }
         };
-    }
-
-    public void getLocation(){
-        if(ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
-            Location location = lm.getLastKnownLocation(LocationManager.GPS_PROVIDER);
-            String provider = location.getProvider();
-
-            // 위치 정보 얻기 누른 시점 위도, 경도
-            double longitude = location.getLongitude();
-            double latitude = location.getLatitude();
-
-            longitude = calc.formattingPoint(longitude);
-            latitude = calc.formattingPoint(latitude);
-            lastLatitude = latitude;
-            lastLongitude = longitude;
-
-            //TODO 현재 요일에 맞는 DB의 요일 VO 가져옴
-            //TODO 요일 VO에 있는 출발 시간 연관 VO 목적지 위경도, 습관 정보 가져옴
-
-            Log.d("최초 위치 정보", "위도 : " + longitude + ", 경도 : " + latitude  );
-                lm.requestLocationUpdates(LocationManager.GPS_PROVIDER,
-                        updateInterval,
-                        0,
-                        gpsLocationListener);
-                lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER,
-                        updateInterval,
-                        0,
-                        gpsLocationListener);
-        }
     }
 
     public void setUpdateInterval(int interval){
@@ -156,5 +234,9 @@ public class LocationHelper {
             manager = context.getSystemService(NotificationManager.class);
             manager.createNotificationChannel(serviceChannel);
         }
+    }
+
+    public String getUserState(){
+        return userState;
     }
 }

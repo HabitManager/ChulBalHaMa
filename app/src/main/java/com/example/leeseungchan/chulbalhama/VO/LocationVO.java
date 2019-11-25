@@ -71,7 +71,7 @@ public class LocationVO implements Serializable {
         if(longitude < 0 || latitude < 0){
             return null;
         }
-        return longitude + ", " + latitude;
+        return latitude + "," + longitude;
     }
 
     public void setLatitude(double lat){

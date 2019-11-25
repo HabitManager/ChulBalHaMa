@@ -105,15 +105,16 @@ public class CustomSevenDayInfo {
         db.close();
     }
     
-    public void updateDayHabit(ArrayList<Boolean> selectable){
+    public void updateDayHabit(ArrayList<Boolean> selectable, int habitId){
+        if(habitId == -1)
+            return;
+        
         DBHelper helper = DBHelper.getInstance();
         SQLiteDatabase db = helper.getWritableDatabase();
-        Cursor habitId = db.rawQuery("select _id from habits order by _id DESC limit 1", null);
-        habitId.moveToNext();
+        String update = "update day_of_week set habit_id=? where day=?";
         for(int i = 0; i < 7; i++){
             if(selectable.get(i)){
-                String update = "update day_of_week set habit_id=? where day=?";
-                db.execSQL(update, new Object[]{habitId.getInt(0), dayName.get(i)});
+                db.execSQL(update, new Object[]{habitId, dayName.get(i)});
             }
         }
         db.close();

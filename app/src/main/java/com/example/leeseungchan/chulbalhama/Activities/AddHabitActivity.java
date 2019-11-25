@@ -137,11 +137,22 @@ public class AddHabitActivity extends AppCompatActivity{
             public void onClick(View v) {
                 if(checkEvertThingInserted()){
                     insertHabit();
-                    customSevenDayInfo.updateDayHabit(days);
+                    customSevenDayInfo.updateDayHabit(days, getNewestHabitId());
                     finish();
                 }
             }
         });
+    }
+    
+    private int getNewestHabitId(){
+        DBHelper helper = DBHelper.getInstance();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        Cursor habitId = db.rawQuery("select _id from habits order by _id DESC limit 1", null);
+        habitId.moveToNext();
+        
+        int latestHabitId = habitId.getInt(0);
+        db.close();
+        return latestHabitId;
     }
     
     private void setToolbar(){

@@ -47,8 +47,17 @@ import java.util.Calendar;
 import java.util.Date;
 
 public class LocationHelper {
+    private static LocationHelper lHelperInstance = null;
 
+    public static LocationHelper getLocationHelper(Context context){
+        if (lHelperInstance == null) {
+            lHelperInstance = new LocationHelper(context);
+        }
+        return lHelperInstance;
+    }
 
+    Intent notificationIntent;
+    PendingIntent pendingIntent;
 
     LocationListener gpsLocationListener;
     LocationManager lm;
@@ -61,11 +70,10 @@ public class LocationHelper {
 
     private boolean activityRecognitionStart = false;
 
-
     double lastLongitude;
     double lastLatitude;
 
-    String userState = "HOME";
+    String userState = "HOME1";
 
     /* 조건 파악에 필요한 정보 */
     String userName;
@@ -79,12 +87,14 @@ public class LocationHelper {
     Date arrivalDateTime;
     long diff, diff2, sec, sec2;
 
-    public LocationHelper(final Context context){
+    private LocationHelper(final Context context){
         this.context = context;
         lm = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
         calc = new DistanceCalc();
         createNotificationChannel();
-
+        notificationIntent = new Intent(context, MainActivity.class);
+        pendingIntent = PendingIntent.getActivity(context,
+                0, notificationIntent, 0);
         dbQuery();
 
         getLocationListener();
@@ -96,6 +106,7 @@ public class LocationHelper {
         int today_dest = -1;
         int todays_habit = -1;
         String dest_name = "";
+        String dest_cordi = "";
         String todays_habit_name = "";
 
         /* 유저 데이터 조회*/
@@ -160,7 +171,9 @@ public class LocationHelper {
             Cursor cDestination = db.rawQuery(destSql, new String[]{Integer.toString(today_dest)}, null);
             cDestination.moveToNext();
             dest_name = cDestination.getString(3);
+            dest_cordi = cDestination.getString(1);
             Log.d("Todays Destination?", dest_name);
+            Log.d("Destinations", dest_cordi);
         } catch (Exception e){Log.e("LocationHelper", "Destination Table error");}
 
         /* 오늘의 습관 조회 */
@@ -172,7 +185,6 @@ public class LocationHelper {
             Log.d("Todays Habit name ?", todays_habit_name);
         } catch (Exception e){Log.e("LocationHelper", "Habits Table error");}
     }
-
 
     public void getLocation(){
         if(ContextCompat.checkSelfPermission( context, android.Manifest.permission.ACCESS_FINE_LOCATION ) == PackageManager.PERMISSION_GRANTED){
@@ -201,9 +213,6 @@ public class LocationHelper {
     }
 
     public void getLocationListener(){
-        Intent notificationIntent = new Intent(context, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(context,
-                0, notificationIntent, 0);
 
         final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setContentTitle("Foreground Service")
@@ -215,9 +224,10 @@ public class LocationHelper {
         gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
                 synchronized (notification){
-                    Log.e("noti", "noti!");
                     manager.notify(3, notification);
                 }
+
+                notiCondition();
 
                 String provider = location.getProvider();
                 double longitude = location.getLongitude();
@@ -247,11 +257,68 @@ public class LocationHelper {
             public void onProviderDisabled(String provider) {
             }
         };
+
+        getLocation();
     }
 
     public void setUpdateInterval(int interval){
         this.updateInterval = interval;
+        lm.removeUpdates(gpsLocationListener);
+
+        final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setContentTitle("Foreground Service")
+                .setContentText("허허")
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent)
+                .build();
+
+        notiCondition();
+
+        gpsLocationListener = new LocationListener() {
+            public void onLocationChanged(Location location) {
+                synchronized (notification){
+                    manager.notify(3, notification);
+                }
+
+                String provider = location.getProvider();
+                double longitude = location.getLongitude();
+                double latitude = location.getLatitude();
+
+                longitude = calc.formattingPoint(longitude);
+                latitude = calc.formattingPoint(latitude);
+                //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
+                //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
+
+                notiCondition();
+
+                if(!activityRecognitionStart)
+                {
+
+
+                }
+
+                lastLatitude = latitude;
+                lastLongitude = longitude;
+            }
+
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+            }
+
+            public void onProviderEnabled(String provider) {
+            }
+
+            public void onProviderDisabled(String provider) {
+            }
+        };
     }
+
+
+    public void notiCondition(){
+        Log.e("LocationHelper", "Notification Condition");
+        //TODO 조건에 따른 새로운 알람 주기.
+
+    }
+
 
     private void createNotificationChannel() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -267,6 +334,10 @@ public class LocationHelper {
 
     public String getUserState(){
         return userState;
+    }
+
+    public void removeUpdates(){
+        lm.removeUpdates(gpsLocationListener);
     }
 
 }

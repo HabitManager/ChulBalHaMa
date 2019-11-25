@@ -192,7 +192,6 @@ public class HabitChangeFragment extends Fragment {
                     String sql = "update habits set due="+ newDue + " where _id="+habit.getId();
                     db.execSQL(sql);
                     db.close();
-    
                     habit.setDue(newDue);
                     setDestInfoChangeDeleteItem(view, R.id.due);
     
@@ -294,7 +293,7 @@ public class HabitChangeFragment extends Fragment {
         db.execSQL(sql, new Object[]{prepare, id});
         db.close();
     }
-    
+  
     private void refresh(){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.detach(this).attach(this).commit();

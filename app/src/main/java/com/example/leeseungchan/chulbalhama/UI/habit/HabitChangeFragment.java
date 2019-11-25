@@ -11,6 +11,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
@@ -23,6 +24,7 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.leeseungchan.chulbalhama.Activities.HabitInfoActivity;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.Activities.MainActivity;
 import com.example.leeseungchan.chulbalhama.Adpater.PrepareAdapter;
@@ -49,6 +51,7 @@ public class HabitChangeFragment extends Fragment {
     private CustomSevenDayInfo customSevenDayInfo;
     private RecyclerView.Adapter prepareAdapter;
     private EditText prepareHintView;
+    private View view;
     
     public static HabitChangeFragment newInstance(Bundle bundle){
         HabitChangeFragment v = new HabitChangeFragment();
@@ -61,7 +64,7 @@ public class HabitChangeFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saveInstanceState) {
         View v = inflater.inflate(R.layout.fragment_change_habit, container, false);
-    
+        this.view = v;
         dbHelper = DBHelper.getInstance(getContext());
         habit = (HabitsVO) bundle.getSerializable("habit");
         
@@ -189,6 +192,11 @@ public class HabitChangeFragment extends Fragment {
                     String sql = "update habits set due="+ newDue + " where _id="+habit.getId();
                     db.execSQL(sql);
                     db.close();
+    
+                    habit.setDue(newDue);
+                    setDestInfoChangeDeleteItem(view, R.id.due);
+    
+                    refresh();
                 }
             })
             .setNegativeButton(R.string.button_cancel, new DialogInterface.OnClickListener() {
@@ -224,6 +232,11 @@ public class HabitChangeFragment extends Fragment {
                 String sql = "update habits set "+ attr +"=\""+ newName + "\" where _id=" + id;
                 db.execSQL(sql);
                 db.close();
+                ((HabitInfoActivity)getActivity()).setTitle(newName);
+    
+                habit.setHabitName(newName);
+                setDestInfoChangeDeleteItem(view, R.id.name_setting);
+                refresh();
             }
         });
         
@@ -255,12 +268,13 @@ public class HabitChangeFragment extends Fragment {
     private void setPrepare(String prepare){
         if(prepare == null)
             return;
-        String[] prepares = prepare.split(",");
+        String[] prepares = prepare.split(",\n\t ",0);
         
         this.prepare.clear();
         
         for(int i=0; i<prepares.length; i++){
-            this.prepare.add(prepares[i]);
+            if(prepares[i] != "")
+                this.prepare.add(prepares[i]);
         }
     }
     
@@ -279,5 +293,10 @@ public class HabitChangeFragment extends Fragment {
         String sql = "update habits set prepare = ? where _id = ? ";
         db.execSQL(sql, new Object[]{prepare, id});
         db.close();
+    }
+    
+    private void refresh(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.detach(this).attach(this).commit();
     }
 }

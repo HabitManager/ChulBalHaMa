@@ -68,6 +68,9 @@ public class HamaService extends  Service{
     LocationUpdateThread locationThread;
     LocationHelper locationHelper;
 
+    int lastTimeInterval = 0;
+    boolean flag = false;
+
     int count=0;
     boolean startupdate=false;
 
@@ -131,7 +134,7 @@ public class HamaService extends  Service{
         HamaHandler hamaHandler = new HamaHandler();
         locationThread = new LocationUpdateThread(hamaHandler);
         locationThread.start();
-        locationHelper = new LocationHelper(getApplicationContext());
+        locationHelper = LocationHelper.getLocationHelper(getApplicationContext());
         locationHelper.getLocation();
 
         startForeground(1, notification);
@@ -173,7 +176,13 @@ public class HamaService extends  Service{
 
         public void handleMessage(android.os.Message msg) {
             if (locationHelper != null) {
+                Log.e("Handler" , "도나?");
                 locationHelper.setUpdateInterval(adjustTimeInterval());
+                if (flag){
+                    locationHelper.removeUpdates();
+                    locationHelper.getLocationListener();
+                    flag=false;
+                }
             }
 //            requestActivityUpdates();
             Log.e("HAMAHandler", "Request Activity");
@@ -182,7 +191,7 @@ public class HamaService extends  Service{
         }
     }
     public int adjustTimeInterval() {
-        int interval;
+        int interval = 500000;
         long diff = 0;
         long diff2 = 0;
         long sec = 0;
@@ -258,27 +267,37 @@ public class HamaService extends  Service{
             sec = diff / 1000;
             sec2 = diff2 / 1000;
             Log.d("Sec Diff", Long.toString(sec));
+            Log.d("Sec2 Diff", Long.toString(sec2));
             /* 집에 있으면 */
-            if (isHome) {
+            if (locationHelper.getUserState() == "HOME") {
+                Log.d("HAMAService", "유저가 집에 있습니다!");
                 /* 출발하기 바로 전 */
-                if (sec < 1800) {
-                    return 180000;
+                if (sec < 3600) {
+                    interval = 180000;
                     /* 아니면 */
                 } else {
-                    return 36000000;
+                    interval = 36000000;
                 }
                 /* 집에서 나왔으면*/
             } else {
+                Log.d("HAMAService", "유저가 집에서 나왔습니다!");
                 /* 도착하기 조금 전*/
                 if (sec2 < 1200) {
-                    return 180000;
+                    interval = 30000;
                     /* 이동중엔*/
                 } else {
-                    return 9000000;
+                    interval = 900000;
                 }
             }
         } catch (Exception e){ Log.e("HamaService", "Exception"); }
-        return 180000;
+
+        Log.e("MAHA_S", Integer.toString(lastTimeInterval));
+        Log.e("HAMA_S", Integer.toString(interval));
+        if (interval != lastTimeInterval){
+            flag = true;
+        }
+        lastTimeInterval = interval;
+        return interval;
     }
 //
 //

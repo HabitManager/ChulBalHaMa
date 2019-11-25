@@ -142,7 +142,7 @@ public class MainActivity extends AppCompatActivity
         Fragment fragment = getSupportFragmentManager().findFragmentById(R.id.nav_host_fragment);
     
         transaction = fragmentManager.beginTransaction();
-        transaction.detach(fragment).attach(fragment).commit();
+        transaction.detach(fragment).attach(fragment).commitAllowingStateLoss();
     }
     
     public void checkFirstRun(){

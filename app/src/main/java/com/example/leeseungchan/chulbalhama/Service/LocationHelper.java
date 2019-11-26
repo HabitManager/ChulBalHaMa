@@ -82,6 +82,8 @@ public class LocationHelper {
     double dest_lat;
     double start_lon;
     double start_lat;
+    double curr_lon=0;
+    double curr_lat=0;
     String destination_name;
     Date startDateTime ;
     Date arrivalDateTime;
@@ -109,18 +111,20 @@ public class LocationHelper {
         String dest_cordi = "";
         String todays_habit_name = "";
 
-        SimpleDateFormat format = new SimpleDateFormat("HH:mm");
-
         /* 유저 데이터 조회*/
         DBHelper helper = DBHelper.getInstance(context);
         SQLiteDatabase db = helper.getWritableDatabase();
         String userSql = "select * from user";
         Cursor cUser = db.rawQuery(userSql, null);
         cUser.moveToNext();
+        start_lat = calc.formattingPoint(Double.parseDouble(cUser.getString(1).split(",")[0]));
+        start_lon = calc.formattingPoint(Double.parseDouble(cUser.getString(1).split(",")[1]));
         userName = cUser.getString(3);
 
         Log.d("\nQueryStart", "----------------------");
         Log.d("dbQuery", "유저 이름 : " + userName);
+        Log.d("dbQuery", "유저 집 Lat : " + Double.toString(start_lat));
+        Log.d("dbQuery", "유저 집 Lon : " + Double.toString(start_lon));
 
         /* 오늘의 요일은? */
         car = Calendar.getInstance();
@@ -151,16 +155,18 @@ public class LocationHelper {
         }
 
         /* 요일 테이블 조회. */
-        try {
+        try{
+
             String daySql = "select * from day_of_week where _id = ?";
             Cursor cDay = db.rawQuery(daySql, new String[]{Integer.toString(dayId + 1)}, null);
             cDay.moveToNext();
             departure_time = cDay.getString(2);
-            todays_habit = cDay.getInt(4);
             today_dest = cDay.getInt(3);
-            departure_time = format.format(departure_time);
+            todays_habit = cDay.getInt(4);
+            SimpleDateFormat format = new SimpleDateFormat("HH:mm");
             startDateTime = format.parse(departure_time);
-            Log.d("TodayDeparture_time?", departure_time);
+            Log.d("DepartureTime Query", departure_time);
+
         } catch (Exception e){Log.e("LocationHelper", "Day Of Week Table error");}
 
         /* 요일에 설정된 목적지 조회 */
@@ -171,7 +177,12 @@ public class LocationHelper {
             dest_name = cDestination.getString(3);
             dest_cordi = cDestination.getString(1);
             Log.d("Todays Destination?", dest_name);
-            Log.d("Destinations", dest_cordi);
+            destination_name = dest_name;
+            dest_lat = calc.formattingPoint(Double.parseDouble(dest_cordi.split(",")[0]));
+            dest_lon = calc.formattingPoint(Double.parseDouble(dest_cordi.split(",")[1]));
+            Log.d("dbQuery", "목적지 Lat : " + Double.toString(dest_lat));
+            Log.d("dbQuery", "목적지 Long : " + Double.toString(dest_lon));
+//            dest_lat = Long.parseLong(dest_cordi.split(",")[0]);
         } catch (Exception e){Log.e("LocationHelper", "Destination Table error");}
 
         /* 오늘의 습관 조회 */
@@ -181,6 +192,7 @@ public class LocationHelper {
             cHabit.moveToNext();
             todays_habit_name = cHabit.getString(1);
             Log.d("Todays Habit name ?", todays_habit_name);
+            habitName = todays_habit_name;
         } catch (Exception e){Log.e("LocationHelper", "Habits Table error");}
     }
 
@@ -233,6 +245,10 @@ public class LocationHelper {
 
                 longitude = calc.formattingPoint(longitude);
                 latitude = calc.formattingPoint(latitude);
+                curr_lat = latitude;
+                curr_lon = longitude;
+                Log.d("LocationHelper", "Current Lat : " + latitude);
+                Log.d("LocationHelper", "Current Lon : " + longitude);
                 //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
                 //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
 
@@ -284,6 +300,10 @@ public class LocationHelper {
 
                 longitude = calc.formattingPoint(longitude);
                 latitude = calc.formattingPoint(latitude);
+                curr_lat = latitude;
+                curr_lon = longitude;
+                Log.d("LocationHelper", "Current Lat : " + latitude);
+                Log.d("LocationHelper", "Current Lon : " + longitude);
                 //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
                 //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
 
@@ -311,7 +331,8 @@ public class LocationHelper {
     }
 
 
-    public void notiCondition(){
+    public void notiCondition() {
+        Date currentDateTime = new Date();
         Log.e("LocationHelper", "Notification Condition");
         //TODO 조건에 따른 새로운 알람 주기.
 
@@ -320,6 +341,18 @@ public class LocationHelper {
         car = Calendar.getInstance();
         String currentTime = format.format(car.getTime());
         Log.d("CurrentTime?", currentTime);
+        Log.d("Current Location" , "지금 어디 ? " + Double.toString(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter")));
+
+        /* 집일때 처리*/
+        if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") > 50){
+
+            /* 학교일때 처리 */
+        } else if(true){
+
+            /* 길바닥일때 처리 */
+        } else{
+
+        }
 
     }
 

@@ -177,8 +177,9 @@ public class HamaService extends  Service{
         public void handleMessage(android.os.Message msg) {
             if (locationHelper != null) {
                 Log.e("Handler" , "도나?");
-                locationHelper.setUpdateInterval(adjustTimeInterval());
+
                 if (flag){
+                    locationHelper.setUpdateInterval(adjustTimeInterval());
                     locationHelper.removeUpdates();
                     locationHelper.getLocationListener();
                     flag=false;

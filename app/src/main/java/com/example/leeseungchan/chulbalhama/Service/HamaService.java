@@ -177,8 +177,9 @@ public class HamaService extends  Service{
         public void handleMessage(android.os.Message msg) {
             if (locationHelper != null) {
                 Log.e("Handler" , "도나?");
-                locationHelper.setUpdateInterval(adjustTimeInterval());
+
                 if (flag){
+                    locationHelper.setUpdateInterval(adjustTimeInterval());
                     locationHelper.removeUpdates();
                     locationHelper.getLocationListener();
                     flag=false;
@@ -283,10 +284,12 @@ public class HamaService extends  Service{
                 Log.d("HAMAService", "유저가 집에서 나왔습니다!");
                 /* 도착하기 조금 전*/
                 if (sec2 < 1200) {
-                    interval = 30000;
+//                    interval = 30000;
+                    interval = 5000;
                     /* 이동중엔*/
                 } else {
-                    interval = 900000;
+//                    interval = 900000;
+                    interval = 5000;
                 }
             }
         } catch (Exception e){ Log.e("HamaService", "Exception"); }

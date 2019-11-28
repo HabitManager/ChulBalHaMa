@@ -347,7 +347,7 @@ public class LocationHelper {
         if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") > 50){
 
             /* 학교일때 처리 */
-        } else if(true){
+        } else if(calc.distance(dest_lat, dest_lon, curr_lat, curr_lon, "meter") > 50){
 
             /* 길바닥일때 처리 */
         } else{

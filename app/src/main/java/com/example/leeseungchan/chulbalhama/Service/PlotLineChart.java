@@ -62,7 +62,7 @@ public class PlotLineChart extends AppCompatActivity{
         for( float i = 0; i < days.get(days.size()-1)+10; i += 0.02f ){
             estimatedScore.add(new Entry(i,(float)model.estimate(i)));
         }
-        for( int i = 0; i < days.get(days.size()-1); i += 1 ) {
+        for( int i = 0; i < days.size(); i += 1 ) {
             userScore.add(new Entry(i, scores.get(i).floatValue()));
         }
         

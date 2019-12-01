@@ -92,15 +92,15 @@ public class StartFragment extends Fragment {
     }
     
     private boolean isStartEmpty(){
-        if(startPoint == null || startPoint.getTime().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "소요시간을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+        if(startPoint == null || startPoint.getName().length() == 0){
+            Toast.makeText(getActivity().getApplicationContext(), "출발지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;
     }
     private boolean isEndEmpty(){
-        if(endPoint == null || startPoint.getTime().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "소요시간을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+        if(endPoint == null || startPoint.getName().length() == 0){
+            Toast.makeText(getActivity().getApplicationContext(), "도착지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
             return true;
         }
         return false;

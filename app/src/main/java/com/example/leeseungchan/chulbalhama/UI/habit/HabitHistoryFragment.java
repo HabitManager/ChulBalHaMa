@@ -143,6 +143,7 @@ public class HabitHistoryFragment extends Fragment {
                         nonLinearRegression.getParamenters()[1],
                         nonLinearRegression.getParamenters()[2]
                     );
+                    bundle.putSerializable("habit", habit);
                     bundle.putSerializable("regressionModel", regressionVO);
                     bundle.putSerializable("dataset", datasetVO);
                     intent.putExtras(bundle);
@@ -177,7 +178,7 @@ public class HabitHistoryFragment extends Fragment {
     private String getDate(){
         String today;
         Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat date = new SimpleDateFormat("MM월 dd일",Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("MM-dd",Locale.getDefault());
         today = date.format(currentTime);
         return today;
     }

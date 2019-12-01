@@ -10,11 +10,12 @@
         android:layout_height="wrap_content"
         android:background="@drawable/ic_lens_black_24dp"
         android:gravity="center"
+        android:layout_margin="10dp"
         style="@style/MenuText"
         />
     <TextView
         android:id="@+id/date"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:gravity="center"
         style="@style/GuideText"

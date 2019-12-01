@@ -178,7 +178,7 @@ public class HabitHistoryFragment extends Fragment {
     private String getDate(){
         String today;
         Date currentTime = Calendar.getInstance().getTime();
-        SimpleDateFormat date = new SimpleDateFormat("MM월 dd일",Locale.getDefault());
+        SimpleDateFormat date = new SimpleDateFormat("MM-dd",Locale.getDefault());
         today = date.format(currentTime);
         return today;
     }

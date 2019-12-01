@@ -53,6 +53,9 @@
         <activity
             android:name=".Activities.StartActivity"
             android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Service.PlotLineChart"
+            android:parentActivityName=".Activities.HabitInfoActivity" />
 
         <service
             android:name=".Service.HamaService"

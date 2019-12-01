@@ -188,6 +188,8 @@ public class HabitHistoryFragment extends Fragment {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "select day, score from srbai where habit_id=?";
         Cursor c = db.rawQuery(sql, new String[]{Integer.toString(habitId)});
+        this.days.add(0);
+        this.scores.add(new Double(0));
         int i=1;
         while(c.moveToNext()){
             String day = c.getString(0);

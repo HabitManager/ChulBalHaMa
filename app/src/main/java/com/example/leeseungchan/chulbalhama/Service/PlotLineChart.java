@@ -1,11 +1,14 @@
 package com.example.leeseungchan.chulbalhama.Service;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.VO.DatasetVO;
@@ -47,11 +50,21 @@ public class PlotLineChart extends AppCompatActivity{
         Intent intent = getIntent();
         model =(RegressionVO)intent.getSerializableExtra("regressionModel");
         dataset = (DatasetVO)intent.getSerializableExtra("dataset");
+        String name = intent.getStringExtra("name");
         
         days = dataset.getDays();
         scores = dataset.getScores();
         
         mChart = findViewById(R.id.linechart);
+    
+        Toolbar toolbarMain = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbarMain);
+    
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setHomeAsUpIndicator(R.drawable.ic_arrow_back);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+    
+        setTitle(name);
         
         //LineChart lineChart = (LineChart) view.findViewById(R.id.chart);// 승찬씨 이건 Fragment 코드라고 하네여 ㅋ.
         mChart.setDragEnabled(true);
@@ -126,6 +139,10 @@ public class PlotLineChart extends AppCompatActivity{
         
         
     }
+    public void setTitle(String id){
+        TextView title = (TextView)findViewById(R.id.toolbar_title);
+        title.setText(id);
+    }
     
     public class MyXAxisValueFormatter extends ValueFormatter { // 축 포매팅
         private String[] mValues;
@@ -139,5 +156,16 @@ public class PlotLineChart extends AppCompatActivity{
             return mValues[(int)value];
         }
         
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+            
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

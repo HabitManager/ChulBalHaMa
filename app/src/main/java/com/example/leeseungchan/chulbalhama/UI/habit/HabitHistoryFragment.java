@@ -143,7 +143,7 @@ public class HabitHistoryFragment extends Fragment {
                         nonLinearRegression.getParamenters()[1],
                         nonLinearRegression.getParamenters()[2]
                     );
-                    bundle.putString("name", habit.getHabitName());
+                    bundle.putSerializable("habit", habit);
                     bundle.putSerializable("regressionModel", regressionVO);
                     bundle.putSerializable("dataset", datasetVO);
                     intent.putExtras(bundle);

@@ -15,11 +15,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity
+        android:name=".Service.PopUpScreen"
+        android:theme="@android:style/Theme.Dialog"
+        ></activity>
         <service
-        android:name=".Service.DetectedActivitiesIntentService"
-        android:enabled="true"
-        android:exported="true"></service>
+            android:name=".Service.DetectedActivitiesIntentService"
+            android:enabled="true"
+            android:exported="true" />
 
         <activity
             android:name=".Activities.SplashActivity"
@@ -56,7 +59,6 @@
         <activity
             android:name=".Service.PlotLineChart"
             android:parentActivityName=".Activities.HabitInfoActivity" />
-
         <service
             android:name=".Service.HamaService"
             android:enabled="true"

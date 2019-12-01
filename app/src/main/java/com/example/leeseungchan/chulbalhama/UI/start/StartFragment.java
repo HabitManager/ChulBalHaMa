@@ -7,6 +7,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,17 +93,29 @@ public class StartFragment extends Fragment {
     }
     
     private boolean isStartEmpty(){
-        if(startPoint == null || startPoint.getName().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "출발지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        if(startPoint.getName() != null ){
+//            if(startPoint.getName().length() == 0){
+//                Log.e("aa","not null");
+//                Toast.makeText(getActivity().getApplicationContext(), "출발지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        }else{
+//            Log.e("aa","null");
+//            Toast.makeText(getActivity().getApplicationContext(), "출발지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
         return false;
     }
     private boolean isEndEmpty(){
-        if(endPoint == null || startPoint.getName().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "도착지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
+//        if(endPoint.getName() != null ){
+//            if(endPoint.getName().length() == 0){
+//                Toast.makeText(getActivity().getApplicationContext(), "도착지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+//                return true;
+//            }
+//        }else{
+//            Toast.makeText(getActivity().getApplicationContext(), "도착지를 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
+//            return true;
+//        }
         return false;
     }
 }

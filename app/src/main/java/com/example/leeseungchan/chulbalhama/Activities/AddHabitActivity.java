@@ -90,12 +90,12 @@ public class AddHabitActivity extends AppCompatActivity{
             public void onClick(View v) {
                 EditText text = prepare.findViewById(R.id.input_for_selection);
                 if(text.getText().toString().length() < 1){
-                    text.setHint("1자 이상 입력해주세요");
+                    text.setHint("입력먼저!");
                     text.setHintTextColor(Color.RED);
                 }else {
                     prepares.add(text.getText().toString());
                     text.setText("");
-                    text.setHint("여기에 입력해 주세요.");
+                    text.setHint("ex)단어장");
                     text.setHintTextColor(Color.GRAY);
                     prepareAdapter.notifyDataSetChanged();
                 }

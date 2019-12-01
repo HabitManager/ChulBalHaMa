@@ -1,7 +1,9 @@
 package com.example.leeseungchan.chulbalhama.UI.habit;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
+import android.graphics.Color;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -18,10 +20,15 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Toast;
 
 import com.example.leeseungchan.chulbalhama.Adpater.SRBAIAdapter;
 import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.Service.NonLinearRegression;
+import com.example.leeseungchan.chulbalhama.Service.PlotLineChart;
+import com.example.leeseungchan.chulbalhama.Service.RegressionVO;
+import com.example.leeseungchan.chulbalhama.VO.DatasetVO;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
 import com.example.leeseungchan.chulbalhama.VO.SrbaiVO;
 
@@ -38,6 +45,12 @@ public class HabitHistoryFragment extends Fragment {
     private DBHelper dbHelper;
     private View v;
     private ArrayList<SrbaiVO> srbaiVOS = new ArrayList<>();
+    NonLinearRegression nonLinearRegression;
+    RegressionVO regressionVO;
+    DatasetVO datasetVO;
+    
+    ArrayList<Integer> days ;
+    ArrayList<Double> scores;
     
     public static HabitHistoryFragment newInstance(Bundle bundle){
         HabitHistoryFragment v = new HabitHistoryFragment();
@@ -53,7 +66,13 @@ public class HabitHistoryFragment extends Fragment {
         this.v = v;
         dbHelper = DBHelper.getInstance(getContext());
         habit = (HabitsVO) bundle.getSerializable("habit");
-
+        nonLinearRegression = new NonLinearRegression();
+        regressionVO=new RegressionVO();
+        datasetVO = new DatasetVO();
+    
+        days = new ArrayList<Integer>();
+        scores = new ArrayList<Double>();
+        
         /* srbai history */
         RecyclerView recyclerView = v.findViewById(R.id.history_list);
         RecyclerView.LayoutManager layoutManager=
@@ -107,7 +126,32 @@ public class HabitHistoryFragment extends Fragment {
                 refresh();
             }
         });
+        
     
+        /*SRBAI graph*/
+        Button graph = v.findViewById(R.id.show_srbai);
+        graph.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(srbaiVOS.size() != 0) {
+                    nonLinearRegression.optimize(days, scores);
+    
+                    Intent intent = new Intent(getContext(), PlotLineChart.class);
+                    Bundle bundle = new Bundle();
+                    regressionVO.setParameters(
+                        nonLinearRegression.getParamenters()[0],
+                        nonLinearRegression.getParamenters()[1],
+                        nonLinearRegression.getParamenters()[2]
+                    );
+                    bundle.putSerializable("regressionModel", regressionVO);
+                    bundle.putSerializable("dataset", datasetVO);
+                    intent.putExtras(bundle);
+                    startActivity(intent);
+                } else {
+                    Toast.makeText(getContext(), "Srbai 검사를 먼저 해주세요", Toast.LENGTH_SHORT);
+                }
+            }
+        });
         return v;
     }
     
@@ -144,12 +188,16 @@ public class HabitHistoryFragment extends Fragment {
         SQLiteDatabase db = dbHelper.getReadableDatabase();
         String sql = "select day, score from srbai where habit_id=?";
         Cursor c = db.rawQuery(sql, new String[]{Integer.toString(habitId)});
+        int i=1;
         while(c.moveToNext()){
             String day = c.getString(0);
             int score = c.getInt(1);
             SrbaiVO srbaiVO = new SrbaiVO(day, score, habitId);
+            this.days.add(i++);
+            this.scores.add(new Double(score));
             srbaiVOS.add(srbaiVO);
         }
+        datasetVO.setDaysNScores(days, scores);
     }
     
     private boolean isTodayComplete( SrbaiVO today){
@@ -173,5 +221,7 @@ public class HabitHistoryFragment extends Fragment {
         }
         return srbaivos.get(srbaivos.size()-1);
     }
+    
+    
 
 }

@@ -96,13 +96,13 @@ public class HabitChangeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 if(prepareHintView.getText().toString().length() < 1){
-                    prepareHintView.setHint("1자 이상 입력해주세요");
+                    prepareHintView.setHint("입력먼저!");
                     prepareHintView.setHintTextColor(Color.RED);
                 }else {
                     prepare.add(prepareHintView.getText().toString());
                     updatePrepare(getContext());
                     prepareHintView.setText("");
-                    prepareHintView.setHint("여기에 입력해 주세요.");
+                    prepareHintView.setHint("ex)단어장");
                     prepareHintView.setHintTextColor(Color.GRAY);
                     prepareAdapter.notifyDataSetChanged();
                 }

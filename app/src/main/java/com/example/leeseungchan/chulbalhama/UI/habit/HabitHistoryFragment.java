@@ -74,13 +74,9 @@ public class HabitHistoryFragment extends Fragment {
         scores = new ArrayList<Double>();
         
         /* srbai history */
-        RecyclerView recyclerView = v.findViewById(R.id.history_list);
-        RecyclerView.LayoutManager layoutManager=
-            new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
-        recyclerView.setLayoutManager(layoutManager);
-        SRBAIAdapter adapter = new SRBAIAdapter(srbaiVOS);
-        recyclerView.setAdapter(adapter);
-        retrieveSrbai(habit.getId());
+        setHistoryItem(R.id.history_list);
+        
+        
         
         /* SRABI questions */
         final LinearLayout srbaiQ = v.findViewById(R.id.srbai_questions);
@@ -119,7 +115,8 @@ public class HabitHistoryFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 srbaiQ.setVisibility(View.GONE);
-                SrbaiVO data = new SrbaiVO(getDate(),
+                SrbaiVO data = new SrbaiVO(
+                    getDate(),
                     getScore(new RadioGroup[]{firstQ,secondQ,thirdQ,fourthQ}),
                     habit.getId());
                 storeSRBAI(data);
@@ -156,6 +153,20 @@ public class HabitHistoryFragment extends Fragment {
         return v;
     }
     
+    private void setHistoryItem(int recyclerViewId){
+        RecyclerView recyclerView = v.findViewById(recyclerViewId);
+        RecyclerView.LayoutManager layoutManager=
+            new LinearLayoutManager(getContext(), RecyclerView.HORIZONTAL, false);
+        recyclerView.setLayoutManager(layoutManager);
+        SRBAIAdapter adapter = new SRBAIAdapter(srbaiVOS);
+        recyclerView.setAdapter(adapter);
+        int result = retrieveSrbai(habit.getId());
+        
+        if(result == 0){
+            recyclerView.setVisibility(View.GONE);
+        }
+    }
+    
     private void storeSRBAI(SrbaiVO result){
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         
@@ -183,7 +194,7 @@ public class HabitHistoryFragment extends Fragment {
         return today;
     }
     
-    public void retrieveSrbai(int habitId){
+    public int retrieveSrbai(int habitId){
         srbaiVOS.clear();
         
         SQLiteDatabase db = dbHelper.getReadableDatabase();
@@ -191,16 +202,17 @@ public class HabitHistoryFragment extends Fragment {
         Cursor c = db.rawQuery(sql, new String[]{Integer.toString(habitId)});
         this.days.add(0);
         this.scores.add(new Double(0));
-        int i=1;
+        int i=0;
         while(c.moveToNext()){
             String day = c.getString(0);
             int score = c.getInt(1);
             SrbaiVO srbaiVO = new SrbaiVO(day, score, habitId);
-            this.days.add(i++);
+            this.days.add(++i);
             this.scores.add(new Double(score));
             srbaiVOS.add(srbaiVO);
         }
         datasetVO.setDaysNScores(days, scores);
+        return i;
     }
     
     private boolean isTodayComplete( SrbaiVO today){

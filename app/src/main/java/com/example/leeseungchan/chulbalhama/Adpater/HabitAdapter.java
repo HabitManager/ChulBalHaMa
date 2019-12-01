@@ -6,6 +6,8 @@ import android.content.Context;
 import android.content.Intent;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
@@ -22,8 +24,13 @@ import com.example.leeseungchan.chulbalhama.DBHelper;
 import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.UI.habit.HabitHistoryFragment;
 import com.example.leeseungchan.chulbalhama.VO.HabitsVO;
+import com.example.leeseungchan.chulbalhama.VO.SrbaiVO;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.Locale;
 
 public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHolder> {
 
@@ -37,7 +44,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
     public class HabitViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         public TextView habitName;
         public TextView habitDescription;
-        private TextView habitInfo, habitHistory, habitDelete;
+        private TextView habitInfo, srbaiGuide, habitHistory, habitDelete;
         private LinearLayout linearLayout;
         private View view;
         private HabitViewHolder holder;
@@ -49,15 +56,12 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             holder = this;
             habitName = v.findViewById(R.id.item_habit_name);
             habitDescription = v.findViewById(R.id.item_habit_description);
-           
-    
-    
-    
+            
             linearLayout = v.findViewById(R.id.list_habit);
             habitInfo = v.findViewById(R.id.info);
             habitHistory = v.findViewById(R.id.history);
             habitDelete = v.findViewById(R.id.delete);
-            
+            srbaiGuide = v.findViewById(R.id.guide_srbai_test);
             
             linearLayout.setOnClickListener(this);
             habitInfo.setOnClickListener(this);
@@ -70,6 +74,11 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             habitName.setText(itemHabit.getHabitName());
             String description = itemHabit.getDue() + "일";
             habitDescription.setText(description);
+            
+            if(isSrbaiFinished(((HabitsVO)mDataSet.get(getAdapterPosition())).getId()))
+                srbaiGuide.setText("이미 설문을 진행하셨습니다.");
+            else
+                srbaiGuide.setText("srbai설문을 진행해 주세요!");
         }
         
         void onBind(int position){
@@ -206,4 +215,31 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         db.execSQL(sql, new Object[]{id});
         db.close();
     }
+    
+    private boolean isSrbaiFinished(int habitId){
+        DBHelper dbHelper = DBHelper.getInstance();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+        String sql = "select day from srbai where habit_id=? order by _id DESC limit 1";
+        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(habitId)});
+        c.moveToNext();
+        if(c.getCount() != 0) {
+            String today = c.getString(0);
+            if (today == null)
+                return false;
+    
+            if (today.equals(getDate()))
+                return true;
+            else
+                return false;
+        }
+        return false;
+    }
+    private String getDate(){
+        String today;
+        Date currentTime = Calendar.getInstance().getTime();
+        SimpleDateFormat date = new SimpleDateFormat("MM-dd",Locale.getDefault());
+        today = date.format(currentTime);
+        return today;
+    }
+    
 }

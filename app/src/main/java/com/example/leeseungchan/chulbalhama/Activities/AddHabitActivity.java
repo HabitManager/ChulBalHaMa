@@ -56,7 +56,8 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
-        listSize = savedInstanceState.getInt("listSize");
+        Intent intent = getIntent();
+        listSize = intent.getIntExtra("listSize", 0);
         
         /* due */
         LinearLayout due = findViewById(R.id.due);

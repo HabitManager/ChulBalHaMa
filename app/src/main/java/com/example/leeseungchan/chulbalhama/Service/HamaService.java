@@ -397,22 +397,24 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
         public void onReceive(Context context, Intent intent) {
             ArrayList<DetectedActivity> updatedActivities = intent.getParcelableArrayListExtra(Constants.ACTIVITY_EXTRA);
             String strStatus = "";
-            maxIdx=0;
+            maxIdx=-1;
             for(int i =0; i<confidenceOfActivity.length ; i++)
                 confidenceOfActivity[i]=0;
             for (DetectedActivity activity : updatedActivities) {
                 int activityType = activity.getType(); // activity 타입 추출
-//                if (activityType == 6)
-//                    continue;
 
                 if(activityType==4)
                     activityType=3;
-                if(activityType==6)
+                if(activityType==6|| activityType==5){
+                    Log.e("ActType","continue"+Integer.toString(activityType));
                     continue;
+                }
 
                if (activity.getConfidence() >confidenceOfActivity[activityType]) {
                    confidenceOfActivity[activityType] = activity.getConfidence();
                }
+               if(maxIdx==-1)
+                   maxIdx=0;
                 maxIdx = (confidenceOfActivity[activityType] > confidenceOfActivity[maxIdx] ? activityType : maxIdx); // 더크다면 큰걸로 기록
                 strStatus += getActivityString(activity.getType()) + activity.getConfidence() + "%\n";
             }
@@ -449,7 +451,7 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 firstTimeCall = 1;
             }
             Log.e(TAG, strStatus);
-            Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
+            //Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
             //detectedActivities.setText(strStatus);
 
         }

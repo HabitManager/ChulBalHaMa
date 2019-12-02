@@ -15,13 +15,14 @@ import java.util.ArrayList;
 
 public class DayTimeDialog {
     private Context context;
+    private ArrayList<Boolean> clicked;
 
-    public DayTimeDialog(Context context) {
+    public DayTimeDialog(Context context, ArrayList<Boolean> clicked) {
         this.context = context;
+        this.clicked = clicked;
     }
 
-    public void callFunction(final ArrayList<Boolean> result,
-                             final ArrayList<Integer> numbers,
+    public void callFunction(final ArrayList<Integer> numbers,
                              final CustomSevenDayInfo sevenDayInfo) {
 
         final Dialog dlg = new Dialog(context);
@@ -52,9 +53,12 @@ public class DayTimeDialog {
                 }else{
                     numbers.add(timePicker.getCurrentMinute());
                 }
+                
+                ArrayList<Boolean>  result = new ArrayList<>();
                 dayCheckBox.getResult(result);
                 sevenDayInfo.setWholeTimeRow(result, numbers);
-                sevenDayInfo.pickDay(result);
+                setClicked(result);
+                sevenDayInfo.pickDay(clicked);
                 dlg.dismiss();
             }
         });
@@ -65,5 +69,12 @@ public class DayTimeDialog {
                 dlg.dismiss();
             }
         });
+    }
+    
+    private void setClicked(ArrayList<Boolean> result){
+        for(int i = 0; i < result.size(); i++){
+            if(result.get(i))
+                clicked.set(i, true);
+        }
     }
 }

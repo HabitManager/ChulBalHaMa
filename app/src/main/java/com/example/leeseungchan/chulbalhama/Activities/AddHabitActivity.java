@@ -108,6 +108,7 @@ public class AddHabitActivity extends AppCompatActivity{
 
 
         /* day and place input*/
+        setDays();
         final LinearLayout dayPlace = findViewById(R.id.add_habit_intro);
 
         final CustomSevenDayInfo customSevenDayInfo =
@@ -128,7 +129,7 @@ public class AddHabitActivity extends AppCompatActivity{
             public void onClick(View v) {
                 DayDialog customDialog = new DayDialog(AddHabitActivity.this);
 
-                customDialog.callFunction(days, customSevenDayInfo, -1);
+                customDialog.callFunction(days, customSevenDayInfo, -1,1);
             }
         });
 
@@ -179,6 +180,14 @@ public class AddHabitActivity extends AppCompatActivity{
         }
 
         return prepare.toString();
+    }
+    
+    private void setDays(){
+        if(days.size()!= 0)
+            return;
+        for(int i = 0; i < 7; i++){
+            days.add(false);
+        }
     }
     
     private void insertHabit(){

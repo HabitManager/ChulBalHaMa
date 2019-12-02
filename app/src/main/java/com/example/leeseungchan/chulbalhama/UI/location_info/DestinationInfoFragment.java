@@ -167,7 +167,7 @@ public class DestinationInfoFragment extends Fragment{
         int time_minute = locationVO.getTimeMin();
         
         if(time_hour >= 0 && time_minute >= 0){
-            time.setTitle(time_hour + ":" + time_minute);
+            time.setTitle(time_hour + "시간 " + time_minute+"분");
         }else{
             time.setTitle(getResources().getString(R.string.guide_when_time));
         }

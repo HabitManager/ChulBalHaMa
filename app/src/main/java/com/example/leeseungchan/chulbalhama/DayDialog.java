@@ -22,7 +22,8 @@ public class DayDialog {
 
     public void callFunction(final ArrayList<Boolean> result,
                              final CustomSevenDayInfo customSevenDayInfo,
-                             final int habitId) {
+                             final int habitId,
+                             int mode) {
 
         final Dialog dlg = new Dialog(context);
 
@@ -34,7 +35,11 @@ public class DayDialog {
 
         final CustomDayCheckBox dayCheckBox =
                 new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
-        dayCheckBox.setBoxes(result);
+        if(mode == 0) {
+            dayCheckBox.setBoxes(result);
+        }else{
+            dayCheckBox.setBoxes(result, mode);
+        }
         dayCheckBox.showSelectedBoxes(habitId);
         final Button okButton = (Button) dlg.findViewById(R.id.okButton);
         final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);

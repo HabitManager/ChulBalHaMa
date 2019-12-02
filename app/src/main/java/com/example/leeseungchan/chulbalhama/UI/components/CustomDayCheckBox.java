@@ -34,11 +34,12 @@ public class CustomDayCheckBox{
         DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
-        String sql ="select departure_time from day_of_week";
+        String sql ="select departure_time, habit_id from day_of_week";
         Cursor time = db.rawQuery(sql, null);
         for(int i = 0; i < 7; i++){
             time.moveToNext();
             String id = time.getString(0);
+            Integer habit_id = time.getInt(1);
             if(id == null){
                 boxes.get(i).setEnabled(false);
                 if(result.size()<=i){
@@ -56,7 +57,25 @@ public class CustomDayCheckBox{
         }
         db.close();
     }
+    public void setBoxes(ArrayList<Boolean> result, int mode){
     
+        DBHelper dbHelper = DBHelper.getInstance();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    
+        String sql ="select departure_time from day_of_week";
+        Cursor time = db.rawQuery(sql, null);
+        for(int i = 0; i < 7; i++){
+            time.moveToNext();
+            String id = time.getString(0);
+            if(id == null){
+                boxes.get(i).setEnabled(false);
+            }
+            if(result.get(i)){
+                boxes.get(i).setChecked(true);
+            }
+        }
+        db.close();
+    }
     public void showSelectedBoxes(int selectedId){
         if(selectedId == -1){
             return;

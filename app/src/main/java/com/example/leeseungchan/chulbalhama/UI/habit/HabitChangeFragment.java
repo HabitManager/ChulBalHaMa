@@ -168,7 +168,7 @@ public class HabitChangeFragment extends Fragment {
                         break;
                     case R.id.day_setting:
                         DayDialog customDialog = new DayDialog(getActivity());
-                        customDialog.callFunction(days, customSevenDayInfo, habit.getId());
+                        customDialog.callFunction(days, customSevenDayInfo, habit.getId(), 0);
                         break;
                 }
             }

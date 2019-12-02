@@ -56,6 +56,8 @@ public class LocationHelper {
         return lHelperInstance;
     }
 
+    int trash = 0;
+
     Intent notificationIntent;
     PendingIntent pendingIntent;
 
@@ -73,11 +75,15 @@ public class LocationHelper {
     double lastLongitude;
     double lastLatitude;
 
-    String userState = "HOME1";
+    String userState = "HOME";
+
+    /* 알람 조건 */
+    boolean homeNoti = false;
 
     /* 조건 파악에 필요한 정보 */
     String userName;
     String habitName;
+    String prepareName;
     double dest_lon;
     double dest_lat;
     double start_lon;
@@ -191,6 +197,7 @@ public class LocationHelper {
             Cursor cHabit = db.rawQuery(habitSql, new String[]{Integer.toString(todays_habit)});
             cHabit.moveToNext();
             todays_habit_name = cHabit.getString(1);
+            prepareName = cHabit.getString(2);
             Log.d("Todays Habit name ?", todays_habit_name);
             habitName = todays_habit_name;
         } catch (Exception e){Log.e("LocationHelper", "Habits Table error");}
@@ -224,21 +231,14 @@ public class LocationHelper {
 
     public void getLocationListener(){
 
-        final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
-                .setContentText("허허")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(pendingIntent)
-                .build();
-
         gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
-                synchronized (notification){
-                    manager.notify(3, notification);
+
+                if(trash++ > 0) {
+                    notiCondition();
+                } else {
+                    Log.e("Location Helper ", "버려~");
                 }
-
-                notiCondition();
-
                 String provider = location.getProvider();
                 double longitude = location.getLongitude();
                 double latitude = location.getLatitude();
@@ -247,14 +247,9 @@ public class LocationHelper {
                 latitude = calc.formattingPoint(latitude);
                 curr_lat = latitude;
                 curr_lon = longitude;
-                Log.d("LocationHelper", "Current Lat : " + latitude);
-                Log.d("LocationHelper", "Current Lon : " + longitude);
-                //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
-                //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
 
                 if(!activityRecognitionStart)
                 {
-
 
                 }
 
@@ -272,86 +267,91 @@ public class LocationHelper {
             }
         };
 
-        getLocation();
+//        getLocation();
     }
 
-    public void setUpdateInterval(int interval){
-        this.updateInterval = interval;
-        lm.removeUpdates(gpsLocationListener);
-
-        final Notification notification = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setContentTitle("Foreground Service")
-                .setContentText("허허")
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
-                .setContentIntent(pendingIntent)
-                .build();
-
-        notiCondition();
-
-        gpsLocationListener = new LocationListener() {
-            public void onLocationChanged(Location location) {
-                synchronized (notification){
-                    manager.notify(3, notification);
-                }
-
-                String provider = location.getProvider();
-                double longitude = location.getLongitude();
-                double latitude = location.getLatitude();
-
-                longitude = calc.formattingPoint(longitude);
-                latitude = calc.formattingPoint(latitude);
-                curr_lat = latitude;
-                curr_lon = longitude;
-                Log.d("LocationHelper", "Current Lat : " + latitude);
-                Log.d("LocationHelper", "Current Lon : " + longitude);
-                //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
-                //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
-
-                notiCondition();
-
-                if(!activityRecognitionStart)
-                {
-
-
-                }
-
-                lastLatitude = latitude;
-                lastLongitude = longitude;
-            }
-
-            public void onStatusChanged(String provider, int status, Bundle extras) {
-            }
-
-            public void onProviderEnabled(String provider) {
-            }
-
-            public void onProviderDisabled(String provider) {
-            }
-        };
-    }
+    /* set Interval */
+//    public void setUpdateInterval(int interval){
+//        this.updateInterval = interval;
+//        lm.removeUpdates(gpsLocationListener);
+//
+//
+//        notiCondition();
+//
+//        gpsLocationListener = new LocationListener() {
+//            public void onLocationChanged(Location location) {
+//
+//                String provider = location.getProvider();
+//                double longitude = location.getLongitude();
+//                double latitude = location.getLatitude();
+//
+//                longitude = calc.formattingPoint(longitude);
+//                latitude = calc.formattingPoint(latitude);
+//                curr_lat = latitude;
+//                curr_lon = longitude;
+//                Log.d("LocationHelper", "Current Lat : " + latitude);
+//                Log.d("LocationHelper", "Current Lon : " + longitude);
+//                //TODO 유저의 위치 vs 목적지(목적지 테이블) 위치 / 집 위치 (유저 테이블) 비교
+//                //TODO 시간 비교해서 해당 습관에 대한 Notification or PopUp
+//
+//                notiCondition();
+//
+//                if(!activityRecognitionStart)
+//                {
+//
+//
+//                }
+//
+//                lastLatitude = latitude;
+//                lastLongitude = longitude;
+//            }
+//
+//            public void onStatusChanged(String provider, int status, Bundle extras) {
+//            }
+//
+//            public void onProviderEnabled(String provider) {
+//            }
+//
+//            public void onProviderDisabled(String provider) {
+//            }
+//        };
+//    }
 
 
     public void notiCondition() {
+        final Notification notification;
+        NotificationCompat.Builder nBuilder= new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setContentIntent(pendingIntent);
+
         Date currentDateTime = new Date();
         Log.e("LocationHelper", "Notification Condition");
-        //TODO 조건에 따른 새로운 알람 주기.
 
         /* 지금 몇시 ? */
         SimpleDateFormat format = new SimpleDateFormat("HH:mm");
         car = Calendar.getInstance();
         String currentTime = format.format(car.getTime());
         Log.d("CurrentTime?", currentTime);
-        Log.d("Current Location" , "지금 어디 ? " + Double.toString(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter")));
+        Log.d("Current Location" , "집과 나로부터의 거리 ? " + Double.toString(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter")));
+        Log.d("Current Location" , "학교와 나로부터의 거리 ? " + Double.toString(calc.distance(dest_lat, dest_lon, curr_lat, curr_lon, "meter")));
 
-        /* 집일때 처리*/
-        if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") > 50){
-
-            /* 학교일때 처리 */
-        } else if(calc.distance(dest_lat, dest_lon, curr_lat, curr_lon, "meter") > 50){
-
-            /* 길바닥일때 처리 */
+            /* 집일때 처리 후문 위치를 넣어놓자. 이때 최초에 집에서 나갈 준비를 하세요 라는 걸 띄워줌.*/
+        if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") < 50){
+            userState = "HOME";
+            if(!homeNoti) {
+                notification = nBuilder.setContentTitle("출발 하시기 전에 " + prepareName + "을 준비하세요!").build();
+                manager.notify(3, notification);
+                homeNoti = true;
+            }
+            //            Toast.makeText(this.context,Double.toString(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter")) + "미터~" , Toast.LENGTH_SHORT).show();
+            /* 학교일때 처리 이때 '잘 했냐?' 팝업창을 띄워줌 */
+        } else if(calc.distance(dest_lat, dest_lon, curr_lat, curr_lon, "meter") < 50){
+            userState = "SCHOOL";
         } else{
-
+            userState = "ROAD";
+            //팝업 한번 ( 오늘 '습관이름'을 할 수 있나요? )
+//            notification = nBuilder.setContentTitle("나는 어디인가.").build();
+//            manager.notify(3, notification);
         }
 
     }
@@ -377,4 +377,7 @@ public class LocationHelper {
         lm.removeUpdates(gpsLocationListener);
     }
 
+    public String getHabitName() {
+        return habitName;
+    }
 }

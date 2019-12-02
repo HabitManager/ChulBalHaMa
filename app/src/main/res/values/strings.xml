@@ -90,7 +90,6 @@
     <string name="closeDrawerNavigation">CloseDrawerNavigation</string>
 
 
-
     <!--   정민 시작 (activity recognition 관련)  -->
     <string name="detected_activities_title">Detected Activities</string>
     <string name="request_activity_updates">행동 예측 수행</string>

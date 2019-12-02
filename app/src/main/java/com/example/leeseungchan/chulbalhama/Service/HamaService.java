@@ -194,7 +194,7 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 isActivityStart = true;
                 Log.d("HAMA SERVICE", "액티비티 레코그니션 생성");
             }
-            if(locationHelper.getUserState() == "SCHOOL"){
+            if(locationHelper.getUserState() == "SCHOOL" && isActivityStart == true){
                 if(!endPopUpFlag){
                     Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen2.class);
                     startPopUpIntent.putExtra("data", "오늘 " + locationHelper.getHabitName() + "를 잘 하셨나요?");

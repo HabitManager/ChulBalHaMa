@@ -234,7 +234,7 @@ public class LocationHelper {
         gpsLocationListener = new LocationListener() {
             public void onLocationChanged(Location location) {
 
-                if(trash++ > 0) {
+                if(trash++ > 1) {
                     notiCondition();
                 } else {
                     Log.e("Location Helper ", "버려~");

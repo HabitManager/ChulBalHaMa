@@ -26,6 +26,7 @@ import com.example.leeseungchan.chulbalhama.R;
 import com.example.leeseungchan.chulbalhama.Activities.LocationInfoActivity;
 import com.example.leeseungchan.chulbalhama.UI.components.CustomChangeDeleteItem;
 import com.example.leeseungchan.chulbalhama.VO.DestinationsVO;
+import com.example.leeseungchan.chulbalhama.VO.LocationVO;
 import com.example.leeseungchan.chulbalhama.VO.UserVO;
 
 import java.util.ArrayList;
@@ -96,15 +97,19 @@ public class PersonalInfoFragment extends Fragment{
         destinations.clear();
         DBHelper dbHelper = DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String sql = "select destination_name, _id from destinations";
+        String sql = "select destination_name, _id, coordinate, time from destinations";
         Cursor c = db.rawQuery(sql, null);
         while(c.moveToNext()){
             String name = c.getString(0);
             int id = c.getInt(1);
+            String coordinate = c.getString(2);
+            String time = c.getString(3);
 
             DestinationsVO h = new DestinationsVO();
             h.setDestinationName(name);
             h.setId(id);
+            h.setCoordinate(coordinate);
+            h.setTime(time);
             destinations.add(h);
         }
     }
@@ -146,6 +151,7 @@ public class PersonalInfoFragment extends Fragment{
                     case R.id.info_start:
                         Intent intent = new Intent(getContext(), LocationInfoActivity.class);
                         intent.putExtra("type", 0);
+                        intent.putExtra("locationVO", getLocationByUser(userVO));
                         startActivity(intent);
                         break;
                 }
@@ -205,5 +211,12 @@ public class PersonalInfoFragment extends Fragment{
     private void refresh(){
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         transaction.detach(this).attach(this).commit();
+    }
+    
+    private LocationVO getLocationByUser(UserVO user){
+        LocationVO locationVO = new LocationVO();
+        locationVO.setName(user.getStartingName());
+        locationVO.setDescription(user.getStartingName());
+        return locationVO;
     }
 }

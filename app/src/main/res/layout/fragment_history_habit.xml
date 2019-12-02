@@ -141,7 +141,18 @@
             android:text="SRBAI 그래프 보기"
             android:textStyle="bold"
             android:layout_gravity="center"
-            android:layout_marginBottom="100dp"/>
+            android:layout_marginBottom="50dp"/>
+
+        <TextView
+            android:id="@+id/cheer_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="100dp"
+            />
 
     </LinearLayout>
 </ScrollView>

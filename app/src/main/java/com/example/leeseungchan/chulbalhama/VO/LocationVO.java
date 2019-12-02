@@ -9,8 +9,10 @@ public class LocationVO implements Serializable {
     private double longitude;
     private String name;
     private String description;
+    private int id;
     
     public LocationVO(){
+        id = -1;
         name = null;
         latitude = -1;
         longitude = -1;
@@ -34,6 +36,13 @@ public class LocationVO implements Serializable {
         this.description = description;
     }
     
+    public int getId() {
+        return id;
+    }
+    
+    public void setId(int id) {
+        this.id = id;
+    }
     
     public void setTime(int timeHour, int timeMin) {
         this.timeHour = timeHour;

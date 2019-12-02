@@ -22,7 +22,8 @@ public class DayDialog {
 
     public void callFunction(final ArrayList<Boolean> result,
                              final CustomSevenDayInfo customSevenDayInfo,
-                             final int habitId) {
+                             final int habitId,
+                             int mode) {
 
         final Dialog dlg = new Dialog(context);
 
@@ -34,7 +35,11 @@ public class DayDialog {
 
         final CustomDayCheckBox dayCheckBox =
                 new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
-        dayCheckBox.setBoxes();
+        if(mode == 0) {
+            dayCheckBox.setBoxes(result);
+        }else{
+            dayCheckBox.setBoxes(result, mode);
+        }
         dayCheckBox.showSelectedBoxes(habitId);
         final Button okButton = (Button) dlg.findViewById(R.id.okButton);
         final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
@@ -43,9 +48,12 @@ public class DayDialog {
         okButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                dayCheckBox.getResult(result);
-                customSevenDayInfo.pickDay(result);
+                ArrayList<Boolean> list = new ArrayList<>();
+                dayCheckBox.getResult(list);
+                customSevenDayInfo.pickDay(list);
                 customSevenDayInfo.updateDayHabit(result, habitId);
+                customSevenDayInfo.deleteDayHabit(compare(result, list), habitId);
+                duplicateList(result, list);
                 dlg.dismiss();
             }
         });
@@ -56,5 +64,22 @@ public class DayDialog {
                 dlg.dismiss();
             }
         });
+    }
+    
+    private ArrayList<Boolean> compare(ArrayList<Boolean> old, ArrayList<Boolean> newOne){
+        ArrayList<Boolean> temp = new ArrayList<>();
+        for(int i = 0; i < old.size(); i++){
+            temp.add(false);
+            if(old.get(i) && !newOne.get(i)){
+                temp.set(i, true);
+            }
+        }
+        return temp;
+    }
+    
+    private void duplicateList(ArrayList<Boolean> old, ArrayList<Boolean> newOne){
+        for(int i = 0; i< newOne.size(); i++){
+            old.set(i, newOne.get(i));
+        }
     }
 }

@@ -57,7 +57,7 @@ public class RegressionVO implements Serializable {
     public String encourageMessage(int goal)
     {
         double estDate=formationDateEstimate();
-        double wantDate = getHabitDueDate(habitID);
+        double wantDate = goal;
         if(estDate>wantDate)
         {//목표 보다 일찍 완성될 것으로 예상
             return "지금 처럼만 하신다면, 목표 기간 내에 습관을 형성하실 수 있을겁니다. 잘하고 계십니다!";

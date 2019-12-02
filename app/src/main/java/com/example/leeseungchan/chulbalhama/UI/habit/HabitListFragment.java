@@ -67,10 +67,12 @@ public class HabitListFragment extends Fragment {
             String name = c.getString(1);
             String prepare = c.getString(2);
             int due = c.getInt(3);
+            int active = c.getInt(5);
 
-            HabitsVO h = new HabitsVO(id, name, due, prepare, 0);
+            HabitsVO h = new HabitsVO(id, name, due, prepare,0, active);
             habits.add(h);
         }
+        db.close();
     }
     
     private void setRecyclerView(View v){

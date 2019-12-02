@@ -8,15 +8,17 @@ public class HabitsVO implements Serializable {
     int due;
     String prepare;
     int achievementRate;
+    int active;
 
     public HabitsVO(){}
 
-    public HabitsVO(int id, String habitName, int due, String prepare, int achievementRate){
+    public HabitsVO(int id, String habitName, int due, String prepare, int achievementRate, int active){
         this.id = id;
         this.habitName = habitName;
         this.due = due;
         this.prepare = prepare;
         this.achievementRate = achievementRate;
+        this.active = active;
     }
 
     public int getId(){
@@ -45,5 +47,13 @@ public class HabitsVO implements Serializable {
 
     public void setPrepare(String prepare) {
         this.prepare = prepare;
+    }
+    
+    public int getActive() {
+        return active;
+    }
+    
+    public void setActive(int active) {
+        this.active = active;
     }
 }

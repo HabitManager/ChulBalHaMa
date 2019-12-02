@@ -16,6 +16,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -49,6 +50,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         private View view;
         private HabitViewHolder holder;
         private int position;
+        private Switch toggleBtn;
 
         public HabitViewHolder(@NonNull final View v){
             super(v);
@@ -62,11 +64,23 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             habitHistory = v.findViewById(R.id.history);
             habitDelete = v.findViewById(R.id.delete);
             srbaiGuide = v.findViewById(R.id.guide_srbai_test);
+            toggleBtn = v. findViewById(R.id.toggle_btn);
             
             linearLayout.setOnClickListener(this);
             habitInfo.setOnClickListener(this);
             habitHistory.setOnClickListener(this);
             habitDelete.setOnClickListener(this);
+            toggleBtn.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                    HabitsVO habitsVO = (HabitsVO)mDataSet.get(getAdapterPosition());
+                    if(isChecked)
+                        habitsVO.setActive(1);
+                    else
+                        habitsVO.setActive(0);
+                    setToggle(habitsVO);
+                }
+            });
             
         }
 
@@ -75,10 +89,16 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             String description = itemHabit.getDue() + "일";
             habitDescription.setText(description);
             
-            if(isSrbaiFinished(((HabitsVO)mDataSet.get(getAdapterPosition())).getId()))
+            if(isSrbaiFinished(itemHabit.getId()))
                 srbaiGuide.setText("이미 설문을 진행하셨습니다.");
             else
                 srbaiGuide.setText("srbai설문을 진행해 주세요!");
+            
+            if(itemHabit.getActive() == 0){
+                toggleBtn.setChecked(false);
+            }else{
+                toggleBtn.setChecked(true);
+            }
         }
         
         void onBind(int position){
@@ -241,5 +261,10 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         today = date.format(currentTime);
         return today;
     }
-    
+    public void setToggle(HabitsVO habitsVO){
+        SQLiteDatabase db = DBHelper.getInstance().getWritableDatabase();
+        String sql = "update habits set active=? where _id=?";
+        db.execSQL(sql, new Object[]{habitsVO.getActive(), habitsVO.getId()});
+        db.close();
+    }
 }

@@ -185,8 +185,8 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
 
             if(locationHelper.getUserState() == "ROAD" && isActivityStart == false){
                 if(!startPopUpFlag) {
-                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen.class);
-                    startPopUpIntent.putExtra("data", "오늘은 " + locationHelper.getHabitName() + "를 하셔야 합니다.");
+                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen2.class);
+                    startPopUpIntent.putExtra("data", "오늘은 " + locationHelper.getHabitName() + "를 해야합니다\n 하마 서비스를 시작 하시겠습니까?.");
                     getApplication().startActivity(startPopUpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     startPopUpFlag = true;
                 }
@@ -196,7 +196,7 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
             }
             if(locationHelper.getUserState() == "SCHOOL"){
                 if(!endPopUpFlag){
-                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen.class);
+                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen2.class);
                     startPopUpIntent.putExtra("data", "오늘 " + locationHelper.getHabitName() + "를 잘 하셨나요?");
                     getApplication().startActivity(startPopUpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     endPopUpFlag = true;

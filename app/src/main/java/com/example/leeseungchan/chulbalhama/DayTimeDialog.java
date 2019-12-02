@@ -28,20 +28,20 @@ public class DayTimeDialog {
         final Dialog dlg = new Dialog(context);
 
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-
-        dlg.setContentView(R.layout.dialog_time_day);
-
-        dlg.show();
-
-        final CustomDayCheckBox dayCheckBox =
-                new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
-        final TimePicker timePicker = (TimePicker) dlg.findViewById(R.id.time_picker);
-        final Button okButton = (Button) dlg.findViewById(R.id.okButton);
-        final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
-
-        okButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+    
+                dlg.setContentView(R.layout.dialog_time_day);
+    
+                dlg.show();
+    
+                final CustomDayCheckBox dayCheckBox =
+                    new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
+                final TimePicker timePicker = (TimePicker) dlg.findViewById(R.id.time_picker);
+                final Button okButton = (Button) dlg.findViewById(R.id.okButton);
+                final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
+    
+                okButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
                 if(numbers.size() != 0) {
                     numbers.set(0, timePicker.getCurrentHour());
                 }else{
@@ -49,7 +49,7 @@ public class DayTimeDialog {
                 }
 
                 if(numbers.size() == 2) {
-                    numbers.set(1, timePicker.getCurrentHour());
+                    numbers.set(1, timePicker.getCurrentMinute());
                 }else{
                     numbers.add(timePicker.getCurrentMinute());
                 }

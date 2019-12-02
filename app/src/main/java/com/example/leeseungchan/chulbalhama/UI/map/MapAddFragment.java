@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.example.leeseungchan.chulbalhama.R;
+import com.example.leeseungchan.chulbalhama.UI.location_info.DestinationChangeFragment;
 import com.example.leeseungchan.chulbalhama.UI.location_info.DestinationInfoFragment;
 import com.example.leeseungchan.chulbalhama.UI.location_info.StartingPointInfoFragment;
 import com.example.leeseungchan.chulbalhama.VO.LocationVO;
@@ -175,6 +176,13 @@ public class MapAddFragment extends Fragment implements View.OnClickListener{
                 if (!fg.isAdded()) {
                     transaction.replace(R.id.nav_host_fragment, fg)
                             .commitNowAllowingStateLoss();
+                }
+                break;
+            case 3:
+                fg = DestinationChangeFragment.newInstance(bundle);
+                if (!fg.isAdded()) {
+                    transaction.replace(R.id.nav_host_fragment, fg)
+                        .commitNowAllowingStateLoss();
                 }
                 break;
             }

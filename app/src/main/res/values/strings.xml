@@ -5,6 +5,7 @@
     <string name="title_habit">습관 더하기</string>
     <string name="title_destination">목적지 추가하기</string>
     <string name="title_starting">출발지 변경하기</string>
+    <string name="title_destination_change">목적지 변경하기</string>
 
     <string name="store">저장하기</string>
 

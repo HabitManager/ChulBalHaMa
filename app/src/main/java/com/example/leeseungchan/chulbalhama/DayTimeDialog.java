@@ -16,45 +16,45 @@ import java.util.ArrayList;
 public class DayTimeDialog {
     private Context context;
     private ArrayList<Boolean> clicked;
-
+    
     public DayTimeDialog(Context context, ArrayList<Boolean> clicked) {
         this.context = context;
         this.clicked = clicked;
     }
-
+    
     public void callFunction(final ArrayList<Integer> numbers,
                              final CustomSevenDayInfo sevenDayInfo) {
-
+        
         final Dialog dlg = new Dialog(context);
-
+        
         dlg.requestWindowFeature(Window.FEATURE_NO_TITLE);
-    
-                dlg.setContentView(R.layout.dialog_time_day);
-    
-                dlg.show();
-    
-                final CustomDayCheckBox dayCheckBox =
-                    new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
-                final TimePicker timePicker = (TimePicker) dlg.findViewById(R.id.time_picker);
-                final Button okButton = (Button) dlg.findViewById(R.id.okButton);
-                final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
-    
-                okButton.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                if(numbers.size() != 0) {
+        
+        dlg.setContentView(R.layout.dialog_time_day);
+        
+        dlg.show();
+        
+        final CustomDayCheckBox dayCheckBox =
+            new CustomDayCheckBox(dlg.findViewById(R.id.custom_days_checkbox));
+        final TimePicker timePicker = (TimePicker) dlg.findViewById(R.id.time_picker);
+        final Button okButton = (Button) dlg.findViewById(R.id.okButton);
+        final Button cancelButton = (Button) dlg.findViewById(R.id.cancelButton);
+        
+        okButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (numbers.size() != 0) {
                     numbers.set(0, timePicker.getCurrentHour());
-                }else{
+                } else {
                     numbers.add(timePicker.getCurrentHour());
                 }
-
-                if(numbers.size() == 2) {
+                
+                if (numbers.size() == 2) {
                     numbers.set(1, timePicker.getCurrentMinute());
-                }else{
+                } else {
                     numbers.add(timePicker.getCurrentMinute());
                 }
                 
-                ArrayList<Boolean>  result = new ArrayList<>();
+                ArrayList<Boolean> result = new ArrayList<>();
                 dayCheckBox.getResult(result);
                 sevenDayInfo.setWholeTimeRow(result, numbers);
                 setClicked(result);
@@ -71,9 +71,9 @@ public class DayTimeDialog {
         });
     }
     
-    private void setClicked(ArrayList<Boolean> result){
-        for(int i = 0; i < result.size(); i++){
-            if(result.get(i))
+    private void setClicked(ArrayList<Boolean> result) {
+        for (int i = 0; i < result.size(); i++) {
+            if (result.get(i))
                 clicked.set(i, true);
         }
     }

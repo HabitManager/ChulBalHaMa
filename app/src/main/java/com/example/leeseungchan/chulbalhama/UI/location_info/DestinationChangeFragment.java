@@ -38,45 +38,47 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
-public class DestinationInfoFragment extends Fragment{
-
+public class DestinationChangeFragment extends Fragment{
+    
     private ArrayList<Boolean> days = new ArrayList<>();
     private ArrayList<Integer> time = new ArrayList<>();
     private LocationVO locationVO;
     private CustomSevenDayInfo sevenDayInfo;
     private ArrayList<String> dayOfWeekTime;
     private View v;
+    private String timeInput;
     
     Bundle bundle = new Bundle();
-
-    public static DestinationInfoFragment newInstance(Bundle bundle){
-        DestinationInfoFragment v = new DestinationInfoFragment();
+    
+    public static DestinationChangeFragment newInstance(Bundle bundle){
+        DestinationChangeFragment v = new DestinationChangeFragment();
         v.bundle = bundle;
         return v;
     }
-
+    
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saveInstanceState) {
         v = inflater.inflate(R.layout.fragment_destination_info, container, false);
-        int type = bundle.getInt("type",1);
-        bundle.putInt("type", 1);
+        int type = bundle.getInt("type",3);
+        bundle.putInt("type", 3);
         locationVO = (LocationVO) bundle.getSerializable("locationVO");
         dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
         setDays();
-    
+        timeInput = bundle.getString("time");
+        
         /* EditText to get name*/
         setEditTextText((EditText) v.findViewById(R.id.destination_name),locationVO);
         
         /* destination coordination view */
         setDestInfoChangeDeleteItem(v, R.id.destination_setting);
-
-
+        
+        
         /* time setting view */
         setDestInfoChangeDeleteItem(v, R.id.destination_time_duration);
         
-
+        
         /* start time view */
         // set input layout
         setDestInfoChangeDeleteItem(v, R.id.destination_time_start);
@@ -86,8 +88,8 @@ public class DestinationInfoFragment extends Fragment{
         
         
         /* destination store */
-        insertDestination(v);
-
+        updateDestination(v);
+        
         return v;
     }
     
@@ -147,7 +149,8 @@ public class DestinationInfoFragment extends Fragment{
     private void setTitle(int id, CustomChangeDeleteItem item){
         switch (id){
             case R.id.destination_setting:
-                setAddress(item, bundle.getString("address"));
+                String address = bundle.getString("address");
+                setAddress(item, address);
                 break;
             case R.id.destination_time_duration:
                 setTime(item, locationVO);
@@ -159,7 +162,7 @@ public class DestinationInfoFragment extends Fragment{
     
     private void setAddress(CustomChangeDeleteItem item, String address){
         if(address == null)
-            item.setTitle(getResources().getString(R.string.guide_address));
+            item.setTitle("");
         else
             item.setTitle(address);
     }
@@ -170,12 +173,13 @@ public class DestinationInfoFragment extends Fragment{
         if(time_hour >= 0 && time_minute >= 0){
             time.setTitle(time_hour + "시간 " + time_minute+"분");
         }else{
-            time.setTitle(getResources().getString(R.string.guide_when_time));
+            time.setTitle(timeInput);
         }
     }
     
-    private void insertDestination(View v){
+    private void updateDestination(View v){
         Button destinationStoreBtn = v.findViewById(R.id.store_destination);
+        destinationStoreBtn.setText(R.string.button_change);
         storeAndUpdateAndFinish(destinationStoreBtn);
     }
     
@@ -242,32 +246,41 @@ public class DestinationInfoFragment extends Fragment{
         if(isTempData != null){
             sevenDayInfo.setSomeTimeRow(isTempData);
         }
+        sevenDayInfo.pickDay(showDestination(locationVO.getId()));
     }
     
     private void storeAndUpdateAndFinish(View v){
         v.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+    
+                String time;
+    
+                if(locationVO.getTime()==null)
+                    time = timeInput;
+                else
+                    time = locationVO.getTime();
+                
                 if(checkEvertThingInserted()) {
                     // insert destination data to sqlite db
-                    insertDest(locationVO.getCoordinate(), locationVO.getTime(), locationVO.getName());
-    
+                    updateDest(locationVO.getCoordinate(), time, locationVO.getName(), locationVO.getId());
+                    
                     // update dayOfWeek table.
                     updateDayOfWeek();
-    
+                    
                     getActivity().finish();
                 }
             }
         });
     }
     
-    private void insertDest(String coordinate, String time, String name){
+    private void updateDest(String coordinate, String time, String name, int id){
         DBHelper dbHelper =  DBHelper.getInstance(getContext());
         SQLiteDatabase db = dbHelper.getWritableDatabase();
         // destination
-        String sql = "insert into destinations (coordinate, time, destination_name) values(?,?,?)";
-       
-        db.execSQL(sql, new Object[]{coordinate,time,name});
+        String sql = "update destinations set coordinate=?, time=?, destination_name=? where _id=?";
+        
+        db.execSQL(sql, new Object[]{coordinate,time,name, id});
         db.close();
     }
     
@@ -278,7 +291,7 @@ public class DestinationInfoFragment extends Fragment{
     }
     
     private boolean checkEvertThingInserted(){
-        if(!isDestNameEmpty() && !isMapUnselected() && !isTimeEmpty() && !isDayEmpty()){
+        if(!isDestNameEmpty() && !isMapUnselected()){
             return true;
         }
         return false;
@@ -292,14 +305,6 @@ public class DestinationInfoFragment extends Fragment{
         return false;
     }
     
-    private boolean isTimeEmpty(){
-        if(locationVO.getTime() == null || locationVO.getTime().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "소요시간을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
-    
     private boolean isMapUnselected(){
         if(locationVO.getCoordinate() == null || locationVO.getCoordinate().length() == 0){
             Toast.makeText(getActivity().getApplicationContext(), "장소를 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
@@ -308,16 +313,27 @@ public class DestinationInfoFragment extends Fragment{
         return false;
     }
     
-    private boolean isDayEmpty(){
-        if(days.isEmpty()){
-            Toast.makeText(getActivity().getApplicationContext(), "요일과 시간을 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
-    
     private void setTime(int hour, int min){
         locationVO.setTime(hour, min);
         refresh();
+    }
+    
+    private ArrayList<Boolean> showDestination(int destId){
+        for(int i = 0; i < 7; i++){
+            days.add(false);
+        }
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
+        String sql = "select _id from day_of_week where destination_id = ? order by _id";
+        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(destId)});
+        while(c.moveToNext()){
+            int id = c.getInt(0);
+            if(id > 7) {
+                db.close();
+                return days;
+            }
+            days.set(id-1, true);
+        }
+        db.close();
+        return days;
     }
 }

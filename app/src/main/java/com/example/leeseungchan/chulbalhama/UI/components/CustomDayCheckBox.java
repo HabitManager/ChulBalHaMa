@@ -76,6 +76,14 @@ public class CustomDayCheckBox{
         }
         db.close();
     }
+    
+    public void setBoxesWithArray(ArrayList<Boolean> result){
+        for(int i = 0; i < 7; i++){
+            if(result.get(i)){
+                boxes.get(i).setChecked(true);
+            }
+        }
+    }
     public void showSelectedBoxes(int selectedId){
         if(selectedId == -1){
             return;

@@ -336,7 +336,7 @@ public class LocationHelper {
         Log.d("Current Location" , "학교와 나로부터의 거리 ? " + Double.toString(calc.distance(dest_lat, dest_lon, curr_lat, curr_lon, "meter")));
 
             /* 집일때 처리 후문 위치를 넣어놓자. 이때 최초에 집에서 나갈 준비를 하세요 라는 걸 띄워줌.*/
-        if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") < 70){
+        if(calc.distance(start_lat, start_lon, curr_lat, curr_lon, "meter") < 10000){
             userState = "HOME";
             if(!homeNoti) {
                 notification = nBuilder.setContentTitle("출발 하시기 전에 " + prepareName + "을 준비하세요!").build();

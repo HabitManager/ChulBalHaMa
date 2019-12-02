@@ -89,6 +89,8 @@ public class NonLinearRegression  { // serialize하여 객체 인텐트 전송�
         //initialize the optimizer and curve fitter.
         LevenbergMarquardtOptimizer optim = new LevenbergMarquardtOptimizer();
         CurveFitter fitter = new CurveFitter(optim);
+        if (day==null)
+            return;
         for(int i =0; i<day.size();i++)
             fitter.addObservedPoint(day.get(i), score.get(i));
         double result[] = fitter.fit(model, initialGuess);

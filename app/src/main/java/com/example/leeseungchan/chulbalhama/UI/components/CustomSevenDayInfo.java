@@ -120,6 +120,21 @@ public class CustomSevenDayInfo {
         db.close();
     }
     
+    public void deleteDayHabit(ArrayList<Boolean> deletable, int habitId){
+        if(habitId == -1)
+            return;
+    
+        DBHelper helper = DBHelper.getInstance();
+        SQLiteDatabase db = helper.getWritableDatabase();
+        String update = "update day_of_week set habit_id=? where day=?";
+        for(int i = 0; i < 7; i++){
+            if(deletable.get(i)){
+                db.execSQL(update, new Object[]{null, dayName.get(i)});
+            }
+        }
+        db.close();
+    }
+    
     public void getResultTimeDataInput(ArrayList<String> times){
         for(int i = 0; i < 7; i++){
             TextView time = dayInputs.get(i).findViewById(R.id.day_time);

@@ -30,7 +30,35 @@ public class CustomDayCheckBox{
         boxes.add((CheckBox) view.findViewById(R.id.sun));
     }
     
-    public void setBoxes(){
+    public void setBoxes(ArrayList<Boolean> result){
+        DBHelper dbHelper = DBHelper.getInstance();
+        SQLiteDatabase db = dbHelper.getReadableDatabase();
+    
+        String sql ="select departure_time, habit_id from day_of_week";
+        Cursor time = db.rawQuery(sql, null);
+        for(int i = 0; i < 7; i++){
+            time.moveToNext();
+            String id = time.getString(0);
+            Integer habit_id = time.getInt(1);
+            if(id == null){
+                boxes.get(i).setEnabled(false);
+                if(result.size()<=i){
+                    result.add(false);
+                }else{
+                    result.set(i,false);
+                }
+            }else {
+                if (result.size() <= i) {
+                    result.add(true);
+                } else {
+                    result.set(i, true);
+                }
+            }
+        }
+        db.close();
+    }
+    public void setBoxes(ArrayList<Boolean> result, int mode){
+    
         DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
@@ -42,10 +70,20 @@ public class CustomDayCheckBox{
             if(id == null){
                 boxes.get(i).setEnabled(false);
             }
+            if(result.get(i)){
+                boxes.get(i).setChecked(true);
+            }
         }
         db.close();
     }
     
+    public void setBoxesWithArray(ArrayList<Boolean> result){
+        for(int i = 0; i < 7; i++){
+            if(result.get(i)){
+                boxes.get(i).setChecked(true);
+            }
+        }
+    }
     public void showSelectedBoxes(int selectedId){
         if(selectedId == -1){
             return;

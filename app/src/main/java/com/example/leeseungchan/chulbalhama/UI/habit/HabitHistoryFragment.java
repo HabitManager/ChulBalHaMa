@@ -20,6 +20,7 @@ import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.example.leeseungchan.chulbalhama.Adpater.SRBAIAdapter;
@@ -150,6 +151,13 @@ public class HabitHistoryFragment extends Fragment {
                 }
             }
         });
+        
+        /* cheer up test */
+        TextView cheerUp = v.findViewById(R.id.cheer_up);
+        if(srbaiVOS.size() != 0){
+            nonLinearRegression.optimize(days, scores);
+            cheerUp.setText(regressionVO.encourageMessage(habit.getDue()));
+        }
         return v;
     }
     

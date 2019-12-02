@@ -94,7 +94,6 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
             else
                 srbaiGuide.setText("srbai설문을 진행해 주세요!");
     
-    
             if(!isValid(itemHabit.getId())){
                 toggleBtn.setChecked(false);
                 toggleBtn.setEnabled(false);

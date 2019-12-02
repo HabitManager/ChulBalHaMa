@@ -37,8 +37,7 @@ public class DetectedActivitiesIntentService extends IntentService {
 
         ArrayList<DetectedActivity> detectedActivities = (ArrayList) result.getProbableActivities();
         Log.e(TAG, "activities detected");
-
-        //Log.e(TAG,detectedActivities.toString());
+        Log.e(TAG,detectedActivities.toString());
         localIntent.putExtra(Constants.ACTIVITY_EXTRA, detectedActivities);
         LocalBroadcastManager.getInstance(this).sendBroadcast(localIntent);
 

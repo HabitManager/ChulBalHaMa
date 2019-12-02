@@ -185,8 +185,8 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
 
             if(locationHelper.getUserState() == "ROAD" && isActivityStart == false){
                 if(!startPopUpFlag) {
-                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen.class);
-                    startPopUpIntent.putExtra("data", "오늘은 " + locationHelper.getHabitName() + "를 하셔야 합니다.");
+                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen2.class);
+                    startPopUpIntent.putExtra("data", "오늘은 " + locationHelper.getHabitName() + "를 해야합니다\n 하마 서비스를 시작 하시겠습니까?.");
                     getApplication().startActivity(startPopUpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     startPopUpFlag = true;
                 }
@@ -194,9 +194,9 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 isActivityStart = true;
                 Log.d("HAMA SERVICE", "액티비티 레코그니션 생성");
             }
-            if(locationHelper.getUserState() == "SCHOOL"){
+            if(locationHelper.getUserState() == "SCHOOL" && isActivityStart == true){
                 if(!endPopUpFlag){
-                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen.class);
+                    Intent startPopUpIntent = new Intent(getApplicationContext(), PopUpScreen2.class);
                     startPopUpIntent.putExtra("data", "오늘 " + locationHelper.getHabitName() + "를 잘 하셨나요?");
                     getApplication().startActivity(startPopUpIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
                     endPopUpFlag = true;
@@ -397,22 +397,24 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
         public void onReceive(Context context, Intent intent) {
             ArrayList<DetectedActivity> updatedActivities = intent.getParcelableArrayListExtra(Constants.ACTIVITY_EXTRA);
             String strStatus = "";
-            maxIdx=0;
+            maxIdx=-1;
             for(int i =0; i<confidenceOfActivity.length ; i++)
                 confidenceOfActivity[i]=0;
             for (DetectedActivity activity : updatedActivities) {
                 int activityType = activity.getType(); // activity 타입 추출
-//                if (activityType == 6)
-//                    continue;
 
                 if(activityType==4)
                     activityType=3;
-                if(activityType==6)
+                if(activityType==6|| activityType==5){
+                    Log.e("ActType","continue"+Integer.toString(activityType));
                     continue;
+                }
 
                if (activity.getConfidence() >confidenceOfActivity[activityType]) {
                    confidenceOfActivity[activityType] = activity.getConfidence();
                }
+               if(maxIdx==-1)
+                   maxIdx=0;
                 maxIdx = (confidenceOfActivity[activityType] > confidenceOfActivity[maxIdx] ? activityType : maxIdx); // 더크다면 큰걸로 기록
                 strStatus += getActivityString(activity.getType()) + activity.getConfidence() + "%\n";
             }
@@ -420,6 +422,10 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 accumulatedTime = System.currentTimeMillis() - countTime;
                 countTime = System.currentTimeMillis();
                 strStatus += "Possibly what you act : " + getActivityString(maxIdx) + confidenceOfActivity[maxIdx] + "% \n";
+                if(maxIdx==2|| maxIdx==7||maxIdx==8)
+                    Toast.makeText(getApplicationContext(), "걷는중!(팝업이 뜨지 않는 상태입니다.)", Toast.LENGTH_SHORT).show();
+                if(maxIdx==0)
+                    Toast.makeText(getApplicationContext(), "차량 탑승중!", Toast.LENGTH_SHORT).show();//appcontext에 토스트
                 if (lastAction != -1)
                     activityTimes[lastAction] += accumulatedTime;
                 if (
@@ -445,7 +451,7 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 firstTimeCall = 1;
             }
             Log.e(TAG, strStatus);
-//            Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
+            //Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
             //detectedActivities.setText(strStatus);
 
         }

@@ -45,6 +45,7 @@ public class HabitListFragment extends Fragment {
             @Override
             public void onClick(View v){
                 Intent intent = new Intent(getContext(), AddHabitActivity.class);
+                intent.putExtra("listSize", habits.size());
                 startActivity(intent);
     
             }

@@ -154,8 +154,6 @@ public class MainActivity extends AppCompatActivity
             dbHelper.setUser();
             Intent newIntent = new Intent(MainActivity.this, StartActivity.class);
             startActivity(newIntent);
-
-            prefs.edit().putBoolean("isFirstRun",false).apply();
         }
     }
     

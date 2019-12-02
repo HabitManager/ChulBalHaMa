@@ -44,6 +44,7 @@ public class DestinationInfoFragment extends Fragment{
     private LocationVO locationVO;
     private CustomSevenDayInfo sevenDayInfo;
     private ArrayList<String> dayOfWeekTime;
+    private View v;
     
     Bundle bundle = new Bundle();
 
@@ -57,11 +58,12 @@ public class DestinationInfoFragment extends Fragment{
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle saveInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_destination_info, container, false);
-
+        v = inflater.inflate(R.layout.fragment_destination_info, container, false);
+        
         bundle.putInt("type", 1);
         locationVO = (LocationVO) bundle.getSerializable("locationVO");
         dayOfWeekTime = bundle.getStringArrayList("dayOfWeekTime");
+        setDays();
     
         /* EditText to get name*/
         setEditTextText((EditText) v.findViewById(R.id.destination_name),locationVO);
@@ -77,6 +79,7 @@ public class DestinationInfoFragment extends Fragment{
         /* start time view */
         // set input layout
         setDestInfoChangeDeleteItem(v, R.id.destination_time_start);
+        
         // set 2d array for day and time
         setDayOfWeekArray(v);
         
@@ -120,8 +123,24 @@ public class DestinationInfoFragment extends Fragment{
         // set change button text & setOnClickListener
         item.setChange(getResources().getString(R.string.button_setting));
         setDestInfoClickListener(item.getChange(), layout);
-        // set delete button gone
-        item.setVisibility(item.DELETE_BTN, View.GONE);
+        // set delete button visible.
+        if(id == R.id.destination_time_start) {
+            item.getDelete().setBackground(getResources().getDrawable(R.drawable.ic_refresh_black_24dp));
+            item.getDelete().setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    setDays();
+                    sevenDayInfo.pickDay(days);
+                    refresh();
+                }
+            });
+        }else
+            item.setVisibility(item.DELETE_BTN, View.GONE);
+    }
+    
+    private void refresh(){
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+        transaction.detach(this).attach(this).commit();
     }
     
     private void setTitle(int id, CustomChangeDeleteItem item){
@@ -147,7 +166,7 @@ public class DestinationInfoFragment extends Fragment{
         int time_hour = locationVO.getTimeHour();
         int time_minute = locationVO.getTimeMin();
         
-        if(time_hour > 0 && time_minute > 0){
+        if(time_hour >= 0 && time_minute >= 0){
             time.setTitle(time_hour + ":" + time_minute);
         }else{
             time.setTitle(getResources().getString(R.string.guide_when_time));
@@ -159,6 +178,8 @@ public class DestinationInfoFragment extends Fragment{
         storeAndUpdateAndFinish(destinationStoreBtn);
     }
     
+    
+    
     private void setDestInfoClickListener(View target, final View root){
         target.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -168,25 +189,33 @@ public class DestinationInfoFragment extends Fragment{
                         callMapFragment();
                         break;
                     case R.id.destination_time_duration:
-                        showTimeDialog(locationVO);
+                        showTimeDialog();
                         break;
                     case R.id.destination_time_start:
-                        DayTimeDialog dayTimeDialog = new DayTimeDialog(getContext());
-                        dayTimeDialog.callFunction(days, time, sevenDayInfo);
+                        DayTimeDialog dayTimeDialog = new DayTimeDialog(getContext(), days);
+                        dayTimeDialog.callFunction(time, sevenDayInfo);
                         break;
                 }
             }
         });
     }
     
-    private void showTimeDialog(final LocationVO locationVO){
+    private void setDays(){
+        if(days.size()!= 0)
+            return;
+        for(int i = 0; i < 7; i++){
+            days.add(false);
+        }
+    }
+    
+    private void showTimeDialog(){
         TimePickerDialog dialog = new TimePickerDialog(
             getContext(),
             android.R.style.Theme_Holo_Light_Dialog,
             new TimePickerDialog.OnTimeSetListener() {
                 @Override
                 public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
-                    locationVO.setTime(hourOfDay, minute);
+                    setTime(hourOfDay, minute);
                 }
             }, 0,0,true);
         
@@ -284,5 +313,10 @@ public class DestinationInfoFragment extends Fragment{
             return true;
         }
         return false;
+    }
+    
+    private void setTime(int hour, int min){
+        locationVO.setTime(hour, min);
+        refresh();
     }
 }

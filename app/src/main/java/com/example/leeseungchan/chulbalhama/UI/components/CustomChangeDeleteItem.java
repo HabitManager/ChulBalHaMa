@@ -56,6 +56,10 @@ public class CustomChangeDeleteItem {
         this.delete = delete;
     }
     
+    public Button getDelete() {
+        return delete;
+    }
+    
     public View getSelectedView(int id){
         switch (id){
             case 0:

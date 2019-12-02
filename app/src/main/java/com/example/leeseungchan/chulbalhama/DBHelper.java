@@ -10,7 +10,7 @@ import android.util.Log;
 
 public class DBHelper extends SQLiteOpenHelper {
 
-    public static final int DB_VERSION =7;
+    public static final int DB_VERSION =8;
     private static DBHelper mInstance = null;
 
     //스키마 변경 및 수정시에 DB_VERSION 바꿔주기
@@ -49,7 +49,8 @@ public class DBHelper extends SQLiteOpenHelper {
                 "habit_name not null,"+
                 "prepare default null,"+
                 "due integer," +
-                "achievement_rate default 0)";
+                "achievement_rate default 0," +
+                "active integer default 1)";
 
         String dayOfWeekTable = "CREATE TABLE day_of_week("+
                 "_id INTEGER PRIMARY KEY AUTOINCREMENT,"+

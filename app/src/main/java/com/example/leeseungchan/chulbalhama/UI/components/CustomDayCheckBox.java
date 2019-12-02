@@ -30,7 +30,7 @@ public class CustomDayCheckBox{
         boxes.add((CheckBox) view.findViewById(R.id.sun));
     }
     
-    public void setBoxes(){
+    public void setBoxes(ArrayList<Boolean> result){
         DBHelper dbHelper = DBHelper.getInstance();
         SQLiteDatabase db = dbHelper.getReadableDatabase();
     
@@ -41,6 +41,17 @@ public class CustomDayCheckBox{
             String id = time.getString(0);
             if(id == null){
                 boxes.get(i).setEnabled(false);
+                if(result.size()<=i){
+                    result.add(false);
+                }else{
+                    result.set(i,false);
+                }
+            }else {
+                if (result.size() <= i) {
+                    result.add(true);
+                } else {
+                    result.set(i, true);
+                }
             }
         }
         db.close();

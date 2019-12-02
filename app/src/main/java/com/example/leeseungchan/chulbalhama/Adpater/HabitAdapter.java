@@ -93,11 +93,17 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
                 srbaiGuide.setText("이미 설문을 진행하셨습니다.");
             else
                 srbaiGuide.setText("srbai설문을 진행해 주세요!");
-            
-            if(itemHabit.getActive() == 0){
+    
+    
+            if(!isValid(itemHabit.getId())){
                 toggleBtn.setChecked(false);
-            }else{
-                toggleBtn.setChecked(true);
+                toggleBtn.setEnabled(false);
+            }else {
+                if (itemHabit.getActive() == 0) {
+                    toggleBtn.setChecked(false);
+                } else {
+                    toggleBtn.setChecked(true);
+                }
             }
         }
         
@@ -266,5 +272,17 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         String sql = "update habits set active=? where _id=?";
         db.execSQL(sql, new Object[]{habitsVO.getActive(), habitsVO.getId()});
         db.close();
+    }
+    
+    private boolean isValid(int id){
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
+        String sql = "select * from day_of_week where habit_id=?";
+        Cursor c = db.rawQuery(sql, new String[]{Integer.toString(id)});
+        int count = c.getCount();
+        db.close();
+        if(count == 0) {
+            return false;
+        }
+        return true;
     }
 }

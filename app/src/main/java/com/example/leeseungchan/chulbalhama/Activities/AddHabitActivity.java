@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.appcompat.widget.Toolbar;
+
+import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -137,7 +139,7 @@ public class AddHabitActivity extends AppCompatActivity{
         store.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(checkEvertThingInserted()){
+                if(checkEvertThingInserted() && !duplicateHabit(habitName.getText().toString())){
                     insertHabit();
                     customSevenDayInfo.updateDayHabit(days, getNewestHabitId());
                     Log.d("AddHabit" , "StartService");
@@ -265,4 +267,18 @@ public class AddHabitActivity extends AppCompatActivity{
                 return super.onOptionsItemSelected(item);
         }
     }
+    
+    private boolean duplicateHabit(String name){
+        boolean duplicate;
+        SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
+        String sql = "select * from habits where habit_name=?";
+        Cursor c = db.rawQuery(sql, new String[]{name});
+       
+        if(c.getCount() == 0){
+            return false;
+        }
+        Toast.makeText(getApplicationContext(), "중복된 습관명입니다.",Toast.LENGTH_SHORT).show();
+        return true;
+    }
+    
 }

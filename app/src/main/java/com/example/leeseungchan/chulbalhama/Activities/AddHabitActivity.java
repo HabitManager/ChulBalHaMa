@@ -45,6 +45,7 @@ public class AddHabitActivity extends AppCompatActivity{
     private ArrayList<String> prepares = new ArrayList<>();
     // day and place
     private ArrayList<Boolean> days = new ArrayList<>();
+    private int listSize;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,6 +56,7 @@ public class AddHabitActivity extends AppCompatActivity{
         setToolbar();
 
         habitName = findViewById(R.id.add_habit_name);
+        listSize = savedInstanceState.getInt("listSize");
         
         /* due */
         LinearLayout due = findViewById(R.id.due);
@@ -141,8 +143,10 @@ public class AddHabitActivity extends AppCompatActivity{
                     insertHabit();
                     customSevenDayInfo.updateDayHabit(days, getNewestHabitId());
                     Log.d("AddHabit" , "StartService");
-                    Intent intent = new Intent(AddHabitActivity.this, HamaService.class);
-                    startService(intent);
+                    if(listSize==0) {
+                        Intent intent = new Intent(AddHabitActivity.this, HamaService.class);
+                        startService(intent);
+                    }
                     Log.d("AddHabit", "Service called");
                     finish();
                 }

@@ -420,6 +420,10 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 accumulatedTime = System.currentTimeMillis() - countTime;
                 countTime = System.currentTimeMillis();
                 strStatus += "Possibly what you act : " + getActivityString(maxIdx) + confidenceOfActivity[maxIdx] + "% \n";
+                if(maxIdx==2|| maxIdx==7||maxIdx==8)
+                    Toast.makeText(getApplicationContext(), "걷는중!(팝업이 뜨지 않는 상태입니다.)", Toast.LENGTH_SHORT).show();
+                if(maxIdx==0)
+                    Toast.makeText(getApplicationContext(), "차량 탑승중!", Toast.LENGTH_SHORT).show();//appcontext에 토스트
                 if (lastAction != -1)
                     activityTimes[lastAction] += accumulatedTime;
                 if (
@@ -445,7 +449,7 @@ public class HamaService extends Service implements GoogleApiClient.OnConnection
                 firstTimeCall = 1;
             }
             Log.e(TAG, strStatus);
-//            Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
+            Toast.makeText(getApplicationContext(), strStatus, Toast.LENGTH_SHORT).show();//appcontext에 토스트
             //detectedActivities.setText(strStatus);
 
         }

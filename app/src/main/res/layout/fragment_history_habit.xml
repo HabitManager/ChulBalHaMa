@@ -1,0 +1,158 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="30dp">
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/history_list"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="@dimen/content_space_small"/>
+
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:orientation="horizontal"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/activity_horizontal_margin">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/srbai"
+                android:layout_gravity="center_vertical"
+                style="@style/MenuText"
+                />
+            <TextView
+                android:id="@+id/score_board"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_weight="1"
+                style="@style/GuideText"/>
+            <CheckBox
+                android:id="@+id/show_additional"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="16dp"
+                android:layout_marginStart="16dp"
+                android:background="@drawable/checkbox_menu"
+                android:layout_gravity="end"
+                android:button="@null"
+                />
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/srbai_questions"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/content_space_small"
+            android:visibility="gone">
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/srbai_1"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                style="@style/MenuText"
+                />
+
+            <include
+                android:id="@+id/srbai_fir"
+                layout="@layout/item_get_radio_seven"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/srbai_2"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                style="@style/MenuText"
+                />
+
+            <include
+                android:id="@+id/srbai_sec"
+                layout="@layout/item_get_radio_seven"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/srbai_3"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                style="@style/MenuText"
+                />
+
+            <include
+                android:id="@+id/srbai_thr"
+                layout="@layout/item_get_radio_seven"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/srbai_4"
+                android:layout_marginStart="@dimen/activity_horizontal_margin"
+                android:layout_marginLeft="@dimen/activity_horizontal_margin"
+                android:layout_marginBottom="@dimen/activity_horizontal_margin"
+                style="@style/MenuText"
+                />
+
+            <include
+                android:id="@+id/srbai_fou"
+                layout="@layout/item_get_radio_seven"/>
+
+
+            <Button
+                android:id="@+id/store_srbai"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                style="@style/StoreButton"
+                android:text="@string/store"
+                android:textStyle="bold"
+                android:layout_gravity="center"
+                android:layout_marginBottom="100dp"/>
+
+        </LinearLayout>
+
+
+        <Button
+            android:id="@+id/show_srbai"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            style="@style/StoreButton"
+            android:text="SRBAI 그래프 보기"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="50dp"/>
+
+        <TextView
+            android:id="@+id/cheer_up"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/text_20sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_marginBottom="100dp"
+            />
+
+    </LinearLayout>
+</ScrollView>

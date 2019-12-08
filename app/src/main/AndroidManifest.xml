@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="com.example.leeseungchan.chulbalhama">
+
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="com.google.android.gms.permission.ACTIVITY_RECOGNITION" />
+
+    <application
+        android:allowBackup="false"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/ic_launcher_round"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".Service.PopUpScreen2"
+            android:theme="@android:style/Theme.Dialog" />
+        <activity
+            android:name=".Service.PopUpScreen"
+            android:theme="@android:style/Theme.Dialog" />
+
+        <service
+            android:name=".Service.DetectedActivitiesIntentService"
+            android:enabled="true"
+            android:exported="true" />
+
+        <activity
+            android:name=".Activities.SplashActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/SplashTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.MainActivity"
+            android:text="@string/app_name">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Activities.AddHabitActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.LocationInfoActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.HabitInfoActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Activities.StartActivity"
+            android:parentActivityName=".Activities.MainActivity" />
+        <activity
+            android:name=".Service.PlotLineChart"
+            android:parentActivityName=".Activities.HabitInfoActivity" />
+
+        <service
+            android:name=".Service.HamaService"
+            android:enabled="true"
+            android:exported="true" />
+    </application>
+
+</manifest>

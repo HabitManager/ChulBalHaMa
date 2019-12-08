@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/round_box"
+    android:paddingTop="3dp"
+    android:paddingLeft="@dimen/fragment_padding_plain"
+    android:paddingRight="@dimen/fragment_padding_plain"
+    android:id="@+id/list_habit">
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/item_habit_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1"/>
+        <Switch
+            android:id="@+id/toggle_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="10dp"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:orientation="horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp">
+        <TextView
+            android:id="@+id/item_habit_description"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/description"
+            android:textSize="20sp"/>
+
+        <TextView
+            android:id="@+id/guide_srbai_test"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="10dp"
+            android:layout_marginLeft="15dp"
+            android:textColor="@color/description"
+            android:textSize="10sp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/see_info"
+        android:paddingVertical="20dp"
+        android:visibility="gone"
+        style="@style/MenuText"/>
+
+    <TextView
+        android:id="@+id/history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/see_history"
+        android:paddingVertical="20dp"
+        android:visibility="gone"
+        style="@style/MenuText"/>
+
+    <TextView
+        android:id="@+id/delete"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/see_delete"
+        android:paddingVertical="20dp"
+        android:layout_marginBottom="20dp"
+        android:visibility="gone"
+        style="@style/MenuText"/>
+
+</LinearLayout>

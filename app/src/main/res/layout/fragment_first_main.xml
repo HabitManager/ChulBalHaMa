@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <Button
+        android:id="@+id/button_for_start"
+        style="@style/StoreButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/content_space_small"
+        android:layout_marginRight="@dimen/content_space_small"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_starting"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2"
+        app:layout_constraintVertical_bias="0.337" />
+
+    <Button
+        android:id="@+id/button_for_dest"
+        style="@style/StoreButton"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="@dimen/content_space_small"
+        android:layout_marginRight="@dimen/content_space_small"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_ending"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_for_start" />
+
+    <Button
+        android:id="@+id/store"
+        style="@style/StoreButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:background="@color/colorPrimary"
+        android:text="@string/button_go"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/button_for_dest" />
+
+    <ImageView
+        android:id="@+id/imageView2"
+        android:layout_width="180dp"
+        android:layout_height="204dp"
+        android:layout_marginTop="64dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.45"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:background="@drawable/hipo_stand" />
+
+    <EditText
+        android:id="@+id/user_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        android:maxLength="9"
+        android:inputType="textPersonName"
+        android:hint="@string/guide_start_name"
+        android:textColorHint="@color/colorPrimary"
+        android:gravity="center"
+        app:layout_constraintBottom_toTopOf="@+id/button_for_start"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
+</androidx.constraintlayout.widget.ConstraintLayout>

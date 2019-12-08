@@ -16,10 +16,12 @@ import java.util.ArrayList;
 public class DayTimeDialog {
     private Context context;
     private ArrayList<Boolean> clicked;
+    
     public DayTimeDialog(Context context, ArrayList<Boolean> clicked) {
         this.context = context;
         this.clicked = clicked;
     }
+    
     public void callFunction(final ArrayList<Integer> numbers,
                              final CustomSevenDayInfo sevenDayInfo) {
         

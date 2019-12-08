@@ -272,6 +272,7 @@ public class HabitAdapter extends RecyclerView.Adapter<HabitAdapter.HabitViewHol
         db.execSQL(sql, new Object[]{habitsVO.getActive(), habitsVO.getId()});
         db.close();
     }
+    
     private boolean isValid(int id){
         SQLiteDatabase db = DBHelper.getInstance().getReadableDatabase();
         String sql = "select * from day_of_week where habit_id=?";

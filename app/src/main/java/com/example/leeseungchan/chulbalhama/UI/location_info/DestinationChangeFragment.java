@@ -261,15 +261,13 @@ public class DestinationChangeFragment extends Fragment{
                 else
                     time = locationVO.getTime();
                 
-                if(checkEvertThingInserted()) {
-                    // insert destination data to sqlite db
-                    updateDest(locationVO.getCoordinate(), time, locationVO.getName(), locationVO.getId());
-                    
-                    // update dayOfWeek table.
-                    updateDayOfWeek();
-                    
-                    getActivity().finish();
-                }
+                // insert destination data to sqlite db
+                updateDest(locationVO.getCoordinate(), time, locationVO.getName(), locationVO.getId());
+                
+                // update dayOfWeek table.
+                updateDayOfWeek();
+                
+                getActivity().finish();
             }
         });
     }
@@ -288,29 +286,6 @@ public class DestinationChangeFragment extends Fragment{
         ArrayList<String> times = new ArrayList<>();
         sevenDayInfo.getResultTimeDataInput(times);
         sevenDayInfo.updateTimeToDays(days,times);
-    }
-    
-    private boolean checkEvertThingInserted(){
-        if(!isDestNameEmpty() && !isMapUnselected()){
-            return true;
-        }
-        return false;
-    }
-    
-    private boolean isDestNameEmpty(){
-        if(locationVO.getName() == null || locationVO.getName().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "이름을 입력해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
-    }
-    
-    private boolean isMapUnselected(){
-        if(locationVO.getCoordinate() == null || locationVO.getCoordinate().length() == 0){
-            Toast.makeText(getActivity().getApplicationContext(), "장소를 설정해 주시기 바랍니다.",Toast.LENGTH_SHORT).show();
-            return true;
-        }
-        return false;
     }
     
     private void setTime(int hour, int min){

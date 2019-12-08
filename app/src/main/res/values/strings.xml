@@ -61,7 +61,7 @@
     <string name="map_location_name_hint">EX) 회사, 학교</string>
     <string name="map_location_address">위치 정보</string>
     <string name="map_location_time_take">소요 시간</string>
-    <string name="map_location_go_time">출발 시간</string>
+    <string name="map_location_go_time">출근/1교시 시작 시간</string>
 
     <string name="hint_empty_edit_text">여기에 입력해 주세요.</string>
 
